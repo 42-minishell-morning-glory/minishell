@@ -34,6 +34,7 @@ re :
 
 run :
 	make
+	cat sun
 	./minishell
 
 .PHONY : all clean fclean re
