@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_dlist	*create_list()
+t_dlist	*create_list(void)
 {
 	t_dlist	*new;
 
@@ -20,7 +20,10 @@ void	add_list(t_info *info, char *str)
 	{
 		info->dlist = create_list();
 		info->dlist->token = str;
-		//printf("curr->token : |%s| and str : |%s|\n", info->dlist->token, str);
+		if (info->quote == '\'')
+			info->dlist->quote_flag = 1;
+		else if (info->quote == '\"')
+			info->dlist->double_quote_flag = 1;
 		return ;
 	}
 	while (curr->next)
@@ -30,11 +33,15 @@ void	add_list(t_info *info, char *str)
 	curr->next = new;
 	new->next = NULL;
 	new->prev = curr;
+	if (info->quote == '\'')
+		new->quote_flag = 1;
+	else if (info->quote == '\"')
+		new->double_quote_flag = 1;
 }
 
 void	delete_dlist(t_info *info)
 {
-	t_dlist *curr;
+	t_dlist	*curr;
 	t_dlist	*tmp;
 
 	curr = info->dlist;
@@ -47,7 +54,7 @@ void	delete_dlist(t_info *info)
 	}
 }
 
-void printList(t_info *info)
+void	printList(t_info *info)
 {
 	t_dlist *tmp;
 	int		i;
@@ -55,7 +62,7 @@ void printList(t_info *info)
 	i = 0;
 	tmp = info->dlist;
 	printf("====print start====\n");
-	while(tmp)
+	while (tmp)
 	{	
 		printf("token : |%s|\n", tmp->token);
 		tmp = tmp->next;

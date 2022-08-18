@@ -13,6 +13,7 @@ DOBULY_DIR = doubly_list
 SRCS =	minishell.c \
 		$(PARSER_DIR)/parser.c \
 		$(DOBULY_DIR)/doubly_list.c \
+		signal.c
 		# $(PARSER_DIR)/mini_split.c\
 
 OBJS = $(SRCS:%.c=%.o)

@@ -93,41 +93,22 @@ void	init_info(t_info *info)
 	info->dlist = 0;
 }
 
-void signal_handler(int signal)
-{
-	// printf("signal : %d\n", signal);
-	if (signal == SIGINT)
-	{
-		rl_replace_line("", 1);
-		rl_redisplay();
-	}
-	else if (signal == SIGTERM)
-	{
-		printf("exit\n");
-		exit(0);
-	}
-	else
-	{
-	}
-}
-
-void	set_signal_handler()
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-	signal(SIGTERM, signal_handler);
-}
-
 int	main(void)
 {
 	char	*str;
 	t_info	info;
 
+	set_terminal();
 	set_signal_handler();
 	while (1)
 	{
 		init_info(&info);
 		str = readline("morningshell$ ");
+		if (!str)
+		{
+			printf("exit\n");
+			exit(0);
+		}
 		if (space_check(str) == TRUE)
 			continue ;
 		str = input_check(str, &info);
@@ -138,4 +119,3 @@ int	main(void)
 		delete_dlist(&info);
 	}
 }
-

@@ -6,6 +6,7 @@
 # include <readline/history.h>
 # include <stdlib.h>
 # include <signal.h>
+# include <termios.h>
 # include "libft/libft.h"
 
 enum {
@@ -17,17 +18,23 @@ typedef struct s_dlist
 {
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
-char				*token;
+	char			*token;
+	int				quote_flag;
+	int				double_quote_flag;
 }					t_dlist;
 
 typedef struct s_info
 {
+	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
 	struct s_dlist			*dlist;
 }							t_info;
-
+/* signal.c */
 void	set_signal_handler();
+void	signal_handler(int signal);
+void	set_terminal();
+
 /*---minishell/parser---*/
 
 	/* parser.c */
