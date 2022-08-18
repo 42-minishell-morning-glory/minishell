@@ -9,6 +9,11 @@ int	is_quotes(char *str, t_info *info)
 	{
 		if (str[i] == '\'' && info->double_quote_flag == 0)
 		{
+			if (i != 0 && str[i - 1] == '\\')
+			{
+				i++;
+				continue ;
+			}
 			i++;
 			while (str[i] && str[i] != '\'')
 				i++;
@@ -19,6 +24,11 @@ int	is_quotes(char *str, t_info *info)
 		}
 		else if (str[i] == '\"' && info->quote_flag == 0)
 		{
+			if (i != 0 && str[i - 1] == '\\')
+			{
+				i++;
+				continue ;
+			}
 			i++;
 			while ((str[i] && str[i] != '\"') || (i != 0 && str[i] == '\"' && str[i - 1] == '\\'))
 				i++;
@@ -80,6 +90,32 @@ void	init_info(t_info *info)
 {
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
+	info->dlist = 0;
+}
+
+void signal_handler(int signal)
+{
+	// printf("signal : %d\n", signal);
+	if (signal == SIGINT)
+	{
+		rl_replace_line("", 1);
+		rl_redisplay();
+	}
+	else if (signal == SIGTERM)
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	else
+	{
+	}
+}
+
+void	set_signal_handler()
+{
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
+	signal(SIGTERM, signal_handler);
 }
 
 int	main(void)
@@ -87,17 +123,19 @@ int	main(void)
 	char	*str;
 	t_info	info;
 
-	init_info(&info);
+	set_signal_handler();
 	while (1)
 	{
+		init_info(&info);
 		str = readline("morningshell$ ");
 		if (space_check(str) == TRUE)
 			continue ;
 		str = input_check(str, &info);
 		printf("%s\n", str);
-		// lexer(str, &info);
+		lexer(str, &info);
 		add_history(str);
 		free(str);
+		delete_dlist(&info);
 	}
 }
 
