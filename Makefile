@@ -5,7 +5,7 @@ RM = rm -f
 PARSER_DIR = parser
 
 SRCS =	minishell.c \
-		$(PARSER_DIR)/parser.c \
+		#$(PARSER_DIR)/parser.c \
 		# $(PARSER_DIR)/mini_split.c\
 
 OBJS = $(SRCS:%.c=%.o)
@@ -15,7 +15,8 @@ NAME = minishell
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	$(CC) -lreadline libft/libft.a $(OBJS) -o $(NAME)
+	make -C ./libft
+	$(CC) -lreadline ./libft/libft.a $(OBJS) -o $(NAME)
 
 %.o		:		%.c
 		$(CC) -c $< -o $@
@@ -24,6 +25,7 @@ clean :
 	$(RM) $(OBJS)
 
 fclean :
+	make -C ./libft fclean
 	$(RM) $(OBJS) $(NAME)
 
 re :
