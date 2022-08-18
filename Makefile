@@ -11,30 +11,32 @@ SRCS =	minishell.c \
 OBJS = $(SRCS:%.c=%.o)
 
 NAME = minishell
+SHELL = bash
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	make -C ./libft
-	$(CC) -lreadline ./libft/libft.a $(OBJS) -o $(NAME)
+	@make -C ./libft
+	@./make.sh
+	@$(CC) -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline ./libft/libft.a $(OBJS) -o $(NAME)
 
 %.o		:		%.c
-		$(CC) -c $< -o $@
+		@$(CC) -c $< -o $@
 
 clean :
 	$(RM) $(OBJS)
 
 fclean :
-	make -C ./libft fclean
-	$(RM) $(OBJS) $(NAME)
+	@make -C ./libft fclean
+	@$(RM) $(OBJS) $(NAME)
 
 re :
-	make fclean
-	make all
+	@make fclean
+	@make all
 
 run :
-	make
-	cat sun
-	./minishell
+	@cat sun
+	@make re
+	@./minishell
 
 .PHONY : all clean fclean re

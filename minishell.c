@@ -10,7 +10,7 @@ int	is_quotes(char *str, t_info *info)
 		if (str[i] == '\'' && info->double_quote_flag == 0)
 		{
 			i++;
-			while ((str[i] && str[i] != '\'') || (i != 0 && str[i] == '\'' && str[i - 1] == '\\'))
+			while (str[i] && str[i] != '\'')
 				i++;
 			if (!str[i])
 				info->quote_flag = 1;
@@ -66,7 +66,7 @@ int space_check(char *str)
 		return (TRUE);
 	while (str[i])
 	{
-		if (str[i] == ' ')
+		if (str[i] == 0)
 		{
 			i++;
 			continue ;
@@ -82,7 +82,7 @@ void	init_info(t_info *info)
 	info->quote_flag = 0;
 }
 
-int	main()
+int	main(void)
 {
 	char	*str;
 	t_info	info;

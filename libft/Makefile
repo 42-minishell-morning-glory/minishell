@@ -1,4 +1,5 @@
 NAME	      = libft.a
+SHELL		= bash
 
 CC		= cc
 CFLAG	      = -Wall -Wextra -Werror
@@ -65,7 +66,7 @@ OBJS_BONUS = $(SRCS_BN:.c=.o)
 all : $(NAME)
 
 %.o : %.c
-	$(CC) $(CFLAG) -c $< -o $@
+	@$(CC) $(CFLAG) -c $< -o $@
 
 ifdef WITH_BONUS
 OBJ = $(OBJS_SRC) $(OBJS_BONUS)
@@ -74,15 +75,16 @@ OBJ = $(OBJS_SRC)
 endif
 
 clean :
-	$(RM) $(RMFLAG) $(OBJS_SRC) $(OBJS_BONUS)
+	@$(RM) $(RMFLAG) $(OBJS_SRC) $(OBJS_BONUS)
 
 fclean : clean
-	$(RM) $(RMFLAG) $(NAME)
+	@$(RM) $(RMFLAG) $(NAME)
 
 re : fclean all
 
 $(NAME) : $(OBJ)
-	$(AR) $(ARFLAGS) $@ $^
+	@./make_libft.sh
+	@$(AR) $(ARFLAGS) $@ $^
 
 bonus : 
 	make WITH_BONUS=1 all

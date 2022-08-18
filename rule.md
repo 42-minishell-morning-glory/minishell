@@ -2,6 +2,14 @@
 < infile cat -e | cat -e | (cat -e && ls) > outfile 
 < infile cat -e | (ls | cat -e) && ls > outfile 
 
+<!--- 문법 검사 먼저(split 시 문제 생길 것들)
+	- > >> 
+	- | ||
+	- >>>-->
+- strncmp로 검사 
+- split에서 charset도 저장
+	- | || // < << 
+	- & 하나는 쓸 일 없음
 - || 에서 둘 다 참이면, 앞에 것만 실행
 - || 에서 앞 참 뒤 거짓, 앞에 것만 실행
 - || 에서 앞 거짓 뒤 참, 앞 에러 메세지 출력 후 뒤 실행
