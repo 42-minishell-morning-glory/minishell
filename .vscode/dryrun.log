@@ -1,0 +1,8 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/hankyuhong/Morning-Shell'
+cc -I/usr/local/Cellar/readline/8.1.2/include -c signal.c -o signal.o
+make -C ./libft
+./make.sh
+cc -I/usr/psps/opt/readline/include ./libft/libft.a minishell.o parser/parser.o doubly_list/doubly_list.o signal.o -o minishell -L/usr/local/Cellar/readline/8.1.2/lib -lreadline
+make: Leaving directory `/Users/hankyuhong/Morning-Shell'
+ 

@@ -1,8 +1,0 @@
-Makefile
-a.out
-infile
-minishell.c
-minishell.h
-outfile
-parser
-rule.md

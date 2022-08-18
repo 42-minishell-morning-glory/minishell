@@ -43,7 +43,7 @@ re :
 	@make all
 
 run :
-	@cat sun
+	@cat sun2
 	@make re
 	@./minishell
 

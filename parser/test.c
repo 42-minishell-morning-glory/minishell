@@ -9,10 +9,31 @@ void	make_token(t_info *info, int i, int last_idx, char *str)
 	add_list(info, temp);
 }
 
+int	handling_quote(t_info *info, char *str, int *i, int *last_idx)
+{
+	if (str[*i] == '\'' || str[*i] == '\"')
+	{
+		info->quote = str[(*i)++];
+		*last_idx = *i;
+		while (str[*i] != info->quote)
+		{
+			if (str[*i] == '\\' && str[*i + 1] == '\"' && info->quote == '\"')
+				ft_strlcpy(&str[*i], &str[*i + 1], ft_strlen(&str[*i]));
+			(*i)++;
+		}
+		make_token(info, *i, *last_idx, str);
+		(*i)++;
+		*last_idx = *i;
+		return (1);
+	}
+	else
+		return (0);
+}
+
 void	first_opertaion(char *str, t_info *info)
 {
-	int		i;
-	int		last_idx;
+	int	i;
+	int	last_idx;
 
 	i = 0;
 	last_idx = 0;
@@ -20,18 +41,11 @@ void	first_opertaion(char *str, t_info *info)
 	{
 		info->quote = 0;
 		if (str[i] == ' ' && i == last_idx)
+			last_idx = ++i;
+		else if (str[i] == ' ' || str[i] == '\'' || str[i] == '\"')
 		{
-			i++;
-			last_idx = i;
-			continue ;
-		}
-		if (str[i] == ' ' || str[i] == '\'' || str[i] == '\"')
-		{
-			if (i != 0 && str[i - 1] == '\\')
-			{
-				i++;
+			if (i != 0 && str[i - 1] == '\\' && i++)
 				continue ;
-			}
 			if (i != last_idx)
 				make_token(info, i, last_idx, str);
 			if (str[i] == ' ')
@@ -39,21 +53,8 @@ void	first_opertaion(char *str, t_info *info)
 				last_idx = i;
 				continue ;
 			}
-			else if (str[i] == '\'' || str[i] == '\"')
-			{
-				info->quote = str[i++];
-				last_idx = i;
-				while (str[i] != info->quote)
-				{
-					if (str[i] == '\\' && str[i + 1] == '\"' && info->quote == '\"')
-						ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i]));
-					i++;
-				}
-				make_token(info, i, last_idx, str);
-				i++;
-				last_idx = i;
+			else if (handling_quote(info, str, &i, &last_idx))
 				continue ;
-			}
 		}
 		i++;
 	}
@@ -64,10 +65,8 @@ void	first_opertaion(char *str, t_info *info)
 int	lexer(char *str, t_info *info)
 {
 	t_list	*new;
-	// info에 스페이스 인덱싱할 구조체 생성?
 	first_opertaion(str, info);
 	printList(info);
-	
 	return (0);
 }
 
