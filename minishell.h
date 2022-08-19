@@ -8,6 +8,7 @@
 # include <signal.h>
 # include <termios.h>
 # include "libft/libft.h"
+# include <errno.h>
 
 enum {
 	FALSE,
@@ -34,7 +35,9 @@ typedef struct s_info
 	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
+	char					**envp;
 	struct s_dlist			*dlist;
+	struct s_dlist			*env;
 	t_first_operation		fo;
 }							t_info;
 /* signal.c */

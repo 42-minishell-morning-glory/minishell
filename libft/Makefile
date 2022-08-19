@@ -16,6 +16,7 @@ SRCS_1 = ft_strlen.c	\
  		 ft_strnstr.c	\
  		 ft_strncmp.c	\
 	 	 ft_strdup.c	\
+		 ft_strndup.c	\
 		 ft_strrchr.c	\
 	 	 ft_memset.c	\
  		 ft_memcpy.c	\

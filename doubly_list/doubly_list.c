@@ -39,6 +39,35 @@ void	add_list(t_info *info, char *str)
 		new->double_quote_flag = 1;
 }
 
+void	add_list_env(t_info *info, char *str)
+{
+	t_dlist	*new;
+	t_dlist	*curr;
+
+	curr = info->env;
+	if (info->env == NULL)
+	{
+		info->env = create_list();
+		info->env->token = str;
+		if (info->quote == '\'')
+			info->env->quote_flag = 1;
+		else if (info->quote == '\"')
+			info->env->double_quote_flag = 1;
+		return ;
+	}
+	while (curr->next)
+		curr = curr->next;
+	new = create_list();
+	new->token = str;
+	curr->next = new;
+	new->next = NULL;
+	new->prev = curr;
+	if (info->quote == '\'')
+		new->quote_flag = 1;
+	else if (info->quote == '\"')
+		new->double_quote_flag = 1;
+}
+
 void	delete_dlist(t_info *info)
 {
 	t_dlist	*curr;
@@ -69,3 +98,4 @@ void	printList(t_info *info)
 	}
 	printf("=====print end=====\n\n");
 }
+

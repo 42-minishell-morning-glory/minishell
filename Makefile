@@ -11,7 +11,7 @@ PARSER_DIR = parser
 DOBULY_DIR = doubly_list
 
 SRCS =	minishell.c \
-		$(PARSER_DIR)/parser.c \
+		$(PARSER_DIR)/parser_test.c \
 		$(PARSER_DIR)/input_check.c \
 		$(DOBULY_DIR)/doubly_list.c \
 		signal.c
