@@ -12,6 +12,7 @@ DOBULY_DIR = doubly_list
 
 SRCS =	minishell.c \
 		$(PARSER_DIR)/parser.c \
+		$(PARSER_DIR)/input_check.c \
 		$(DOBULY_DIR)/doubly_list.c \
 		signal.c
 		# $(PARSER_DIR)/mini_split.c\
@@ -43,7 +44,7 @@ re :
 	@make all
 
 run :
-	@cat sun2
+	@cat ascii_art/sun
 	@make re
 	@./minishell
 

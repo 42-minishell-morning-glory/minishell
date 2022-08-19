@@ -56,7 +56,7 @@ void	delete_dlist(t_info *info)
 
 void	printList(t_info *info)
 {
-	t_dlist *tmp;
+	t_dlist	*tmp;
 	int		i;
 
 	i = 0;

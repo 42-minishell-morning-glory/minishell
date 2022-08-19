@@ -9,68 +9,69 @@ void	make_token(t_info *info, int i, int last_idx, char *str)
 	add_list(info, temp);
 }
 
+int	quote_handle(char *str, t_info *info)
+{
+	if (str[info->fo.i] == ' ')
+	{
+		info->fo.last_idx = info->fo.i;
+		return (0);
+	}
+	else if (str[info->fo.i] == '\'' || str[info->fo.i] == '\"')
+	{
+		info->quote = str[info->fo.i++];
+		info->fo.last_idx = info->fo.i;
+		while (str[info->fo.i] != info->quote)
+		{
+			if (str[info->fo.i] == '\\' && str[info->fo.i + 1] == '\"' \
+				&& info->quote == '\"')
+				ft_strlcpy(&str[info->fo.i], &str[info->fo.i + 1], \
+				ft_strlen(&str[info->fo.i]));
+			info->fo.i++;
+		}
+		make_token(info, info->fo.i, info->fo.last_idx, str);
+		info->fo.last_idx = ++info->fo.i;
+		return (0);
+	}
+	return (1);
+}
+
 void	first_opertaion(char *str, t_info *info)
 {
-	int		i;
-	int		last_idx;
-
-	i = 0;
-	last_idx = 0;
-	while (str[i])
+	while (str[info->fo.i])
 	{
 		info->quote = 0;
-		if (str[i] == ' ' && i == last_idx)
+		if (str[info->fo.i] == ' ' && info->fo.i == info->fo.last_idx)
 		{
-			i++;
-			last_idx = i;
+			info->fo.last_idx = ++info->fo.i;
 			continue ;
 		}
-		if (str[i] == ' ' || str[i] == '\'' || str[i] == '\"')
+		if (str[info->fo.i] == ' ' || str[info->fo.i] == '\'' || \
+		str[info->fo.i] == '\"')
 		{
-			if (i != 0 && str[i - 1] == '\\')
-			{
-				i++;
+			if (info->fo.i != 0 && str[info->fo.i - 1] == '\\' && info->fo.i++)
 				continue ;
-			}
-			if (i != last_idx)
-				make_token(info, i, last_idx, str);
-			if (str[i] == ' ')
-			{
-				last_idx = i;
+			if (info->fo.i != info->fo.last_idx)
+				make_token(info, info->fo.i, info->fo.last_idx, str);
+			if (!quote_handle(str, info))
 				continue ;
-			}
-			else if (str[i] == '\'' || str[i] == '\"')
-			{
-				info->quote = str[i++];
-				last_idx = i;
-				while (str[i] != info->quote)
-				{
-					if (str[i] == '\\' && str[i + 1] == '\"' && info->quote == '\"')
-						ft_strlcpy(&str[i], &str[i + 1], ft_strlen(&str[i]));
-					i++;
-				}
-				make_token(info, i, last_idx, str);
-				i++;
-				last_idx = i;
-				continue ;
-			}
 		}
-		i++;
+		info->fo.i++;
 	}
-	if (last_idx != i)
-		make_token(info, i, last_idx, str);
+	if (info->fo.last_idx != info->fo.i)
+		make_token(info, info->fo.i, info->fo.last_idx, str);
 }
 
 int	lexer(char *str, t_info *info)
 {
 	t_list	*new;
-	// info에 스페이스 인덱싱할 구조체 생성?
-	first_opertaion(str, info);
+	char	*lex_str;
+
+	lex_str = ft_strdup(str);
+	first_opertaion(lex_str, info);
 	printList(info);
-	
+	free(lex_str);
 	return (0);
 }
-
 
 /* yehyun
 command

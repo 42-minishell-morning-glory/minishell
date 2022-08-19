@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void signal_handler(int signal)
+void	signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -13,17 +13,17 @@ void signal_handler(int signal)
 		return ;
 }
 
-void	set_signal_handler()
+void	set_signal_handler(void)
 {
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	set_terminal()
+void	set_terminal(void)
 {
-	struct termios term;
+	struct termios	term;
 
 	tcgetattr(STDIN_FILENO, &term);
-    term.c_lflag &= ~(ECHOCTL);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	term.c_lflag &= ~(ECHOCTL);
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
