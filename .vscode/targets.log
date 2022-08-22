@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Thu Aug 18 17:13:54 2022
+# Make data base, printed on Mon Aug 22 16:10:00 2022
 
 # Variables
 
@@ -20,7 +20,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # makefile (from `Makefile', line 4)
-COMFILE_FLAGS = -I/usr/local/Cellar/readline/8.1.2/include
+COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -29,16 +29,16 @@ COMFILE_FLAGS = -I/usr/local/Cellar/readline/8.1.2/include
 @F = $(notdir $@)
 # makefile
 CURDIR := /Users/hankyuhong/Morning-Shell
-# makefile (from `Makefile', line 22)
+# makefile (from `Makefile', line 23)
 SHELL = bash
 # makefile (from `Makefile', line 8)
 RM = rm -f
 # environment
-VSCODE_NLS_CONFIG = {"locale":"ko","availableLanguages":{"*":"ko"},"_languagePackId":"2dff5cff996ed6cbe8d8aa8740f86aa0.ko","_translationsConfigFile":"/Users/hankyuhong/Library/Application Support/Code/clp/2dff5cff996ed6cbe8d8aa8740f86aa0.ko/tcf.json","_cacheRoot":"/Users/hankyuhong/Library/Application Support/Code/clp/2dff5cff996ed6cbe8d8aa8740f86aa0.ko","_resolvedLanguagePackCoreLocation":"/Users/hankyuhong/Library/Application Support/Code/clp/2dff5cff996ed6cbe8d8aa8740f86aa0.ko/6d9b74a70ca9c7733b29f0456fd8195364076dda","_corruptedFile":"/Users/hankyuhong/Library/Application Support/Code/clp/2dff5cff996ed6cbe8d8aa8740f86aa0.ko/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"ko","availableLanguages":{"*":"ko"},"_languagePackId":"d4733d4bd5138ffb2c9d12a76b2e9102.ko","_translationsConfigFile":"/Users/hankyuhong/Library/Application Support/Code/clp/d4733d4bd5138ffb2c9d12a76b2e9102.ko/tcf.json","_cacheRoot":"/Users/hankyuhong/Library/Application Support/Code/clp/d4733d4bd5138ffb2c9d12a76b2e9102.ko","_resolvedLanguagePackCoreLocation":"/Users/hankyuhong/Library/Application Support/Code/clp/d4733d4bd5138ffb2c9d12a76b2e9102.ko/e4503b30fc78200f846c62cf8091b76ff5547662","_corruptedFile":"/Users/hankyuhong/Library/Application Support/Code/clp/d4733d4bd5138ffb2c9d12a76b2e9102.ko/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
 # makefile (from `Makefile', line 2)
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # environment
@@ -59,7 +59,7 @@ ELECTRON_RUN_AS_NODE = 1
 SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.LXyApPSz07/Listeners
 # automatic
 %F = $(notdir $%)
-# makefile (from `Makefile', line 19)
+# makefile (from `Makefile', line 20)
 OBJS = $(SRCS:%.c=%.o)
 # environment
 PWD = /Users/hankyuhong/Morning-Shell
@@ -78,11 +78,11 @@ MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /De
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/hankyuhong/Library/Application Support/Code/CachedData/6d9b74a70ca9c7733b29f0456fd8195364076dda
+VSCODE_CODE_CACHE_PATH = /Users/hankyuhong/Library/Application Support/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
 # environment
 LOGNAME = hankyuhong
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -94,7 +94,7 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # makefile (from `Makefile', line 13)
-SRCS = minishell.c $(PARSER_DIR)/parser.c $(DOBULY_DIR)/doubly_list.c signal.c
+SRCS = minishell.c $(PARSER_DIR)/lexer.c $(PARSER_DIR)/tokenize.c $(PARSER_DIR)/input_check.c $(DOBULY_DIR)/doubly_list.c signal.c
 # environment
 SHLVL = 3
 # makefile (from `Makefile', line 1)
@@ -107,7 +107,7 @@ USER = hankyuhong
 .DEFAULT_GOAL := all
 # environment
 TERM_SESSION_ID = 633D22DC-25C5-4B48-A272-8E744CE0ABA6
-# makefile (from `Makefile', line 21)
+# makefile (from `Makefile', line 22)
 NAME = minishell
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
@@ -120,11 +120,11 @@ TERM_PROGRAM = Apple_Terminal
 # environment
 TMPDIR = /var/folders/nq/tcfbfnfs5vlfhgjd271hhxq00000gp/T/
 # makefile (from `Makefile', line 3)
-LINKING_FLAGS = -L/usr/local/Cellar/readline/8.1.2/lib -lreadline
+LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/hankyuhong/Library/Application Support/Code/1.70.1-main.sock
+VSCODE_IPC_HOOK = /Users/hankyuhong/Library/Application Support/Code/1.70.2-main.sock
 # environment
 MallocNanoZone = 0
 # makefile
@@ -154,8 +154,8 @@ COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
 # automatic
- 
 <F = $(notdir $<)
+ 
 # environment
 LC_ALL = C
 # automatic
@@ -169,9 +169,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 3032
+VSCODE_PID = 49716
 # variable set hash-table stats:
-# Load=78/1024=8%, Rehash=0, Collisions=6/112=5%
+# Load=78/1024=8%, Rehash=0, Collisions=6/114=5%
 
 # Pattern-specific Variable Values
 
@@ -179,22 +179,26 @@ VSCODE_PID = 3032
 
 # Directories
 
-# . (device 16777229, inode 2184782): 19 files, no impossibilities.
-# parser (device 16777229, inode 2227688): 4 files, no impossibilities so far.
-# doubly_list (device 16777229, inode 2227679): 3 files, no impossibilities so far.
+# . (device 16777229, inode 2324264): 19 files, no impossibilities.
 
-# 26 files, no impossibilities in 3 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 %.o: %.c
-#  commands to execute (from `Makefile', line 32):
+#  commands to execute (from `Makefile', line 33):
 	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
 	
 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
+
+# Not a target:
+parser/input_check.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 all: minishell
 #  Phony target (prerequisite of .PHONY).
@@ -205,18 +209,6 @@ all: minishell
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/4=0%
-
-parser/parser.o: parser/parser.c
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: `parser/parser'
-#  Last modified 2022-08-18 17:10:13
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-#  commands to execute (from `Makefile', line 32):
-	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
-	
 
 .PHONY: all clean fclean re
 #  Implicit rule search has not been done.
@@ -230,72 +222,73 @@ parser/parser.o: parser/parser.c
 #  File has not been updated.
 
 # Not a target:
-doubly_list/doubly_list.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-08-18 17:04:26
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-
-# Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-18 17:07:57
+#  Last modified 2022-08-22 16:09:43
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
-signal.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-08-18 17:04:26
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+parser/lexer.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-minishell: minishell.o parser/parser.o doubly_list/doubly_list.o signal.o
+minishell: minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o doubly_list/doubly_list.o signal.o
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/4=0%
-#  commands to execute (from `Makefile', line 27):
+#  commands to execute (from `Makefile', line 28):
 	@make -C ./libft
 	@./make.sh
-	@$(CC) -I/usr/psps/opt/readline/include ./libft/libft.a $(OBJS) -o $(NAME) $(LINKING_FLAGS)
+	@$(CC) -I/usr/psps/opt/readline/include $(OBJS) -o $(NAME) $(LINKING_FLAGS) ./libft/libft.a
 	
 
 minishell.o: minishell.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `minishell'
-#  Last modified 2022-08-18 17:10:13
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := minishell.o
+# automatic
+# % := 
+# automatic
+# * := minishell
+# automatic
+# + := minishell.c
+# automatic
+# | := 
+# automatic
+# < := minishell.c
+# automatic
+# ^ := minishell.c
+# automatic
+# ? := minishell.c
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-#  commands to execute (from `Makefile', line 32):
+# Load=8/32=25%, Rehash=0, Collisions=1/14=7%
+#  commands to execute (from `Makefile', line 33):
 	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
 	
 
 # Not a target:
-parser/parser.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-08-18 17:07:08
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+parser/tokenize.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 fclean:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 38):
+#  commands to execute (from `Makefile', line 39):
 	@make -C ./libft fclean
 	@$(RM) $(OBJS) $(NAME)
 	
@@ -311,18 +304,17 @@ re:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 42):
+#  commands to execute (from `Makefile', line 43):
 	@make fclean
 	@make all
 	
 
- 
 run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 46):
-	@cat sun2
+#  commands to execute (from `Makefile', line 47):
+	@cat ascii_art/sun
 	@make re
 	@./minishell
 	
@@ -332,61 +324,34 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 35):
+#  commands to execute (from `Makefile', line 36):
 	$(RM) $(OBJS)
 	
 
 # Not a target:
 minishell.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-18 17:04:26
+#  Last modified 2022-08-22 16:05:29
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
-doubly_list/doubly_list.o: doubly_list/doubly_list.c
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: `doubly_list/doubly_list'
-#  Last modified 2022-08-18 17:10:13
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-#  commands to execute (from `Makefile', line 32):
-	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
-	
+# Not a target:
+doubly_list/doubly_list.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-signal.o: signal.c
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: `signal'
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := signal.o
-# automatic
-# % := 
-# automatic
-# * := signal
-# automatic
-# + := signal.c
-# automatic
-# | := 
-# automatic
-# < := signal.c
-# automatic
-# ^ := signal.c
-# automatic
-# ? := signal.c
-# variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/14=7%
-#  commands to execute (from `Makefile', line 32):
-	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
-	
+# Not a target:
+signal.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # files hash-table stats:
-# Load=18/1024=2%, Rehash=0, Collisions=0/52=0%
+# Load=17/1024=2%, Rehash=0, Collisions=0/44=0%
+ 
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -398,6 +363,6 @@ signal.o: signal.c
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Aug 18 17:13:54 2022
+# Finished Make data base on Mon Aug 22 16:10:00 2022
 
  

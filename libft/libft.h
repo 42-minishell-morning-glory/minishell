@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojinjang <hojinjang@student.42.fr>        +#+  +:+       +#+        */
+/*   By: kyhan <kyhan@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/15 20:44:49 by kyhan             #+#    #+#             */
-/*   Updated: 2022/08/19 16:51:45 by hojinjang        ###   ########.fr       */
+/*   Updated: 2022/08/22 09:03:22 by kyhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			ft_toupper(int c);
 int			ft_tolower(int c);
 void		*ft_calloc(size_t count, size_t size);
 char		*ft_strdup(const char *s1);
-char		*ft_strndup(const char *s1, int n);
+char		*ft_strndup(const char *s1, size_t n);
 
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strjoin(char const *s1, char const *s2);

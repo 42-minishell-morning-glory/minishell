@@ -1,8 +1,14 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/hankyuhong/Morning-Shell'
-cc -I/usr/local/Cellar/readline/8.1.2/include -c signal.c -o signal.o
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c minishell.c -o minishell.o
+ 
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c parser/lexer.c -o parser/lexer.o
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c parser/tokenize.c -o parser/tokenize.o
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c parser/input_check.c -o parser/input_check.o
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c doubly_list/doubly_list.c -o doubly_list/doubly_list.o
+cc -I/opt/homebrew/Cellar/readline/8.1.2/include -c signal.c -o signal.o
 make -C ./libft
 ./make.sh
-cc -I/usr/psps/opt/readline/include ./libft/libft.a minishell.o parser/parser.o doubly_list/doubly_list.o signal.o -o minishell -L/usr/local/Cellar/readline/8.1.2/lib -lreadline
+cc -I/usr/psps/opt/readline/include minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o doubly_list/doubly_list.o signal.o -o minishell -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline ./libft/libft.a
 make: Leaving directory `/Users/hankyuhong/Morning-Shell'
  

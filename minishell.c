@@ -1,12 +1,22 @@
 #include "minishell.h"
 
+extern char **environ;
+
 void	init_info(t_info *info)
 {
+	int	i;
+
+	i = 0;
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
 	info->dlist = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
+	while (environ[i])
+	{
+		add_list_env(info, environ[i]);
+		i++;
+	}
 }
 
 int	main(void)
@@ -29,8 +39,9 @@ int	main(void)
 			continue ;
 		str = input_check(str, &info);
 		add_history(str);
-		printf("%s\n", str);
 		lexer(str, &info);
+		tokenize(&info);
+		printList(&info);
 		free(str);
 		delete_dlist(&info);
 	}

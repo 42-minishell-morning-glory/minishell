@@ -42,10 +42,81 @@ int	echo(char **argv)
 	return (1);
 }
 
-int	cd(char *path)
+int	unset(t_info *info, char *key)
+{
+	t_dlist	*tmp;
+
+	tmp = info->env;
+	if (ft_isdigit(key[0])
+		&& printf("minishell: unset: '%s': not a valid identifier\n", key))
+		return (0);
+	if (key[0] == '-' && printf("usage: unset [name ...]\n"))
+		return (0);
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->token, key, ft_strlen(key) + 1) == '=')
+			break ;
+		tmp = tmp->next;
+	}
+	delete_node(info, tmp);
+	return (1);
+}
+
+int	env(t_dlist *env, int flag)
+{
+	t_dlist	*temp;
+
+	temp = env;
+	while (temp != NULL)
+	{
+		if (flag == 1)
+			printf("declare -x ");
+		printf("%s\n", temp->token);
+		temp = temp->next;
+	}
+	return (0);
+}
+
+int	export(t_info *info, char *key_value)
+{
+	int		i;
+	char	*temp;
+	t_dlist	*tmp;
+
+	i = 0;
+	tmp	= info->env;
+	if (key_value == 0)
+	{
+		env(info->env, 1);
+		return (0);
+	}
+	while (key_value[i] && key_value[i] != '=')
+	{
+		if (ft_isdigit(key_value[i]))
+			return (0);
+		i++;
+	}
+	if (!key_value[i])
+		return (0);
+	while (tmp)
+	{
+		if (!ft_strncmp(key_value, tmp->token, i))
+		{
+			temp = ft_strndup(tmp->token, i - 1);
+			unset(info, temp);
+			free(temp);
+		}
+		tmp = tmp->next;
+	}
+	add_list_env(info, key_value);
+	return (0);
+}
+
+int	cd(t_info *info, char *path)
 {
 	static char	*old_path;
 	char		*tmp;
+	char		*env;
 
 	if (path[0] == '-' && path[1] == '\0')
 	{
@@ -65,6 +136,9 @@ int	cd(char *path)
 		if (chdir(path))
 			perror(strerror(errno));
 	}
+	env = ft_strjoin("OLDPWD=", old_path);
+	export(info, env);
+	free(env);
 	return (0);
 }
 
@@ -73,63 +147,40 @@ void	pwd(void) // 뒤에 오는 argv들 모두 금이빨 빼 씹어먹음
 	printf("%s\n", getcwd(NULL, 0));
 }
 
-int	export(t_info *info, char *key_value)
+int	mini_exit(char *key)
 {
-	int	i;
+	int	exit_code;
 
-	i = 0;
-	while (key_value[i] &&key_value[i] != '=')
-	{
-		if (ft_isdigit(key_value[i]))
-			return (0);
-		i++;
-	}
-	if (!key_value[i])
-		return (0);
-	add_list_env(info, key_value);
-	return (0);
-}
-
-int	env(t_dlist *env)
-{
-	t_dlist	*temp;
-
-	temp = env;
-	while (env != NULL)
-	{
-		printf("%s\n", env->token);
-		temp = temp->next;
-	}
-	return (0);
-}
-
-int	unset(char *key)
-{
-	if (ft_isdigit(key[0]))
-		re
-}
-
-int	mini_exit()
-{
-	if ()
+	exit_code = ft_atoi(key);
 	printf("exit\n");
-	exit(0);	
+	exit(exit_code);	
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	*buf;
+	t_info	info;
 
+	int	i = 0;
+	ft_memset(&info, 0, sizeof(t_info));
 	(void) argc;
 	(void) argv;
-	env(envp);
+	while (envp[i])
+	{
+		add_list_env(&info, envp[i]);
+		i++;
+	}
+	export(&info, ft_strdup("a=1"));
+	unset(&info, "a");
+	env(info.env, 0);
+	// unset(info.env, "abc");
 	// buf = getcwd(NULL, 0);
 	// printf("Before path : %s\n", buf);
 	// free(buf);
 	// chdir("../");
 	// for (int i = 1; i < argc; i++)
 	// 	cd(argv[i]);
-	pwd();
+	//pwd();
 	// pwd = buf(현재 경로) + argv (..);
 	// chdir(pwd);
 	// buf = getcwd(NULL, 30);

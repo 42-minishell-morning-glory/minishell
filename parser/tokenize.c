@@ -1,0 +1,83 @@
+#include "../minishell.h"
+
+int	is_sep(int sep)
+{
+	if (sep == '<' || sep == '>' || sep == '&' || sep == '|')
+		return (1);
+	return (0);
+}
+
+void	cut_node(t_dlist *curr, t_dlist *next, int i)
+{
+	t_dlist	*new;
+	char	*tmp1;
+	char	*tmp2;
+	char	*remove;
+
+	remove = curr->token;
+	new = create_list();
+	tmp1 = ft_strndup(remove, i + 1);
+	tmp2 = ft_strdup(&remove[i + 1]);
+	free(remove);
+	curr->token = tmp1;
+	new->token = tmp2;
+	new->next = curr->next;
+	curr->next = new;
+	new->prev = curr;
+}
+
+int	split_token(char *token, t_dlist *curr, t_dlist *next)
+{
+	int	i;
+
+	i = 0;
+	while (token[i])
+	{
+		if (!is_sep(token[i]))
+		{
+			while (token[i] && !is_sep(token[i]))
+				i++;
+			if (is_sep(token[i]))
+				cut_node(curr, next, i - 1);
+			return (1);
+		}
+		if (is_sep(token[i]))
+		{
+			if (token[i + 1] == token[i])
+				cut_node(curr, next, i + 1);
+			else
+				cut_node(curr, next, i);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	is_complete_sep(char *token)
+{
+	if (!ft_strncmp(token, "<<", 3) || !ft_strncmp(token, "||", 3) \
+	|| !ft_strncmp(token, ">>", 3) || !ft_strncmp(token, "&&", 3) \
+	|| !ft_strncmp(token, "<", 2) || !ft_strncmp(token, ">", 2) \
+	|| !ft_strncmp(token, "|", 2))
+		return (1);
+	return (0);
+}
+
+void	tokenize(t_info *info)
+{
+	t_dlist	*curr;
+
+	curr = info->dlist;
+	while (curr)
+	{
+		if (curr->token[0] == '(' || is_complete_sep(curr->token))
+		{
+			curr = curr->next;
+			continue ;
+		}
+		split_token(curr->token, curr, curr->next);
+		printList(info);
+		curr = curr->next;
+	}
+}

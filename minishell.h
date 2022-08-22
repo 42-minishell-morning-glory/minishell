@@ -11,15 +11,25 @@
 # include <errno.h>
 
 enum {
+	CMD,
+	ARG,
+	PIPE,
+	REDIR,
+	AND,
+	OR,
+	BRACKET
+};
+
+enum {
 	FALSE,
 	TRUE
 };
 
-typedef struct s_fisrt_operation
+typedef struct s_operation
 {
 	int			i;
 	int			last_idx;
-}				t_first_operation;
+}				t_operation;
 
 typedef struct s_dlist
 {
@@ -28,6 +38,7 @@ typedef struct s_dlist
 	char			*token;
 	int				quote_flag;
 	int				double_quote_flag;
+	int				type;
 }					t_dlist;
 
 typedef struct s_info
@@ -38,7 +49,7 @@ typedef struct s_info
 	char					**envp;
 	struct s_dlist			*dlist;
 	struct s_dlist			*env;
-	t_first_operation		fo;
+	struct s_operation		fo;
 }							t_info;
 /* signal.c */
 void	set_signal_handler(void);
@@ -59,6 +70,10 @@ char	*input_check(char *str, t_info *info);
 int		space_check(char *str);
 
 /*---minishell/parser---*/
+void	tokenize(t_info *info);
+int		split_token(char *token, t_dlist *curr, t_dlist *next);
+void	cut_node(t_dlist *curr, t_dlist *next, int i);
+int		is_sep(int sep);
 
 /*---minishell/doubly_list---*/
 
@@ -66,7 +81,9 @@ int		space_check(char *str);
 void	printList(t_info *info);
 void	delete_dlist(t_info *info);
 void	add_list(t_info *info, char *str);
+void	add_list_env(t_info *info, char *str);
 t_dlist	*create_list(void);
+int		delete_node(t_info *info, t_dlist *node);
 
 /*---minishell/doubly_list---*/
 

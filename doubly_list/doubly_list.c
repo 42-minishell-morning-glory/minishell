@@ -49,10 +49,6 @@ void	add_list_env(t_info *info, char *str)
 	{
 		info->env = create_list();
 		info->env->token = str;
-		if (info->quote == '\'')
-			info->env->quote_flag = 1;
-		else if (info->quote == '\"')
-			info->env->double_quote_flag = 1;
 		return ;
 	}
 	while (curr->next)
@@ -62,10 +58,6 @@ void	add_list_env(t_info *info, char *str)
 	curr->next = new;
 	new->next = NULL;
 	new->prev = curr;
-	if (info->quote == '\'')
-		new->quote_flag = 1;
-	else if (info->quote == '\"')
-		new->double_quote_flag = 1;
 }
 
 void	delete_dlist(t_info *info)
@@ -93,9 +85,31 @@ void	printList(t_info *info)
 	printf("====print start====\n");
 	while (tmp)
 	{	
-		printf("token : |%s|\n", tmp->token);
+		printf("token : %s\n", tmp->token);
 		tmp = tmp->next;
 	}
 	printf("=====print end=====\n\n");
 }
 
+int	delete_node(t_info *info, t_dlist *node)
+{
+	t_dlist	*tmp;
+
+	tmp = info->env;
+	while (tmp && tmp != node)
+		tmp = tmp->next;
+	if (tmp == 0)
+		return (0);
+	if (tmp->next)
+		tmp->next->prev = tmp->prev;
+	if (tmp->prev)
+		tmp->prev->next = tmp->next;
+	else
+		info->env = info->env->next;
+	tmp->next = 0;
+	tmp->prev = 0;
+	free(tmp->token);
+	tmp->token = 0;
+	free(tmp);
+	return (1);
+}
