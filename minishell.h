@@ -10,34 +10,39 @@
 # include "libft/libft.h"
 # include <errno.h>
 
-enum {
-	CMD,
-	ARG,
-	PIPE,
-	REDIR,
-	AND,
-	OR,
-	BRACKET
-};
+/* yehyun
+command
+option
+operator(논리 연산자)
+redirection
+pipe
+single quote
+double quote
+string -> 달러도 여기서 받아서 예외처리
 
-enum {
-	FALSE,
-	TRUE
-};
+현재 알려진 이슈 : '$'와 "$"를 어떻게 구분할 것인가??
+*/ 
+
+# define LINE 1
+# define PIPE 2
+# define REDIR 3
+# define WORD 4
+# define BRACKET 5
+
+# define FALSE 0
+# define TRUE 1
 
 typedef struct s_operation
 {
-	int			i;
-	int			last_idx;
-}				t_operation;
+	int	i;
+	int	last_idx;
+}		t_operation;
 
 typedef struct s_dlist
 {
 	struct s_dlist	*next;
 	struct s_dlist	*prev;
 	char			*token;
-	int				quote_flag;
-	int				double_quote_flag;
 	int				type;
 }					t_dlist;
 
@@ -60,7 +65,7 @@ void	set_terminal(void);
 
 	/* parser.c */
 int		lexer(char *str, t_info *info);
-void	first_opertaion(char *str, t_info *info);
+int		first_opertaion(char *str, t_info *info);
 
 	/* mini_split.c */
 char	**ft_split(const char *s, char c);
@@ -74,6 +79,9 @@ void	tokenize(t_info *info);
 int		split_token(char *token, t_dlist *curr, t_dlist *next);
 void	cut_node(t_dlist *curr, t_dlist *next, int i);
 int		is_sep(int sep);
+int		puterr_msg(char *token);
+int		check_syntax(t_info *info);
+int		put_syntaxerr_msg(char *token);
 
 /*---minishell/doubly_list---*/
 

@@ -1,0 +1,15 @@
+Makefile
+a.out.dSYM
+ascii_art
+built_in.c
+doubly_list
+hi
+libft
+ls
+make.sh
+minishell.c
+minishell.h
+parser
+signal.c
+venv
+기록들

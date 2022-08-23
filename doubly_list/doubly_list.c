@@ -20,10 +20,6 @@ void	add_list(t_info *info, char *str)
 	{
 		info->dlist = create_list();
 		info->dlist->token = str;
-		if (info->quote == '\'')
-			info->dlist->quote_flag = 1;
-		else if (info->quote == '\"')
-			info->dlist->double_quote_flag = 1;
 		return ;
 	}
 	while (curr->next)
@@ -33,10 +29,6 @@ void	add_list(t_info *info, char *str)
 	curr->next = new;
 	new->next = NULL;
 	new->prev = curr;
-	if (info->quote == '\'')
-		new->quote_flag = 1;
-	else if (info->quote == '\"')
-		new->double_quote_flag = 1;
 }
 
 void	add_list_env(t_info *info, char *str)

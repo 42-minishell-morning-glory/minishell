@@ -14,6 +14,7 @@ SRCS =	minishell.c \
 		$(PARSER_DIR)/lexer.c \
 		$(PARSER_DIR)/tokenize.c \
 		$(PARSER_DIR)/input_check.c \
+		$(PARSER_DIR)/syntax.c \
 		$(DOBULY_DIR)/doubly_list.c \
 		signal.c
 

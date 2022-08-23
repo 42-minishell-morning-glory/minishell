@@ -39,10 +39,14 @@ int	main(void)
 			continue ;
 		str = input_check(str, &info);
 		add_history(str);
-		lexer(str, &info);
-		tokenize(&info);
-		printList(&info);
+		if (!lexer(str, &info))
+		{
+			free(str);
+			delete_dlist(&info);
+			continue;
+		}
 		free(str);
-		delete_dlist(&info);
+		delete_dlist(&info);		
+		//printList(&info); //지울거임
 	}
 }

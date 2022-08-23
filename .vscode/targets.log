@@ -8,15 +8,15 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Mon Aug 22 16:10:00 2022
+# Make data base, printed on Tue Aug 23 11:38:40 2022
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
- 
 ?F = $(notdir $?)
+ 
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # makefile (from `Makefile', line 4)
@@ -29,7 +29,7 @@ COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include
 @F = $(notdir $@)
 # makefile
 CURDIR := /Users/hankyuhong/Morning-Shell
-# makefile (from `Makefile', line 23)
+# makefile (from `Makefile', line 24)
 SHELL = bash
 # makefile (from `Makefile', line 8)
 RM = rm -f
@@ -59,7 +59,7 @@ ELECTRON_RUN_AS_NODE = 1
 SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.LXyApPSz07/Listeners
 # automatic
 %F = $(notdir $%)
-# makefile (from `Makefile', line 20)
+# makefile (from `Makefile', line 21)
 OBJS = $(SRCS:%.c=%.o)
 # environment
 PWD = /Users/hankyuhong/Morning-Shell
@@ -82,7 +82,7 @@ VSCODE_CODE_CACHE_PATH = /Users/hankyuhong/Library/Application Support/Code/Cach
 # environment
 LOGNAME = hankyuhong
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -94,7 +94,7 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # makefile (from `Makefile', line 13)
-SRCS = minishell.c $(PARSER_DIR)/lexer.c $(PARSER_DIR)/tokenize.c $(PARSER_DIR)/input_check.c $(DOBULY_DIR)/doubly_list.c signal.c
+SRCS = minishell.c $(PARSER_DIR)/lexer.c $(PARSER_DIR)/tokenize.c $(PARSER_DIR)/input_check.c $(PARSER_DIR)/syntax.c $(DOBULY_DIR)/doubly_list.c signal.c
 # environment
 SHLVL = 3
 # makefile (from `Makefile', line 1)
@@ -107,7 +107,7 @@ USER = hankyuhong
 .DEFAULT_GOAL := all
 # environment
 TERM_SESSION_ID = 633D22DC-25C5-4B48-A272-8E744CE0ABA6
-# makefile (from `Makefile', line 22)
+# makefile (from `Makefile', line 23)
 NAME = minishell
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
@@ -155,7 +155,6 @@ COMMAND_MODE = unix2003
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
- 
 # environment
 LC_ALL = C
 # automatic
@@ -171,22 +170,25 @@ TERM = xterm-256color
 # environment
 VSCODE_PID = 49716
 # variable set hash-table stats:
-# Load=78/1024=8%, Rehash=0, Collisions=6/114=5%
+# Load=78/1024=8%, Rehash=0, Collisions=9/123=7%
 
 # Pattern-specific Variable Values
 
 # No pattern-specific variable values.
+ 
 
 # Directories
 
-# . (device 16777229, inode 2324264): 19 files, no impossibilities.
+# . (device 16777229, inode 2324264): 23 files, no impossibilities.
+# parser (device 16777229, inode 2324396): 10 files, no impossibilities so far.
+# doubly_list (device 16777229, inode 2324342): 3 files, no impossibilities so far.
 
-# 19 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
 %.o: %.c
-#  commands to execute (from `Makefile', line 33):
+#  commands to execute (from `Makefile', line 34):
 	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
 	
 
@@ -194,11 +196,17 @@ VSCODE_PID = 49716
 
 # Files
 
-# Not a target:
-parser/input_check.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+parser/input_check.o: parser/input_check.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `parser/input_check'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
 
 all: minishell
 #  Phony target (prerequisite of .PHONY).
@@ -208,7 +216,7 @@ all: minishell
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/4=0%
+# Load=0/32=0%, Rehash=0, Collisions=0/12=0%
 
 .PHONY: all clean fclean re
 #  Implicit rule search has not been done.
@@ -222,28 +230,78 @@ all: minishell
 #  File has not been updated.
 
 # Not a target:
-Makefile:
+doubly_list/doubly_list.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-22 16:09:43
+#  Last modified 2022-08-23 11:22:14
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
-parser/lexer.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-23 11:38:26
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
-minishell: minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o doubly_list/doubly_list.o signal.o
+# Not a target:
+signal.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-22 08:49:47
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+parser/lexer.o: parser/lexer.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `parser/lexer'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
+
+# Not a target:
+parser/input_check.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-22 08:49:47
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+minishell: minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o doubly_list/doubly_list.o signal.o
 #  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `'
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
+# automatic
+# @ := minishell
+# automatic
+# % := 
+# automatic
+# * := 
+# automatic
+# + := minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o doubly_list/doubly_list.o signal.o
+# automatic
+# | := 
+# automatic
+# < := minishell.o
+# automatic
+# ^ := minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o doubly_list/doubly_list.o signal.o
+# automatic
+# ? := minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o doubly_list/doubly_list.o signal.o
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/4=0%
-#  commands to execute (from `Makefile', line 28):
+# Load=8/32=25%, Rehash=0, Collisions=2/20=10%
+#  commands to execute (from `Makefile', line 29):
 	@make -C ./libft
 	@./make.sh
 	@$(CC) -I/usr/psps/opt/readline/include $(OBJS) -o $(NAME) $(LINKING_FLAGS) ./libft/libft.a
@@ -252,43 +310,33 @@ minishell: minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o dou
 minishell.o: minishell.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `minishell'
-#  File does not exist.
+#  Last modified 2022-08-23 11:38:28
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := minishell.o
-# automatic
-# % := 
-# automatic
-# * := minishell
-# automatic
-# + := minishell.c
-# automatic
-# | := 
-# automatic
-# < := minishell.c
-# automatic
-# ^ := minishell.c
-# automatic
-# ? := minishell.c
+#  Successfully updated.
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/14=7%
-#  commands to execute (from `Makefile', line 33):
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
 	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
 	
 
-# Not a target:
-parser/tokenize.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+parser/tokenize.o: parser/tokenize.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `parser/tokenize'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
 
 fclean:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 39):
+#  commands to execute (from `Makefile', line 40):
 	@make -C ./libft fclean
 	@$(RM) $(OBJS) $(NAME)
 	
@@ -299,12 +347,25 @@ fclean:
 #  Modification time never checked.
 #  File has not been updated.
 
+parser/syntax.o: parser/syntax.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `parser/syntax'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+ 
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
+
 re:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 43):
+#  commands to execute (from `Makefile', line 44):
 	@make fclean
 	@make all
 	
@@ -313,7 +374,7 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 47):
+#  commands to execute (from `Makefile', line 48):
 	@cat ascii_art/sun
 	@make re
 	@./minishell
@@ -324,34 +385,72 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 36):
+#  commands to execute (from `Makefile', line 37):
 	$(RM) $(OBJS)
 	
 
 # Not a target:
-minishell.c:
+parser/lexer.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-22 16:05:29
+#  Last modified 2022-08-23 11:37:29
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
-doubly_list/doubly_list.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+minishell.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-23 11:36:26
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
-signal.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+parser/tokenize.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-22 16:07:43
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+doubly_list/doubly_list.o: doubly_list/doubly_list.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `doubly_list/doubly_list'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
+
+signal.o: signal.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `signal'
+#  Last modified 2022-08-23 11:38:28
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 34):
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	
+
+# Not a target:
+parser/syntax.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-23 11:33:02
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/44=0%
- 
+# Load=24/1024=2%, Rehash=0, Collisions=0/71=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -363,6 +462,6 @@ signal.o:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Aug 22 16:10:00 2022
+# Finished Make data base on Tue Aug 23 11:38:40 2022
 
  
