@@ -70,9 +70,7 @@ void	delete_dlist(t_info *info)
 void	printList(t_info *info)
 {
 	t_dlist	*tmp;
-	int		i;
 
-	i = 0;
 	tmp = info->dlist;
 	printf("====print start====\n");
 	while (tmp)

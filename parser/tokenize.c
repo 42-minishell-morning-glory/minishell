@@ -7,7 +7,7 @@ int	is_sep(int sep)
 	return (0);
 }
 
-void	cut_node(t_dlist *curr, t_dlist *next, int i)
+void	cut_node(t_dlist *curr, int i)
 {
 	t_dlist	*new;
 	char	*tmp1;
@@ -26,7 +26,7 @@ void	cut_node(t_dlist *curr, t_dlist *next, int i)
 	new->prev = curr;
 }
 
-int	split_token(char *token, t_dlist *curr, t_dlist *next)
+int	split_token(char *token, t_dlist *curr)
 {
 	int	i;
 
@@ -38,15 +38,15 @@ int	split_token(char *token, t_dlist *curr, t_dlist *next)
 			while (token[i] && !is_sep(token[i]))
 				i++;
 			if (is_sep(token[i]))
-				cut_node(curr, next, i - 1);
+				cut_node(curr, i - 1);
 			return (1);
 		}
 		if (is_sep(token[i]))
 		{
 			if (token[i + 1] == token[i])
-				cut_node(curr, next, i + 1);
+				cut_node(curr, i + 1);
 			else
-				cut_node(curr, next, i);
+				cut_node(curr, i);
 			return (1);
 		}
 		i++;
@@ -76,8 +76,8 @@ void	tokenize(t_info *info)
 			curr = curr->next;
 			continue ;
 		}
-		split_token(curr->token, curr, curr->next);
-		printList(info);
+		split_token(curr->token, curr);
 		curr = curr->next;
 	}
+	printList(info);
 }

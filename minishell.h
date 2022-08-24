@@ -38,6 +38,7 @@ typedef struct s_operation
 	int	last_idx;
 }		t_operation;
 
+
 typedef struct s_dlist
 {
 	struct s_dlist	*next;
@@ -46,6 +47,13 @@ typedef struct s_dlist
 	int				type;
 }					t_dlist;
 
+typedef struct s_tree
+{
+	t_dlist				*dlist;
+	struct s_tree		*right_child;
+	struct s_tree		*left_child;
+}						t_tree;
+
 typedef struct s_info
 {
 	char					quote;
@@ -53,6 +61,7 @@ typedef struct s_info
 	int						double_quote_flag;
 	char					**envp;
 	struct s_dlist			*dlist;
+	t_tree					*root;
 	struct s_dlist			*env;
 	struct s_operation		fo;
 }							t_info;
@@ -63,36 +72,38 @@ void	set_terminal(void);
 
 /*---minishell/parser---*/
 
-	/* parser.c */
+	/* lexer.c */
 int		lexer(char *str, t_info *info);
-int		first_opertaion(char *str, t_info *info);
-
-	/* mini_split.c */
-char	**ft_split(const char *s, char c);
 
 	/* input_check.c */
 char	*input_check(char *str, t_info *info);
 int		space_check(char *str);
 
-/*---minishell/parser---*/
+	/* tokenize.c */	
 void	tokenize(t_info *info);
-int		split_token(char *token, t_dlist *curr, t_dlist *next);
-void	cut_node(t_dlist *curr, t_dlist *next, int i);
-int		is_sep(int sep);
-int		puterr_msg(char *token);
-int		check_syntax(t_info *info);
-int		put_syntaxerr_msg(char *token);
 
-/*---minishell/doubly_list---*/
+	/* syntax.c, syntax_table.c */
+int		put_syntaxerr_msg(char *token);
+int		check_syntax(t_info *info);
+int		check_redir(t_dlist *curr);
+int		check_pipe(t_dlist *curr);
+int		check_word(t_dlist *curr);
+int		check_line(t_dlist *curr);
+int		check_bracket(t_dlist *curr);
+
+/*---minishell/utils---*/
 
 	/* doubly_list.c */
-void	printList(t_info *info);
-void	delete_dlist(t_info *info);
+t_dlist	*create_list(void);
 void	add_list(t_info *info, char *str);
 void	add_list_env(t_info *info, char *str);
-t_dlist	*create_list(void);
 int		delete_node(t_info *info, t_dlist *node);
+void	delete_dlist(t_info *info);
+void	printList(t_info *info);
 
-/*---minishell/doubly_list---*/
+	/* tree.c */
+t_tree *make_tree(t_tree *myself, t_dlist *dlist);
+void	printTree(t_tree *parent);
+/*---minishell/utils---*/
 
 #endif

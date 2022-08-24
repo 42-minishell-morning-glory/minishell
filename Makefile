@@ -1,22 +1,24 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include
-
-# DFLAGS = -g3 -fsanitize=address
+COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+DFLAGS = -g3 -fsanitize=address
 
 RM = rm -f
 
 PARSER_DIR = parser
-DOBULY_DIR = doubly_list
+UTILS_DIR = utils
 
 SRCS =	minishell.c \
+		signal.c \
 		$(PARSER_DIR)/lexer.c \
 		$(PARSER_DIR)/tokenize.c \
 		$(PARSER_DIR)/input_check.c \
 		$(PARSER_DIR)/syntax.c \
-		$(DOBULY_DIR)/doubly_list.c \
-		signal.c
+		$(PARSER_DIR)/syntax_table.c \
+		$(UTILS_DIR)/doubly_list.c \
+		$(UTILS_DIR)/tree.c
+
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -28,13 +30,14 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	@make -C ./libft
 	@./make.sh
-	@$(CC) -I/usr/psps/opt/readline/include $(OBJS) -o $(NAME) $(LINKING_FLAGS) ./libft/libft.a
+	@$(CC) $(DFLAGS) $(CFLAGS) $(OBJS) -o $(NAME) $(LINKING_FLAGS) $(COMFILE_FLAGS) ./libft/libft.a
 
-%.o		:		%.c
-		@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+%.o : %.c
+	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
 
 clean :
-	$(RM) $(OBJS)
+	@make -C ./libft fclean
+	@$(RM) $(OBJS)
 
 fclean :
 	@make -C ./libft fclean

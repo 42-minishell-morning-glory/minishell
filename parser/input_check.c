@@ -54,12 +54,10 @@ int	is_quotes(char *str, t_info *info)
 
 char	*input_check(char *str, t_info *info)
 {
-	size_t	i;
 	char	*quote_line;
 	char	*tmp;
 	char	*free_tmp;
 
-	i = 0;
 	while (is_quotes(str, info) == FALSE)
 	{
 		quote_line = readline("> ");

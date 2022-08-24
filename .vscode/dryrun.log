@@ -1,7 +1,5 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/hankyuhong/Morning-Shell'
-make -C ./libft
-./make.sh
-cc -I/usr/psps/opt/readline/include minishell.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o doubly_list/doubly_list.o signal.o -o minishell -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline ./libft/libft.a
+make: Nothing to be done for `all'.
 make: Leaving directory `/Users/hankyuhong/Morning-Shell'
  

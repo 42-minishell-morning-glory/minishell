@@ -2,7 +2,7 @@ i=1
 j=0
 max=15000
 sp="/-\|"
-echo -n "MORNINGSHELL is Ready "
+echo -n "MORNING-SHELL is Ready "
 echo -n ' '
 while [ $j -lt $max ]
 do

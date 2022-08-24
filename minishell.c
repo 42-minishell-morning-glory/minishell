@@ -12,6 +12,7 @@ void	init_info(t_info *info)
 	info->dlist = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
+	info->root = 0;
 	while (environ[i])
 	{
 		add_list_env(info, environ[i]);
@@ -45,8 +46,10 @@ int	main(void)
 			delete_dlist(&info);
 			continue;
 		}
+		info.root = make_tree(NULL, info.dlist);
+		printTree(info.root);
 		free(str);
-		delete_dlist(&info);		
+		delete_dlist(&info);
 		//printList(&info); //지울거임
 	}
 }

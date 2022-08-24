@@ -53,9 +53,9 @@ int	first_opertaion(char *str, t_info *info)
 				info->fo.i++;
 		}
 		else if (str[info->fo.i] == ')')
-			return (put_syntaxerr_msg(")"));
+			return (put_syntaxerr_msg(")")); // return (0);
 		else if (str[info->fo.i] == '(' && !cut_bracket(str, info, 0, 0))
-			return (put_syntaxerr_msg(")")); //에러 출력
+			return (put_syntaxerr_msg(")")); //return 0
 		info->fo.i++;
 	}
 	if (info->fo.last_idx != info->fo.i)
@@ -65,7 +65,6 @@ int	first_opertaion(char *str, t_info *info)
 
 int	lexer(char *str, t_info *info)
 {
-	t_list	*new;
 	char	*lex_str;
 
 	lex_str = ft_strdup(str);
@@ -78,5 +77,6 @@ int	lexer(char *str, t_info *info)
 	tokenize(info);
 	if (!check_syntax(info))
 		return(0);
+	//redir
 	return (1);
 }
