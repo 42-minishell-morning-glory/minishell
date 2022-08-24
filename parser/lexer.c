@@ -77,6 +77,5 @@ int	lexer(char *str, t_info *info)
 	tokenize(info);
 	if (!check_syntax(info))
 		return(0);
-	//redir
 	return (1);
 }

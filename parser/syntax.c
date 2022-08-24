@@ -64,6 +64,7 @@ int	check_syntax(t_info *info)
 			break ;
 		curr = curr->next;
 	}
-	ret = check_last(curr);
+	if (ret)
+		ret = check_last(curr);
 	return (ret);
 }

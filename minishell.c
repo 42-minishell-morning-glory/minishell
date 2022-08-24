@@ -47,7 +47,7 @@ int	main(void)
 			continue;
 		}
 		info.root = make_tree(NULL, info.dlist);
-		printTree(info.root);
+		printTree(info.root, 0);
 		free(str);
 		delete_dlist(&info);
 		//printList(&info); //지울거임

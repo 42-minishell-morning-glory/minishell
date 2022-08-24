@@ -103,7 +103,7 @@ void	printList(t_info *info);
 
 	/* tree.c */
 t_tree *make_tree(t_tree *myself, t_dlist *dlist);
-void	printTree(t_tree *parent);
+void	printTree(t_tree *parent, int cnt);
 /*---minishell/utils---*/
 
 #endif

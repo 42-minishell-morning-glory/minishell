@@ -23,14 +23,14 @@ t_dlist	*get_first(t_dlist *curr)
 	return (curr);
 }
 
-void	printTree(t_tree *parent)
+void	printTree(t_tree *parent, int cnt)
 {
 	t_dlist	*temp;
 
 	if (parent)
 	{
 		temp = get_first(parent->dlist);
-		printf("tree: ");
+		printf("depth : %d, tree: ", cnt);
 		while (temp)
 		{
 			printf("%s", temp->token);
@@ -39,13 +39,13 @@ void	printTree(t_tree *parent)
 				printf(", ");
 		}
 		printf("\n");
-		printTree(parent->left_child);
-		printTree(parent->right_child);
+		printTree(parent->left_child, cnt + 1);
+		printTree(parent->right_child, cnt + 1);
 	}
 }
 
 t_tree *make_tree(t_tree *myself, t_dlist *dlist)
- {
+{
 	t_dlist 	*left;
 	t_dlist 	*right;
 	t_dlist		*node;
