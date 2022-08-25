@@ -8,6 +8,8 @@
 		"stdio.h": "c",
 		"readline.h": "c",
 		"errno.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"dirent.h": "c",
+		"unistd.h": "c"
 	}
 }

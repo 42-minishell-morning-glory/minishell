@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	is_sep(int sep)
+int	is_sep_token(int sep)
 {
 	if (sep == '<' || sep == '>' || sep == '&' || sep == '|')
 		return (1);
@@ -33,15 +33,15 @@ int	split_token(char *token, t_dlist *curr)
 	i = 0;
 	while (token[i])
 	{
-		if (!is_sep(token[i]))
+		if (!is_sep_token(token[i]))
 		{
-			while (token[i] && !is_sep(token[i]))
+			while (token[i] && !is_sep_token(token[i]))
 				i++;
-			if (is_sep(token[i]))
+			if (is_sep_token(token[i]))
 				cut_node(curr, i - 1);
 			return (1);
 		}
-		if (is_sep(token[i]))
+		if (is_sep_token(token[i]))
 		{
 			if (token[i + 1] == token[i])
 				cut_node(curr, i + 1);

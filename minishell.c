@@ -10,6 +10,7 @@ void	init_info(t_info *info)
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
 	info->dlist = 0;
+	info->env = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
@@ -38,8 +39,9 @@ int	main(void)
 		}
 		if (space_check(str) == TRUE)
 			continue ;
-		str = input_check(str, &info);
 		add_history(str);
+		if (!input_check(str))
+			continue ;
 		if (!lexer(str, &info))
 		{
 			free(str);
@@ -47,6 +49,7 @@ int	main(void)
 			continue;
 		}
 		info.root = make_tree(NULL, info.dlist);
+		expand(info.root, &info);
 		printTree(info.root, 0);
 		free(str);
 		delete_dlist(&info);

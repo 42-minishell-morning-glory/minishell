@@ -2,12 +2,13 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
 COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
-DFLAGS = -g3 -fsanitize=address
+DFLAGS = -g2 -fsanitize=address
 
 RM = rm -f
 
 PARSER_DIR = parser
 UTILS_DIR = utils
+EXPAND_DIR = expand
 
 SRCS =	minishell.c \
 		signal.c \
@@ -17,8 +18,10 @@ SRCS =	minishell.c \
 		$(PARSER_DIR)/syntax.c \
 		$(PARSER_DIR)/syntax_table.c \
 		$(UTILS_DIR)/doubly_list.c \
-		$(UTILS_DIR)/tree.c
-
+		$(UTILS_DIR)/tree.c \
+		$(UTILS_DIR)/ft_strrep.c \
+		$(EXPAND_DIR)/expand.c \
+		$(EXPAND_DIR)/shell_var.c \
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -33,7 +36,7 @@ $(NAME) : $(OBJS)
 	@$(CC) $(DFLAGS) $(CFLAGS) $(OBJS) -o $(NAME) $(LINKING_FLAGS) $(COMFILE_FLAGS) ./libft/libft.a
 
 %.o : %.c
-	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	@$(CC) $(DFLAGS) $(COMFILE_FLAGS) -c $< -o $@
 
 clean :
 	@make -C ./libft fclean

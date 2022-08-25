@@ -9,6 +9,9 @@
 # include <termios.h>
 # include "libft/libft.h"
 # include <errno.h>
+# include <dirent.h>
+# include <sys/stat.h>
+# include <unistd.h>
 
 /* yehyun
 command
@@ -76,11 +79,12 @@ void	set_terminal(void);
 int		lexer(char *str, t_info *info);
 
 	/* input_check.c */
-char	*input_check(char *str, t_info *info);
+int		input_check(char *str);
 int		space_check(char *str);
 
 	/* tokenize.c */	
 void	tokenize(t_info *info);
+void	cut_node(t_dlist *curr, int i);
 
 	/* syntax.c, syntax_table.c */
 int		put_syntaxerr_msg(char *token);
@@ -104,6 +108,13 @@ void	printList(t_info *info);
 	/* tree.c */
 t_tree *make_tree(t_tree *myself, t_dlist *dlist);
 void	printTree(t_tree *parent, int cnt);
+t_dlist	*get_first(t_dlist *curr);
+
+char	*ft_strrep(char *token, char *value, int i);
 /*---minishell/utils---*/
+
+	/* expand.c */
+int		expand(t_tree *myself, t_info *info);
+int		shell_var_expand(t_dlist *curr, t_info *info);
 
 #endif

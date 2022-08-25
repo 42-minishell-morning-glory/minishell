@@ -1,16 +1,9 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/hankyuhong/Morning-Shell'
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c minishell.c -o minishell.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c signal.c -o signal.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c parser/lexer.c -o parser/lexer.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c parser/tokenize.c -o parser/tokenize.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c parser/input_check.c -o parser/input_check.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c parser/syntax.c -o parser/syntax.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c parser/syntax_table.c -o parser/syntax_table.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c utils/doubly_list.c -o utils/doubly_list.o
-cc -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c utils/tree.c -o utils/tree.o
+cc -g2 -fsanitize=address -I/opt/homebrew/Cellar/readline/8.1.2/include/ -c expand/expand.c -o expand/expand.o
+ 
 make -C ./libft
 ./make.sh
-cc -g3 -fsanitize=address -Wall -Wextra -Werror minishell.o signal.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o parser/syntax_table.o utils/doubly_list.o utils/tree.o -o minishell -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline -I/opt/homebrew/Cellar/readline/8.1.2/include/ ./libft/libft.a
+cc -g2 -fsanitize=address -Wall -Wextra -Werror minishell.o signal.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o parser/syntax_table.o utils/doubly_list.o utils/tree.o utils/ft_strrep.o expand/expand.o expand/shell_var.o -o minishell -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline -I/opt/homebrew/Cellar/readline/8.1.2/include/ ./libft/libft.a
 make: Leaving directory `/Users/hankyuhong/Morning-Shell'
  

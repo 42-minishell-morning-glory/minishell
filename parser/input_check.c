@@ -36,13 +36,14 @@ int	is_quotes(char *str, t_info *info)
 	i = 0;
 	while (str[i])
 	{
+	printf("%s", str);
 		if (str[i] == '\'' && info->double_quote_flag == 0)
 		{
-			if (! is_single_quote(info, str, &i))
+			if (!is_single_quote(info, str, &i))
 				continue ;
 		}
 		else if (str[i] == '\"' && info->quote_flag == 0)
-			if (! is_double_quote(info, str, &i))
+			if (!is_double_quote(info, str, &i))
 				continue ;
 		i++;
 	}
@@ -52,25 +53,25 @@ int	is_quotes(char *str, t_info *info)
 		return (FALSE);
 }
 
-char	*input_check(char *str, t_info *info)
-{
-	char	*quote_line;
-	char	*tmp;
-	char	*free_tmp;
+// char	*input_check(char *str, t_info *info)
+// {
+// 	char	*quote_line;
+// 	char	*tmp;
+// 	char	*free_tmp;
 
-	while (is_quotes(str, info) == FALSE)
-	{
-		quote_line = readline("> ");
-		tmp = ft_strjoin(str, "\n");
-		free_tmp = tmp;
-		tmp = ft_strjoin(tmp, quote_line);
-		free(free_tmp);
-		free(str);
-		free(quote_line);
-		str = tmp;
-	}
-	return (str);
-}
+// 	while (is_quotes(str, info) == FALSE)
+// 	{
+// 		quote_line = readline("> ");
+// 		tmp = ft_strjoin(str, "\n");
+// 		free_tmp = tmp;
+// 		tmp = ft_strjoin(tmp, quote_line);
+// 		free(free_tmp);
+// 		free(str);
+// 		free(quote_line);
+// 		str = tmp;
+// 	}
+// 	return (str);
+// }
 
 int	space_check(char *str)
 {
@@ -86,4 +87,33 @@ int	space_check(char *str)
 		return (FALSE);
 	}
 	return (TRUE);
+}
+
+int	input_check(char *str)
+{
+	char	quote;
+	int		i;
+
+	i = 0;
+	quote = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"' && !quote)
+			quote = '\"';
+		else if (str[i] == '\"' && quote == '\"')
+			quote = 0;
+		else if (str[i] == '\'' && !quote)
+			quote = '\'';
+		else if (str[i] == '\'' && quote == '\'')
+			quote = 0;
+		i++;
+	}
+	if (quote)
+	{
+		if (quote == '\'')
+			return (put_syntaxerr_msg("\'"));
+		else if (quote == '\"')
+			return (put_syntaxerr_msg("\""));
+	}
+	return (1);
 }
