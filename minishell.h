@@ -121,5 +121,9 @@ int		shell_var_expand(t_dlist *curr, t_info *info);
 
 	/* wildcard.c */
 int		wildcard(t_dlist **now);
+int		set_list(t_dlist *curr, t_dlist *new_list);
+char	*ft_str_rep_wildcard(char *d_name, char *next_path);
+char	*ft_strjoin_free(char *s1, char *s2);
+// int		filter_wildcard(char *wc, char *str, int i, int j);
 
 #endif

@@ -70,6 +70,8 @@ int	expand(t_tree *myself, t_info *info)
 		shell_var_expand(curr, info);
 		word_split(curr, 0, 0);
 		wildcard(&curr);
+		if (!myself->dlist->prev && !myself->dlist->next)
+			myself->dlist = curr;
 		quote_removal(curr);
 		curr = curr->next;
 	}

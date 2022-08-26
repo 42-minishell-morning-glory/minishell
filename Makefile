@@ -20,10 +20,10 @@ SRCS =	minishell.c \
 		$(UTILS_DIR)/doubly_list.c \
 		$(UTILS_DIR)/tree.c \
 		$(UTILS_DIR)/ft_strrep.c \
-		$(UTILS_DIR)/ft_strjoin_free.c \
 		$(EXPAND_DIR)/expand.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
+		$(EXPAND_DIR)/wild_card_utils.c \
 
 OBJS = $(SRCS:%.c=%.o)
 

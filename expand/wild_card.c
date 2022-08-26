@@ -5,8 +5,6 @@ int	check_wildcard(t_dlist *curr, char quote, int i, int w_cnt)
 	char	*tmp;
 
 	tmp = curr->token;
-	if (tmp[0] == '/')
-		return (0);
 	while (tmp[i])
 	{
 		if (tmp[i] == '\'' || tmp[i] == '\"')
@@ -18,8 +16,8 @@ int	check_wildcard(t_dlist *curr, char quote, int i, int w_cnt)
 		else if (tmp[i] == '*')
 		{
 			w_cnt++;
-			if (w_cnt >= 2)
-				return (0);
+			if (tmp[i + 1] == '*')
+				return (put_syntaxerr_msg("*"));
 		}
 		i++;
 	}
@@ -46,17 +44,20 @@ int	find_dir(char *path)
 	return (last_dir_idx);
 }
 
-int	filter_wildcard(char *next_path, char *d_name, int path_len, int name_len) // ab*c, abc
+int	filter_wildcard(char *next_path, char *d_name, int path_len, int name_len)
 {
 	int	i;
 
 	i = 0;
+	//printf("WHAT THE fuCK : %s,  %s\n", next_path, d_name);
 	while (next_path[i] != '*')
 	{
 		if (next_path[i] != d_name[i])
 			return (0);
 		i++;
 	}
+	if (next_path[path_len - 1] == '/')
+		path_len--;
 	while (next_path[--path_len] != '*')
 	{
 		if (next_path[path_len] != d_name[--name_len])
@@ -64,18 +65,6 @@ int	filter_wildcard(char *next_path, char *d_name, int path_len, int name_len) /
 	}
 	return (1);
 }
-
-char	*ft_str_rep_wildcard(char *d_name, char *next_path)
-{
-	char	*tmp;
-	int		i;
-
-	i = asdasd();
-	tmp = ft_strdup(&next_path[i]);
-	ft_strjoin_free(d_name, tmp);
-	
-}
-
 
 t_dlist *change_to_word(char *curr_path, char *next_path)
 {
@@ -89,57 +78,44 @@ t_dlist *change_to_word(char *curr_path, char *next_path)
 	tmp_info.dlist = NULL;
 	while (dir_entry)
 	{
-		if (ft_strnstr(next_path, "*/", 2))
+		if (next_path[0] == '.')
 		{
-			if (dir_entry->d_type == 8)
+			if (ft_strnstr(next_path, "*/", ft_strlen(next_path))
+				&& dir_entry->d_name[0] == '.' && dir_entry->d_type == 4
+				&& filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
 			{
-				// ft_str_rep_wildcard(dir_entry->d_name, next_path);
-				curr_path = ft_strjoin(dir_entry->d_name, "/");
-				curr_path = ft_strjoin_free(curr_path, next_path);
+				curr_path = ft_str_rep_wildcard(dir_entry->d_name, next_path);
 				add_list(&tmp_info, curr_path);
 			}
+			else if (dir_entry->d_type == 8
+				&& filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
+				add_list(&tmp_info, dir_entry->d_name);
 		}
 		else
-			if (filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
+		{
+			if (dir_entry->d_name[0] != '.' && dir_entry->d_type == 4
+				&& filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
+			{
+				printf("HEY\n");
+				curr_path = ft_str_rep_wildcard(dir_entry->d_name, next_path);
+				add_list(&tmp_info, curr_path);
+			}
+			else if (dir_entry->d_name[0] != '.' && dir_entry->d_type == 8
+				&& filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
 				add_list(&tmp_info, dir_entry->d_name);
+		}
 		dir_entry = readdir(dir_info);
 	}
 	free(next_path);
-	if (tmp_info.dlist)
-		printList(&tmp_info);
 	return (tmp_info.dlist);
-}
-
-int	set_list(t_dlist *curr, t_dlist *new_list)
-{
-	t_dlist	*temp;
-
-	temp = new_list;
-	temp->type = WORD;
-	if (curr->prev)
-	{
-		temp->prev = curr->prev;
-		curr->prev->next = temp;
-	}
-	while (temp->next)
-	{
-		temp = temp->next;
-		temp->type = WORD;
-	}
-	if (curr->next)
-	{
-		temp->next = curr->next;
-		curr->next->prev = temp;
-	}
-	return (1);
 }
 
 int	wildcard(t_dlist **now)
 {
-	char			*curr_path;
-	char			*next_path;
-	int				last_dir_idx;
-	t_dlist			*new_list;
+	char	*curr_path;
+	char	*next_path;
+	int		last_dir_idx;
+	t_dlist	*new_list;
 
 	if (!check_wildcard(*now, 0, 0, 0))
 		return (0);
@@ -154,10 +130,7 @@ int	wildcard(t_dlist **now)
 		curr_path = ft_strndup((*now)->token, last_dir_idx + 1);
 		next_path = ft_strdup(&(*now)->token[last_dir_idx + 1]);
 	}
-	printf("|%d|\n", last_dir_idx);
-	printf("hey curr_path: |%s|\n",curr_path);
-	printf("hey next_path: |%s|\n",next_path);
-	new_list = change_to_word(curr_path, next_path);
+	new_list = change_to_word(curr_path, next_path); // 리스트 프리
 	if (new_list && set_list(*now, new_list))
 		*now = new_list;
 	return (0);
