@@ -1,116 +1,164 @@
 #include "../minishell.h"
 
-int	check_wd(char *token)
+int	check_wildcard(t_dlist *curr, char quote, int i, int w_cnt)
 {
-	int i;
-	int w_cnt;
+	char	*tmp;
+
+	tmp = curr->token;
+	if (tmp[0] == '/')
+		return (0);
+	while (tmp[i])
+	{
+		if (tmp[i] == '\'' || tmp[i] == '\"')
+		{
+			quote = tmp[i++];
+			while (tmp[i] != quote)
+				i++;
+		}
+		else if (tmp[i] == '*')
+		{
+			w_cnt++;
+			if (w_cnt >= 2)
+				return (0);
+		}
+		i++;
+	}
+	if (!w_cnt)
+		return (0);
+	return (1);
+}
+
+int	find_dir(char *path)
+{
+	int	i;
+	int	last_dir_idx;
 	
 	i = 0;
-	w_cnt = 0;
-	while (token[i])
+	last_dir_idx = 0;
+	while (path[i] && path[i] != '*')
 	{
-		if (token[0] = '/' || w_cnt >= 2)
-			return (0);
-		if (token[i] == '*')
-			w_cnt++;
+		if (path[last_dir_idx + 1] == 0)
+			break ;
+		if (path[i] == '/')
+			last_dir_idx = i;
 		i++;
+	}
+	return (last_dir_idx);
+}
+
+int	filter_wildcard(char *next_path, char *d_name, int path_len, int name_len) // ab*c, abc
+{
+	int	i;
+
+	i = 0;
+	while (next_path[i] != '*')
+	{
+		if (next_path[i] != d_name[i])
+			return (0);
+		i++;
+	}
+	while (next_path[--path_len] != '*')
+	{
+		if (next_path[path_len] != d_name[--name_len])
+			return (0);
 	}
 	return (1);
 }
 
-int	wildcard(t_dlist *curr, char *path, t_dlist *temp)
-{	
+char	*ft_str_rep_wildcard(char *d_name, char *next_path)
+{
+	char	*tmp;
+	int		i;
+
+	i = asdasd();
+	tmp = ft_strdup(&next_path[i]);
+	ft_strjoin_free(d_name, tmp);
+	
+}
+
+
+t_dlist *change_to_word(char *curr_path, char *next_path)
+{
 	DIR				*dir_info;
 	struct dirent	*dir_entry;
-	char			*pre;
-	char			*post;
-	t_info			*tmp_info;
-	int				i;
-
-	if (!check_wd(curr->token))
-		return ;
-	i = 0;
-	while (curr->token[i] != '*') // ./././././* or */
-		i++;
-	if (i == 0)
+	t_info			tmp_info;
+	
+	dir_info = opendir(curr_path);
+	dir_entry = readdir(dir_info);
+	free(curr_path);
+	tmp_info.dlist = NULL;
+	while (dir_entry)
 	{
-		pre = ft_strdup("./");
-		post = ft_strdup(curr->token);
+		if (ft_strnstr(next_path, "*/", 2))
+		{
+			if (dir_entry->d_type == 8)
+			{
+				// ft_str_rep_wildcard(dir_entry->d_name, next_path);
+				curr_path = ft_strjoin(dir_entry->d_name, "/");
+				curr_path = ft_strjoin_free(curr_path, next_path);
+				add_list(&tmp_info, curr_path);
+			}
+		}
+		else
+			if (filter_wildcard(next_path, dir_entry->d_name, ft_strlen(next_path), ft_strlen(dir_entry->d_name)))
+				add_list(&tmp_info, dir_entry->d_name);
+		dir_entry = readdir(dir_info);
+	}
+	free(next_path);
+	if (tmp_info.dlist)
+		printList(&tmp_info);
+	return (tmp_info.dlist);
+}
+
+int	set_list(t_dlist *curr, t_dlist *new_list)
+{
+	t_dlist	*temp;
+
+	temp = new_list;
+	temp->type = WORD;
+	if (curr->prev)
+	{
+		temp->prev = curr->prev;
+		curr->prev->next = temp;
+	}
+	while (temp->next)
+	{
+		temp = temp->next;
+		temp->type = WORD;
+	}
+	if (curr->next)
+	{
+		temp->next = curr->next;
+		curr->next->prev = temp;
+	}
+	return (1);
+}
+
+int	wildcard(t_dlist **now)
+{
+	char			*curr_path;
+	char			*next_path;
+	int				last_dir_idx;
+	t_dlist			*new_list;
+
+	if (!check_wildcard(*now, 0, 0, 0))
+		return (0);
+	last_dir_idx = find_dir((*now)->token);
+	if (!last_dir_idx)
+	{
+		curr_path = ft_strdup("./");
+		next_path = ft_strdup((*now)->token);
 	}
 	else
 	{
-		pre = ft_strndup(curr->token, i);
-		post = ft_strdup(&curr->token[i]);
+		curr_path = ft_strndup((*now)->token, last_dir_idx + 1);
+		next_path = ft_strdup(&(*now)->token[last_dir_idx + 1]);
 	}
-	dir_info = opendir(pre);
-	dir_entry = readdir(dir_info);
-	while (dir_entry)
-	{
-		if (ft_strstr(post, "*/"))
-			wildcard(info, pre+dir_entry->d_name);
-		else
-			if (판단(*, hello.c))
-				add_list(info, dir_entry->d_name);
-		dir_entry = readdir(dir_info);
-	}
-	
-	
-	
-	if (ft_strchr(curr->token + i, '/')) // d/hello         *.c     ././././*.c
-	{
-		dir_info = opendir(".");
-		dir_entry = readdir(dir_info);
-		tmp_path = ft_strndup(ft_strjoin(dir_entry->d_name, , );
-	}
-	else // *.c
-	{
-		dir_info = opendir(tmp_path);
-		dir_entry = readdir(dir_info);
-	}
-	while (dir_entry->name)
-	{
-		dir_entry->d_name
-
-		recursive_wildcard(curr, tmp_path, temp);
-	}
-	
-/************************PYTHON********************************/
-	// 옾=>	*/hello.c
-	open(".")
-	pre = "./"
-	post = "*/hello.c"
-	dir_entry = readdir(dir_info);
-	while (dir_entry)
-		if "*/" in post:
-			if dir_entry->d_name == directory:
-				wildcard(curr, pre+dir_entry->d_name)
-		else:
-			add_list(info, dir_entry->d_name)
-		dir_entry = readdir(dir_info);
-/**************************************************************/
-
-
-	DIR				*dir_info;
-	struct dirent	*dir_entry;
-	char			*tmp_path;
-	t_info			*tmp_info;
-
-
-	dir_info = opendir("a/b/c");
-	if (dir_info != NULL)
-	{
-		dir_entry = readdir(dir_info);
-		while (dir_entry)
-		{
-			if (".c" in dir_entry->d_name)
-			{
-				printf("DIR : %s type : %hhu\n", dir_entry->d_name, dir_entry->d_type);
-				add_list(curr, dir_entry->d_name); //curr을 받아야 함
-			}
-			dir_entry = readdir(dir_info);
-		}
-		closedir(dir_info);  
-		return (1);
-	}
-
+	printf("|%d|\n", last_dir_idx);
+	printf("hey curr_path: |%s|\n",curr_path);
+	printf("hey next_path: |%s|\n",next_path);
+	new_list = change_to_word(curr_path, next_path);
+	if (new_list && set_list(*now, new_list))
+		*now = new_list;
+	return (0);
 }

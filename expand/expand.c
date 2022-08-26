@@ -27,11 +27,10 @@ int	quote_removal(t_dlist *curr)
 	return (1);
 }
 
-int	word_split(t_dlist *now, int i)
+void	word_split(t_dlist *now, char quote, int i)
 {
 	t_dlist	*curr; 
 	char	*token;
-	char	quote;
 
 	curr = now;
 	token = curr->token;
@@ -48,6 +47,7 @@ int	word_split(t_dlist *now, int i)
 			while (token[i] == ' ')
 				ft_strlcpy(&token[i], &token[i + 1], ft_strlen(&token[i]));
 			cut_node(curr, i - 1);
+			curr->next->type = WORD;
 			curr = curr->next;
 			token = curr->token;
 			i = -1;
@@ -68,8 +68,8 @@ int	expand(t_tree *myself, t_info *info)
 		if (curr->type != WORD)
 			break ;
 		shell_var_expand(curr, info);
-		word_split(curr, 0);
-		// filename_expand(curr);
+		word_split(curr, 0, 0);
+		wildcard(&curr);
 		quote_removal(curr);
 		curr = curr->next;
 	}

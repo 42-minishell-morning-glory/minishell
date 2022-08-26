@@ -110,11 +110,16 @@ t_tree *make_tree(t_tree *myself, t_dlist *dlist);
 void	printTree(t_tree *parent, int cnt);
 t_dlist	*get_first(t_dlist *curr);
 
+	/* other */
+char	*ft_strjoin_free(char *s1, char *s2);
 char	*ft_strrep(char *token, char *value, int i);
 /*---minishell/utils---*/
 
 	/* expand.c */
 int		expand(t_tree *myself, t_info *info);
 int		shell_var_expand(t_dlist *curr, t_info *info);
+
+	/* wildcard.c */
+int		wildcard(t_dlist **now);
 
 #endif
