@@ -109,5 +109,4 @@ void	tokenize(t_info *info)
 		split_token(curr->token, curr);
 		curr = curr->next;
 	}
-	printList(info);
 }

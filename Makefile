@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+LINKING_FLAGS = -L/usr/lib32 -lreadline
+COMFILE_FLAGS = -I/usr/include/
 DFLAGS = -g2 -fsanitize=address
 
 RM = rm -f

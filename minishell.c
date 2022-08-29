@@ -14,7 +14,6 @@ void	init_info(t_info *info)
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
-	info->p_flag = 0;
 	while (environ[i])
 	{
 		add_list_env(info, environ[i]);
@@ -26,6 +25,7 @@ int	main(void)
 {
 	char	*str;
 	t_info	info;
+	pid_t	pid;
 
 	set_terminal();
 	set_signal_handler();
@@ -51,10 +51,11 @@ int	main(void)
 		}
 		info.root = make_tree(NULL, info.dlist);
 		expand(info.root, &info);
-		execute(&info, info.root);
-		printTree(info.root, 0);
+		pid = fork();
+		if (pid == 0)
+			execute(&info, info.root);
+		waitpid(pid, 0, 0);
 		free(str);
 		delete_dlist(&info);
-		//printList(&info); //지울거임
 	}
 }
