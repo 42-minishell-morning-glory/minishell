@@ -7,11 +7,11 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <termios.h>
+# include <fcntl.h>
 # include "libft/libft.h"
 # include <errno.h>
 # include <dirent.h>
-# include <sys/stat.h>
-# include <unistd.h>
+# include <sys/wait.h>
 
 /* yehyun
 command
@@ -63,6 +63,8 @@ typedef struct s_info
 	int						quote_flag;
 	int						double_quote_flag;
 	char					**envp;
+	int						p_fd[2];
+	int						p_flag;
 	struct s_dlist			*dlist;
 	t_tree					*root;
 	struct s_dlist			*env;
@@ -97,6 +99,10 @@ int		check_bracket(t_dlist *curr);
 
 /*---minishell/utils---*/
 
+
+/* execute.c */
+int	execute(t_info *info, t_tree *myself);
+
 	/* doubly_list.c */
 t_dlist	*create_list(void);
 void	add_list(t_info *info, char *str);
@@ -124,6 +130,6 @@ int		wildcard(t_dlist **now);
 int		set_list(t_dlist *curr, t_dlist *new_list);
 char	*ft_str_rep_wildcard(char *d_name, char *next_path);
 char	*ft_strjoin_free(char *s1, char *s2);
-// int		filter_wildcard(char *wc, char *str, int i, int j);
+int		filter_wildcard(char *wc, char *str, int i, int j);
 
 #endif

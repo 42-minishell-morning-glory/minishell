@@ -26,14 +26,44 @@ void	cut_node(t_dlist *curr, int i)
 	new->prev = curr;
 }
 
+int	pass_quote(char *token, int i)
+{
+	char	quote;
+
+	quote = 0;
+	while (token[i])
+	{
+		if (token[i] == '\'' && !quote)
+			quote = '\'';
+		else if (token[i] == '\'' && quote == '\'')
+		{
+			quote = 0;
+			return (i);
+		}
+		else if (token[i] == '\"' && !quote)
+			quote = '\"';
+		else if (token[i] == '\"' && quote == '\"')
+		{
+			quote = 0;
+			return (i);
+		}
+		i++;
+	}
+	return (i);
+}
+
 int	split_token(char *token, t_dlist *curr)
 {
 	int	i;
+	int	quote;
 
 	i = 0;
+	quote = 0;
 	while (token[i])
 	{
-		if (!is_sep_token(token[i]))
+		if (token[i] == '\'' || token[i] == '\"')
+			i = pass_quote(token, i);
+		else if (!is_sep_token(token[i]))
 		{
 			while (token[i] && !is_sep_token(token[i]))
 				i++;
@@ -41,7 +71,7 @@ int	split_token(char *token, t_dlist *curr)
 				cut_node(curr, i - 1);
 			return (1);
 		}
-		if (is_sep_token(token[i]))
+		else if (is_sep_token(token[i]))
 		{
 			if (token[i + 1] == token[i])
 				cut_node(curr, i + 1);

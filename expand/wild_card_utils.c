@@ -31,7 +31,7 @@ char	*ft_str_rep_wildcard(char *d_name, char *next_path)
 	int		i;
 
 	i = 0;
-	while (next_path[i] && next_path[i] != '*')
+	while (next_path[i] && next_path[i] != '/')
 		i++;
 	i = i + 1;
 	tmp = ft_strdup(&next_path[i]);
@@ -84,30 +84,53 @@ int	wild_free(char **split, char *tmp)
 	return (1);
 }
 
-// int	filter_wildcard(char *wc, char *str, int i, int j)
-// {
-// 	char	**split;
-// 	char	*tmp;
-// 	int		last;
-// 	int		str_len;
+int	filter_wildcard(char *wc, char *str, int i, int j)
+{
+	char	**split;
+	char	*tmp;
+	int		last;
+	int		str_len;
 
-// 	str_len = ft_strlen(str);
-// 	last = ft_strlen(wc);
-// 	while (wc[++i] != '*')
-// 		if (wc[i] != str[i])
-// 			return (0);
-// 	while (wc[--last] != '*')
-// 		if (wc[last] != str[--str_len])
-// 			return (0);
-// 	tmp = ft_strndup(&wc[i], last - i + 1);
-// 	split = ft_split(tmp, '*');
-// 	while (split[j] && str[i])
-// 	{
-// 		if (!ft_strncmp(split[j], &str[i], ft_strlen(split[j])))
-// 			i += ft_strlen(split[j++]);
-// 		i++;
-// 	}
-// 	if ((!str[i] && !split[j]) || (wc[0] == '*' && !wc[1]))
-// 		return (wild_free(split, tmp));
-// 	return (wild_free(split, tmp) - 1);
-// }
+	str_len = ft_strlen(str);
+	last = ft_strlen(wc);
+	//printf("This is WildCard : wc : %s || str : %s\n", wc, str);
+	while (wc[++i] != '*')
+	{
+		if (wc[i] != str[i])
+			return (0);
+		// printf("first : wc[%d] : %c || str[%d]: %c\n", i, wc[i], i, str[i]);
+	}
+	while (wc[--last] != '*')
+	{
+		if (wc[last] != str[--str_len])
+			return (0);
+		// printf("second : wc[%d] : %c || str[%d]: %c\n", last, wc[last], str_len, str[str_len]);
+	}
+	tmp = ft_strndup(&wc[i], last - i + 1);
+	//printf("tmp : %s\n", tmp);
+	split = ft_split(tmp, '*');
+	//for (int a = 0; split[a]; a++)
+	//{
+	//	printf("split[%d] : %s\n", a, split[a]);
+	//}
+	while (split[j] && str[i])
+	{
+		if (!ft_strncmp(split[j], &str[i], ft_strlen(split[j])))
+		{
+			//printf("split[%d] : %s || str[%d] : %s\n", j, split[j], i, &str[i]);
+			i += ft_strlen(split[j++]);
+		}
+		i++;
+	}
+	if (!split[j] || (wc[0] == '*' && !wc[1]))
+		return (wild_free(split, tmp));
+	return (wild_free(split, tmp) - 1);
+}
+
+
+/*
+
+*.c
+*\/
+
+*/

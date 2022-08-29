@@ -9,6 +9,7 @@ RM = rm -f
 PARSER_DIR = parser
 UTILS_DIR = utils
 EXPAND_DIR = expand
+TREE_DIR = travel_tree
 
 SRCS =	minishell.c \
 		signal.c \
@@ -24,6 +25,7 @@ SRCS =	minishell.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
 		$(EXPAND_DIR)/wild_card_utils.c \
+		$(TREE_DIR)/test.c \
 
 OBJS = $(SRCS:%.c=%.o)
 

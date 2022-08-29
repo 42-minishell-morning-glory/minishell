@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Fri Aug 26 14:29:04 2022
+# Make data base, printed on Fri Aug 26 22:33:21 2022
 
 # Variables
 
@@ -123,6 +123,7 @@ MallocNanoZone = 0
 # makefile
 MAKEFLAGS = Rrqp
 # environment
+ 
 MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
@@ -169,13 +170,12 @@ VSCODE_PID = 64742
 
 # Directories
 
-# utils (device 16777229, inode 2324342): 9 files, no impossibilities so far.
-# . (device 16777229, inode 2324264): 25 files, no impossibilities.
+# utils (device 16777229, inode 2324342): 10 files, no impossibilities so far.
+# . (device 16777229, inode 2324264): 27 files, no impossibilities.
 # parser (device 16777229, inode 2324396): 12 files, no impossibilities so far.
- 
 # expand (device 16777229, inode 2419330): 10 files, no impossibilities so far.
 
-# 56 files, no impossibilities in 4 directories.
+# 59 files, no impossibilities in 4 directories.
 
 # Implicit Rules
 
@@ -200,7 +200,7 @@ utils/tree.c:
 parser/input_check.o: parser/input_check.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `parser/input_check'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -212,7 +212,7 @@ parser/input_check.o: parser/input_check.c
 utils/doubly_list.o: utils/doubly_list.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `utils/doubly_list'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -234,7 +234,7 @@ all: minishell
 parser/syntax_table.o: parser/syntax_table.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `parser/syntax_table'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -251,7 +251,7 @@ parser/syntax_table.o: parser/syntax_table.c
 expand/expand.o: expand/expand.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `expand/expand'
-#  Last modified 2022-08-26 14:24:12
+#  Last modified 2022-08-26 16:28:13
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -293,7 +293,7 @@ signal.c:
 expand/shell_var.o: expand/shell_var.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `expand/shell_var'
-#  Last modified 2022-08-26 14:24:12
+#  Last modified 2022-08-26 16:28:13
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -305,7 +305,7 @@ expand/shell_var.o: expand/shell_var.c
 parser/lexer.o: parser/lexer.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `parser/lexer'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -324,6 +324,7 @@ parser/input_check.c:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
+ 
 utils/doubly_list.c:
 #  Implicit rule search has been done.
 #  Last modified 2022-08-25 13:31:53
@@ -335,7 +336,7 @@ utils/doubly_list.c:
 utils/ft_strrep.o: utils/ft_strrep.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `utils/ft_strrep'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:13
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -346,7 +347,7 @@ utils/ft_strrep.o: utils/ft_strrep.c
 
 minishell: minishell.o signal.o parser/lexer.o parser/tokenize.o parser/input_check.o parser/syntax.o parser/syntax_table.o utils/doubly_list.o utils/tree.o utils/ft_strrep.o expand/expand.o expand/shell_var.o expand/wild_card.o expand/wild_card_utils.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-08-26 14:24:13
+#  Last modified 2022-08-26 16:28:14
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -360,7 +361,7 @@ minishell: minishell.o signal.o parser/lexer.o parser/tokenize.o parser/input_ch
 minishell.o: minishell.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `minishell'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -381,7 +382,7 @@ parser/syntax_table.c:
 parser/tokenize.o: parser/tokenize.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `parser/tokenize'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -412,7 +413,7 @@ expand/expand.c:
 expand/wild_card.o: expand/wild_card.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `expand/wild_card'
-#  Last modified 2022-08-26 14:24:12
+#  Last modified 2022-08-26 16:28:13
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -446,11 +447,10 @@ expand/wild_card.o: expand/wild_card.c
 parser/syntax.o: parser/syntax.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `parser/syntax'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
- 
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 #  commands to execute (from `Makefile', line 41):
 	@$(CC) $(DFLAGS) $(COMFILE_FLAGS) -c $< -o $@
@@ -498,7 +498,7 @@ clean:
 utils/tree.o: utils/tree.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `utils/tree'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -546,7 +546,7 @@ parser/tokenize.c:
 # Not a target:
 expand/wild_card.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-26 14:29:04
+#  Last modified 2022-08-26 16:30:13
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -555,7 +555,7 @@ expand/wild_card.c:
 signal.o: signal.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: `signal'
-#  Last modified 2022-08-26 14:24:11
+#  Last modified 2022-08-26 16:28:12
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -586,6 +586,6 @@ parser/syntax.c:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Aug 26 14:29:04 2022
+# Finished Make data base on Fri Aug 26 22:33:21 2022
 
  
