@@ -1,0 +1,18 @@
+execute func token : -e
+execute func token : ls$
+Makefile$
+ascii_art$
+built_in.c$
+expand$
+libft$
+make.sh$
+minishell$
+minishell.c$
+minishell.h$
+minishell.o$
+parser$
+signal.c$
+signal.o$
+travel_tree$
+utils$
+·M-^DM-^@·M-^Eµ·M-^DM-^E·M-^E©·M-^F®·M-^DM-^C·M-^E≥·M-^FØ$

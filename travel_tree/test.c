@@ -1,5 +1,12 @@
 #include "../minishell.h"
 
+void	puterr_exit(char *str)
+{
+	ft_putstr_fd("minishell: ", 2);
+	perror(str);
+	exit(1);
+}
+
 int	ft_free(char **split)
 {
 	int	i;
@@ -26,62 +33,75 @@ int	execute_line(t_info *info, t_tree *myself)
 	return (ret);
 }
 
-int	child_proc(t_info *info, t_tree *myself, int p_fd[2])
+int	child_proc(t_info *info, t_tree *myself, int *p_fd)
 {
 	dup2(p_fd[1], STDOUT_FILENO);
 	close(p_fd[1]);
 	close(p_fd[0]);
-	printf("child!!\n");
-	execute(info, myself->left_child);
-	return (0);
+	return (execute(info, myself->left_child));
 }
 
-int	parent_proc(t_info *info, t_tree *myself, int p_fd[2])
+int	parent_proc(t_info *info, t_tree *myself, int *p_fd)
 {
 	dup2(p_fd[0], STDIN_FILENO);
 	close(p_fd[0]);
 	close(p_fd[1]);
-	execute(info, myself->right_child);
-	return (0);
+	return (execute(info, myself->right_child));
 }
 
 int	execute_pipe(t_info *info, t_tree *myself)
 {	
-	pid_t	id;
+	pid_t	pid;
+	int		p_fd[2];
 	int		status;
+	int		ret;
 
-	if (pipe(info->p_fd) == -1)
-		return (0);
-	id = fork();
-	if (id == -1)
-		return (0);
-	else if (id == 0)
-		child_proc(info, myself, info->p_fd);
-	parent_proc(info, myself, info->p_fd);
-	waitpid(id, &status, 0);
-	printf("parent!!\n");
-	return (1);
+	if (pipe(p_fd) == -1)
+		return (1);
+	pid = fork();
+	if (pid == 0)
+		child_proc(info, myself, p_fd);
+	waitpid(pid, &status, 0);
+	if (WEXITSTATUS(status) == 1)
+		return (1);
+	if (parent_proc(info, myself, p_fd))
+		return (1);
 }
 
 int	execute_redir(t_info *info, t_tree *myself)
 {
-	// if (!ft_strncmp(myself->dlist->token, "<", 2))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, ">", 2))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, "<<", 3))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, ">>", 3))
-	// {
-		
-	// }
-	return (0);
+	int	fd;
+
+	if (!ft_strncmp(myself->dlist->token, ">", 2))
+	{
+		if (myself->right_child)
+			fd = open(myself->right_child->dlist->token, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+		if (!info->redir_flag) // first redir
+		{
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+			info->redir_flag = 1;
+		}
+		execute(info, myself->left_child); // execute에서 REDIR가 아니면 flag off 해줘야 함
+		dup2(1, STDOUT_FILENO);
+	}
+	
+	//if (!ft_strncmp(myself->dlist->token, "<", 2))
+	//{
+			//}
+	//else if (!ft_strncmp(myself->dlist->token, ">", 2))
+	//{
+	
+	//}
+	//else if (!ft_strncmp(myself->dlist->token, "<<", 3))
+	//{
+	
+	//}
+	//else if (!ft_strncmp(myself->dlist->token, ">>", 3))
+	//{
+	
+	//}
+	return (1);
 }
 
 char	**make_command(t_dlist *curr)
@@ -152,26 +172,15 @@ int	execute_word(t_info *info, t_tree *myself)
 {
 	char	**argv;
 	char	**env;
-	pid_t	id;
 	int		status;
 	char	*path;
 
 	myself->dlist = get_first(myself->dlist);
 	argv = make_command(myself->dlist);
 	env = make_command(info->env);
-	if (info->p_flag);
-	id = fork();
-	if (id == -1)
-		return (0);
-	else if (!id)
-	{
-		path = get_path(argv[0], env);
-		execve(path, argv, env);
-	}
-	waitpid(id, &status, 0);
-	// ft_free(argv);
-	// ft_free(env);
-	return (1);
+	path = get_path(argv[0], env);
+	if (execve(path, argv, env) == -1)
+		puterr_exit("execve");
 }
 
 int	execute_bracket(t_info *info, t_tree *myself)
@@ -184,6 +193,9 @@ int	execute(t_info *info, t_tree *myself)
 	int	ret;
 
 	ret = 0;
+	printf("execute func token : %s\n", myself->dlist->token);
+	if (myself->dlist->type != REDIR)
+		info->redir_flag = 0;
 	if (myself->dlist->type == LINE)
 		ret = execute_line(info, myself);
 	if (myself->dlist->type == PIPE)

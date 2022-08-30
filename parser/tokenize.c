@@ -22,6 +22,7 @@ void	cut_node(t_dlist *curr, int i)
 	curr->token = tmp1;
 	new->token = tmp2;
 	new->next = curr->next;
+	curr->next->prev = new;
 	curr->next = new;
 	new->prev = curr;
 }
@@ -109,5 +110,4 @@ void	tokenize(t_info *info)
 		split_token(curr->token, curr);
 		curr = curr->next;
 	}
-	printList(info);
 }

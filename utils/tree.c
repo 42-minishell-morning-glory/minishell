@@ -26,21 +26,22 @@ t_dlist	*get_first(t_dlist *curr)
 void	printTree(t_tree *parent, int cnt)
 {
 	t_dlist	*temp;
+	t_tree	*tmp = parent;
 
-	if (parent)
+	if (tmp)
 	{
-		temp = get_first(parent->dlist);
+		temp = get_first(tmp->dlist);
 		printf("depth : %d, tree: ", cnt);
 		while (temp)
 		{
-			printf("%s", temp->token);
+			printf("%s %d", temp->token, temp->type);
 			temp = temp->next;
 			if (temp)
 				printf(", ");
 		}
 		printf("\n");
-		printTree(parent->left_child, cnt + 1);
-		printTree(parent->right_child, cnt + 1);
+		printTree(tmp->left_child, cnt + 1);
+		printTree(tmp->right_child, cnt + 1);
 	}
 }
 
@@ -49,7 +50,7 @@ t_tree *make_tree(t_tree *myself, t_dlist *dlist)
 	t_dlist 	*left;
 	t_dlist 	*right;
 	t_dlist		*node;
-	
+
 	node = check_priority(dlist);
 	if (!myself)
 		myself = ft_calloc(1, sizeof(t_tree));
@@ -71,3 +72,22 @@ t_tree *make_tree(t_tree *myself, t_dlist *dlist)
 		myself->right_child = make_tree(myself->right_child, right);
 	return (myself);
 }
+
+
+
+
+
+/*
+token : ls, type : 4
+token : |, type : 2
+token : cat-e, type : 4
+token : &&, type : 1
+token : ls, type : 4
+
+==================================================
+
+depth : 0, tree: && 1
+depth : 1, tree: ls 4, | 2, cat 4, -e 4
+depth : 1, tree: ls 4
+
+*/

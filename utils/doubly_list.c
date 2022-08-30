@@ -75,7 +75,7 @@ void	printList(t_info *info)
 	printf("====print start====\n");
 	while (tmp)
 	{	
-		printf("token : %s\n", tmp->token);
+		printf("token : %s, type : %d\n", tmp->token, tmp->type);
 		tmp = tmp->next;
 	}
 	printf("=====print end=====\n\n");

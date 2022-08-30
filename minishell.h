@@ -62,9 +62,8 @@ typedef struct s_info
 	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
+	int						redir_flag;
 	char					**envp;
-	int						p_fd[2];
-	int						p_flag;
 	struct s_dlist			*dlist;
 	t_tree					*root;
 	struct s_dlist			*env;
