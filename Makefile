@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LINKING_FLAGS = -L/usr/lib32 -lreadline
+LINKING_FLAGS = -L/usr/lib/x86_64-linux-gnu -lreadline
 COMFILE_FLAGS = -I/usr/include/
 DFLAGS = -g2 -fsanitize=address
 

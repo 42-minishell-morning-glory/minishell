@@ -41,7 +41,6 @@ typedef struct s_operation
 	int	last_idx;
 }		t_operation;
 
-
 typedef struct s_dlist
 {
 	struct s_dlist	*next;
@@ -49,6 +48,14 @@ typedef struct s_dlist
 	char			*token;
 	int				type;
 }					t_dlist;
+
+typedef struct s_ftool
+{
+	int		p_fd[2];
+	int		status;
+	pid_t	pid;
+}			t_ftool;
+
 
 typedef struct s_tree
 {

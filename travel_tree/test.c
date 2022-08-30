@@ -23,69 +23,78 @@ int	ft_free(char **split)
 
 int	execute_line(t_info *info, t_tree *myself)
 {
-	int	ret;
+	t_ftool	tool;
+	int		ret;
 
-	ret = execute(info, myself->left_child);
+	if (pipe(tool.p_fd) == -1)
+		return (1);
+	tool.pid = fork();
+	if (!tool.pid)
+		ret = execute(info, myself->left_child);
+	waitpid(tool.pid, &tool.status, 0);
 	if (myself->dlist->token[0] == '&' && ret)
-		ret = execute(info, myself->right_child);
+		return (execute(info, myself->right_child));
 	else if (myself->dlist->token[0] == '|' && !ret)
-		ret = execute(info, myself->right_child);
-	return (ret);
-}
-
-int	child_proc(t_info *info, t_tree *myself, int *p_fd)
-{
-	dup2(p_fd[1], STDOUT_FILENO);
-	close(p_fd[1]);
-	close(p_fd[0]);
-	return (execute(info, myself->left_child));
-}
-
-int	parent_proc(t_info *info, t_tree *myself, int *p_fd)
-{
-	dup2(p_fd[0], STDIN_FILENO);
-	close(p_fd[0]);
-	close(p_fd[1]);
-	return (execute(info, myself->right_child));
+		return (execute(info, myself->right_child));
 }
 
 int	execute_pipe(t_info *info, t_tree *myself)
 {	
-	pid_t	pid;
-	int		p_fd[2];
-	int		status;
-	int		ret;
+	t_ftool	tool;
 
-	if (pipe(p_fd) == -1)
+	if (pipe(tool.p_fd) == -1)
 		return (1);
-	pid = fork();
-	if (pid == 0)
-		child_proc(info, myself, p_fd);
-	waitpid(pid, &status, 0);
-	if (WEXITSTATUS(status) == 1)
-		return (1);
-	if (parent_proc(info, myself, p_fd))
-		return (1);
+	tool.pid = fork();
+	if (!tool.pid)
+	{
+		dup2(tool.p_fd[1], STDOUT_FILENO);
+		close(tool.p_fd[1]);
+		close(tool.p_fd[0]);
+		return (execute(info, myself->left_child));
+	}
+	waitpid(tool.pid, &tool.status, 0);
+	if (WEXITSTATUS(tool.status) == 1)
+		return (1); // 왼쪽에서 오류났으면 파이프 오른쪽은 실행 x
+	dup2(tool.p_fd[0], STDIN_FILENO);
+	close(tool.p_fd[0]);
+	close(tool.p_fd[1]);
+	return (execute(info, myself->right_child));
+}
+
+int	redir_right_one(t_info *info, t_tree *myself)
+{
+	int		fd;
+	t_ftool	tool;
+
+	fd = open(myself->right_child->dlist->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	myself->right_child->dlist = myself->right_child->dlist->next;
+	if (myself->left_child)
+	{	
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		execute(info, myself->left_child);
+	}
 }
 
 int	execute_redir(t_info *info, t_tree *myself)
 {
-	// if (!ft_strncmp(myself->dlist->token, "<", 2))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, ">", 2))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, "<<", 3))
-	// {
-		
-	// }
-	// else if (!ft_strncmp(myself->dlist->token, ">>", 3))
-	// {
-		
-	// }
+	if (!ft_strncmp(myself->dlist->token, ">", 2))
+		redir_right_one(info, myself);
+	//if (!ft_strncmp(myself->dlist->token, "<", 2))
+	//{
+			//}
+	//else if (!ft_strncmp(myself->dlist->token, ">", 2))
+	//{
+	
+	//}
+	//else if (!ft_strncmp(myself->dlist->token, "<<", 3))
+	//{
+	
+	//}
+	//else if (!ft_strncmp(myself->dlist->token, ">>", 3))
+	//{
+	
+	//}
 	return (0);
 }
 
@@ -157,8 +166,6 @@ int	execute_word(t_info *info, t_tree *myself)
 {
 	char	**argv;
 	char	**env;
-	pid_t	id;
-	int		status;
 	char	*path;
 
 	myself->dlist = get_first(myself->dlist);
@@ -176,18 +183,14 @@ int	execute_bracket(t_info *info, t_tree *myself)
 
 int	execute(t_info *info, t_tree *myself)
 {
-	int	ret;
-
-	ret = 0;
 	if (myself->dlist->type == LINE)
-		ret = execute_line(info, myself);
+		return (execute_line(info, myself));
 	if (myself->dlist->type == PIPE)
-		ret = execute_pipe(info, myself);
+		return (execute_pipe(info, myself));
 	if (myself->dlist->type == REDIR)
-		ret = execute_redir(info, myself);
+		return (execute_redir(info, myself));
 	if (myself->dlist->type == WORD)
-		ret = execute_word(info, myself);
+		return (execute_word(info, myself));
 	if (myself->dlist->type == BRACKET)
-		ret = execute_bracket(info, myself);
-	return (ret);
+		return (execute_bracket(info, myself));
 }

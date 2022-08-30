@@ -46,8 +46,8 @@ void	printTree(t_tree *parent, int cnt)
 
 t_tree *make_tree(t_tree *myself, t_dlist *dlist)
 {
-	t_dlist 	*left;
-	t_dlist 	*right;
+	t_dlist		*left;
+	t_dlist		*right;
 	t_dlist		*node;
 	
 	node = check_priority(dlist);
