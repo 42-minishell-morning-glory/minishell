@@ -58,7 +58,7 @@ int	unset(t_info *info, char *key)
 			break ;
 		tmp = tmp->next;
 	}
-	delete_node(info, tmp);
+	delete_node(&info->dlist, info->dlist);
 	return (1);
 }
 

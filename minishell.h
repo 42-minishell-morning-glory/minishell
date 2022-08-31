@@ -41,6 +41,12 @@ typedef struct s_operation
 	int	last_idx;
 }		t_operation;
 
+typedef struct s_ftool
+{
+	int		p_fd[2];
+	int		status;
+	pid_t	pid;
+}			t_ftool;
 
 typedef struct s_dlist
 {
@@ -106,7 +112,7 @@ int	execute(t_info *info, t_tree *myself);
 t_dlist	*create_list(void);
 void	add_list(t_info *info, char *str);
 void	add_list_env(t_info *info, char *str);
-int		delete_node(t_info *info, t_dlist *node);
+int		delete_node(t_dlist **list, t_dlist *node);
 void	delete_dlist(t_info *info);
 void	printList(t_info *info);
 

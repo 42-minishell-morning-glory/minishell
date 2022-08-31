@@ -22,7 +22,8 @@ void	cut_node(t_dlist *curr, int i)
 	curr->token = tmp1;
 	new->token = tmp2;
 	new->next = curr->next;
-	curr->next->prev = new;
+	if (curr->next)
+		curr->next->prev = new;
 	curr->next = new;
 	new->prev = curr;
 }

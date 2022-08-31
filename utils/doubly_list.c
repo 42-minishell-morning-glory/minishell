@@ -81,11 +81,11 @@ void	printList(t_info *info)
 	printf("=====print end=====\n\n");
 }
 
-int	delete_node(t_info *info, t_dlist *node)
+int	delete_node(t_dlist **list, t_dlist *node)
 {
 	t_dlist	*tmp;
 
-	tmp = info->env;
+	tmp = *list;
 	while (tmp && tmp != node)
 		tmp = tmp->next;
 	if (tmp == 0)
@@ -95,7 +95,7 @@ int	delete_node(t_info *info, t_dlist *node)
 	if (tmp->prev)
 		tmp->prev->next = tmp->next;
 	else
-		info->env = info->env->next;
+		*list = (*list)->next;
 	tmp->next = 0;
 	tmp->prev = 0;
 	free(tmp->token);

@@ -53,7 +53,7 @@ int	main(void)
 		//printList(&info);
 		info.root = make_tree(NULL, info.dlist);
 		expand(info.root, &info);
-		//printTree(info.root, 0);
+		printTree(info.root, 0);
 		pid = fork();
 		if (pid == 0)
 			execute(&info, info.root);

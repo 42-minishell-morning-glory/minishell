@@ -63,6 +63,27 @@ int	first_opertaion(char *str, t_info *info)
 	return (1);
 }
 
+int	stick_redir(t_info *info)
+{
+	t_dlist	*tmp;
+	char	*remove;
+
+	tmp = info->dlist;
+	while (tmp)
+	{
+		if (tmp->type == REDIR)
+		{
+			remove = tmp->token;
+			tmp->token = ft_strjoin(remove, tmp->next->token);
+			free(remove);
+			remove = NULL;
+			delete_node(&info->dlist, tmp->next);
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
 int	lexer(char *str, t_info *info)
 {
 	char	*lex_str;
@@ -77,5 +98,6 @@ int	lexer(char *str, t_info *info)
 	tokenize(info);
 	if (!check_syntax(info))
 		return(0);
+	stick_redir(info);
 	return (1);
 }
