@@ -1,8 +1,8 @@
 #include "../minishell.h"
 
-int	is_sep_token(int sep)
+int	is_sep_token(char *str, int i)
 {
-	if (sep == '<' || sep == '>' || sep == '&' || sep == '|')
+	if (str[i] == '<' || str[i] == '>' || (str[i] == '&' && str[i + 1] == '&') || str[i] == '|')
 		return (1);
 	return (0);
 }
@@ -65,15 +65,15 @@ int	split_token(char *token, t_dlist *curr)
 	{
 		if (token[i] == '\'' || token[i] == '\"')
 			i = pass_quote(token, i);
-		else if (!is_sep_token(token[i]))
+		else if (!is_sep_token(token, i))
 		{
-			while (token[i] && !is_sep_token(token[i]))
+			while (token[i] && !is_sep_token(token, i))
 				i++;
-			if (is_sep_token(token[i]))
+			if (is_sep_token(token, i))
 				cut_node(curr, i - 1);
 			return (1);
 		}
-		else if (is_sep_token(token[i]))
+		else if (is_sep_token(token, i))
 		{
 			if (token[i + 1] == token[i])
 				cut_node(curr, i + 1);

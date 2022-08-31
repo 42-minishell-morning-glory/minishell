@@ -34,7 +34,7 @@ void	printTree(t_tree *parent, int cnt)
 		printf("depth : %d, tree: ", cnt);
 		while (temp)
 		{
-			printf("str : %s,  type: %d", temp->token, temp->type);
+			printf("|str : %s,  type: %d|", temp->token, temp->type);
 			temp = temp->next;
 			if (temp)
 				printf(", ");

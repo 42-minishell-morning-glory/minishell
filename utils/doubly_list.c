@@ -58,7 +58,7 @@ void	delete_dlist(t_info *info)
 	t_dlist	*tmp;
 
 	curr = info->dlist;
-	while (!curr)
+	while (curr)
 	{
 		tmp = curr;
 		curr = curr->next;

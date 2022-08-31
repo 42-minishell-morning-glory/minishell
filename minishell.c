@@ -9,12 +9,16 @@ void	init_info(t_info *info)
 	i = 0;
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
-	info->redir_flag = 0;
+	info->redir_out_flag = 0;
+	info->redir_in_flag = 0;
+	info->s_flag = 0;
+	info->pipe_cnt = 0;
 	info->dlist = 0;
 	info->env = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
+	info->pipe = ft_calloc(2, sizeof(int));
 	while (environ[i])
 	{
 		add_list_env(info, environ[i]);
@@ -25,8 +29,8 @@ void	init_info(t_info *info)
 int	main(void)
 {
 	char	*str;
-	t_info	info;
 	pid_t	pid;
+	t_info	info;
 
 	set_terminal();
 	set_signal_handler();
@@ -50,13 +54,16 @@ int	main(void)
 			delete_dlist(&info);
 			continue;
 		}
-		//printList(&info);
+		printList(&info);
 		info.root = make_tree(NULL, info.dlist);
 		expand(info.root, &info);
 		printTree(info.root, 0);
 		pid = fork();
-		if (pid == 0)
+		if (!pid)
+		{
 			execute(&info, info.root);
+			exit(1);
+		}
 		waitpid(pid, 0, 0);
 		free(str);
 		delete_dlist(&info);

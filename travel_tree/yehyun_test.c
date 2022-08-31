@@ -6,7 +6,7 @@ void	puterr_exit(char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
 	perror(str);
-	exit(errno);
+	exit(1);
 }
 
 int	ft_free(char **split)
@@ -32,7 +32,7 @@ int	execute_line(t_info *info, t_tree *myself)
 	tool.pid = fork();
 	if (!tool.pid)
 		execute(info, myself->left_child);
-	waitpid(tool.pid, &tool.status, 0);
+	waitpid(tool.pid, &tool.status, WNOHANG);
 	if (myself->dlist->token[0] == '&' && !WEXITSTATUS(tool.status))
 		execute(info, myself->right_child);
 	else if (myself->dlist->token[0] == '|' && WEXITSTATUS(tool.status))
@@ -40,42 +40,26 @@ int	execute_line(t_info *info, t_tree *myself)
 }
 
 int	execute_pipe(t_info *info, t_tree *myself)
-{
-	int	stdin_fd;
-	int	stdout_fd;
-	int	left_check;
-	int	right_check;
+{	
+	t_ftool	tool;
 
-
-	printf("execute_pipe : %s\n", myself->dlist->token);
-	if (!info->pipe_cnt)
+	if (pipe(tool.p_fd) == -1)
+		return (1);
+	tool.pid = fork();
+	if (!tool.pid)
 	{
-		if (pipe(info->pipe) == -1)
-			return (-1);
-		stdout_fd = dup(STDOUT_FILENO);
-		stdin_fd = dup(STDIN_FILENO);
-		dup2(info->pipe[1], STDOUT_FILENO);
-		// dup2(info->pipe[0], STDIN_FILENO);
+		dup2(tool.p_fd[1], STDOUT_FILENO);
+		close(tool.p_fd[1]);
+		close(tool.p_fd[0]);
+		return (execute(info, myself->left_child));
 	}
-	info->pipe_cnt++;
-	left_check = execute(info, myself->left_child);
-	if (left_check)
-		return (left_check);
-	dup2(info->pipe[0], STDIN_FILENO);
-	// dup2(stdout_fd, STDOUT_FILENO);
-	// dup2(stdout_fd, STDOUT_FILENO);
-	info->pipe_cnt--;
-	if (!info->pipe_cnt)
-	{
-		close(info->pipe[1]);
-		write(2, "HEY!!\n", 6);
-		dup2(stdout_fd, STDOUT_FILENO);
-		// dup2(stdin_fd, STDIN_FILENO);
-	}
-	right_check = execute(info, myself->right_child);
-	// dup2(info->pipe[1], STDOUT_FILENO);
-	// dup2(stdin_fd, STDIN_FILENO);
-	return (right_check);
+	waitpid(tool.pid, &tool.status, 0);
+	if (WEXITSTATUS(tool.status))
+		return (tool.status); // 왼쪽에서 오류났으면 파이프 오른쪽은 실행 x
+	dup2(tool.p_fd[0], STDIN_FILENO);
+	close(tool.p_fd[0]);
+	close(tool.p_fd[1]);
+	execute(info, myself->right_child);
 }
 
 int	arg_num(t_dlist *list)
@@ -103,7 +87,7 @@ char	**make_command_redir(t_tree *left_c, t_tree *right_c)
 	return (make_command(left));
 }
 
-int	redir_input(t_info *info, t_tree *myself)
+int	kyhan_redir_input(t_info *info, t_tree *myself)
 {
 	int		r_fd;
 	char	**arg;
@@ -147,41 +131,80 @@ int	redir_input(t_info *info, t_tree *myself)
 	}
 }
 
+int	redir_input(t_info *info, t_tree *myself)
+{
+	t_ftool	tool;
+	char	*file_name;
+	int		r_fd;
+
+	file_name = myself->dlist->token;
+	while (*file_name == '<')
+		file_name++;
+	if (myself->dlist->token[1] == '<')
+		r_fd = open(file_name, O_RDONLY, 0664);
+	else
+		r_fd = open(file_name, O_RDONLY, 0664);
+	if (r_fd == -1)
+		info->redir_in_flag = 0;
+	else if (r_fd != -1 && !info->redir_in_flag)
+	{
+		dup2(r_fd, STDIN_FILENO);
+		close(r_fd);
+		info->redir_in_flag = 1;
+	}
+	tool.pid = fork();
+	if (!tool.pid)
+		execute(info, myself->left_child);
+	waitpid(tool.pid, &tool.status, 0);
+	if (WEXITSTATUS(tool.status))
+		exit(tool.status);
+	exit(0);
+}
+
 int	redir_output(t_info *info, t_tree *myself)
 {
-	int	r_fd;
+	t_ftool	tool;
+	char	*file_name;
+	int		r_fd;
 
+	file_name = myself->dlist->token;
+	while (*file_name == '>')
+		file_name++;
 	if (myself->dlist->token[1] == '>')
-		r_fd = open(&myself->dlist->token[2], O_CREAT | O_APPEND | O_RDWR, 0664);
+		r_fd = open(file_name, O_CREAT | O_APPEND | O_RDWR, 0664);
 	else
-		r_fd = open(&myself->dlist->token[1], O_CREAT | O_TRUNC | O_RDWR, 0664);
-	if (r_fd == -1 || (!myself->right_child && !myself->left_child))
-		exit(1);
-	if (!myself->right_child && !info->redir_out_flag)
+		r_fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);
+	if (!info->redir_out_flag)
 	{
 		dup2(r_fd, STDOUT_FILENO);
 		close(r_fd);
 		info->redir_out_flag = 1;
+	}
+	tool.pid = fork();
+	if (!tool.pid)
 		execute(info, myself->left_child);
-	}
-	else if (myself->right_child && myself->left_child->dlist->type == REDIR)
+	waitpid(tool.pid, &tool.status, 0);
+	if (WEXITSTATUS(tool.status))
 	{
-		
-		// myself->right_child를 myself->left_child->right_child로 보내기
+		// printf("unlink 해야됨!\n");
+		unlink(file_name);
+		exit(tool.status);
 	}
-	else if (myself->left_child->dlist->type == WORD);
-		// left right 합쳐서 인자로 넘겨주기
-		// excute left
+	exit(0);
+	// else if (myself->right_child && myself->left_child->dlist->type == REDIR)
+	// {
+		
+	// 	// myself->right_child를 myself->left_child->right_child로 보내기
+	// }
+	// else if (myself->left_child->dlist->type == WORD);
+	// excute left
 }
 
 int	execute_redir(t_info *info, t_tree *myself)
 {
-	char	*tmp;
-
-	tmp = myself->dlist->token;
-	if (tmp[0] == '<' && tmp[1] != '<')
+	if (myself->dlist->token[0] == '<')
 		redir_input(info, myself);
-	else if (tmp[0] == '>')
+	else if (myself->dlist->token[0] == '>') // >a
 		redir_output(info, myself);
 	//if (!ft_strncmp(myself->dlist->token, "<", 2))
 	//{
@@ -198,7 +221,9 @@ int	execute_redir(t_info *info, t_tree *myself)
 	//{
 	
 	//}
+	return (1);
 }
+
 
 char	**make_command(t_dlist *curr)
 {
@@ -268,19 +293,15 @@ int	execute_word(t_info *info, t_tree *myself)
 {
 	char	**argv;
 	char	**env;
+	int		status;
 	char	*path;
-	t_ftool	tool;
 
 	myself->dlist = get_first(myself->dlist);
 	argv = make_command(myself->dlist);
 	env = make_command(info->env);
 	path = get_path(argv[0], env);
-	tool.pid = fork();
-	if (!tool.pid)
-		if (execve(path, argv, env) == -1)
-			puterr_exit("execve");
-	waitpid(tool.pid, &tool.status, 0);
-	return (WEXITSTATUS(tool.status));
+	if (execve(path, argv, env) == -1) // status에 exit code 0으로 저장
+		puterr_exit("execve"); // status에 exit code 1로 저장
 }
 
 int	execute_bracket(t_info *info, t_tree *myself)
@@ -291,13 +312,13 @@ int	execute_bracket(t_info *info, t_tree *myself)
 int	execute(t_info *info, t_tree *myself)
 {
 	if (myself->dlist->type == LINE)
-		return (execute_line(info, myself));
+		execute_line(info, myself);
 	if (myself->dlist->type == PIPE)
-		return (execute_pipe(info, myself));
+		execute_pipe(info, myself);
 	if (myself->dlist->type == REDIR)
-		return (execute_redir(info, myself));
+		execute_redir(info, myself);
 	if (myself->dlist->type == WORD)
-		return (execute_word(info, myself));
+		execute_word(info, myself);
 	if (myself->dlist->type == BRACKET)
-		return (execute_bracket(info, myself));
+		execute_bracket(info, myself);
 }

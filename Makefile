@@ -1,7 +1,9 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+LINKING_FLAGS = -L/usr/local/Cellar/readline/8.1.2/lib -lreadline
+COMFILE_FLAGS = -I/usr/local/Cellar/readline/8.1.2/include
+#LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
+#COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
 DFLAGS = -g2 -fsanitize=address
 
 RM = rm -f
@@ -25,7 +27,7 @@ SRCS =	minishell.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
 		$(EXPAND_DIR)/wild_card_utils.c \
-		$(TREE_DIR)/test.c \
+		$(TREE_DIR)/yehyun_test.c \
 
 OBJS = $(SRCS:%.c=%.o)
 

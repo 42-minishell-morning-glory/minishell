@@ -48,6 +48,8 @@ int	check_syntax(t_info *info)
 	curr = info->dlist;
 	init_syntax(info);
 	ret = 1;
+	if (curr->type == LINE || curr->type == PIPE)
+		return (put_syntaxerr_msg(curr->token));
 	while (curr->next)
 	{
 		if (curr->type == LINE)

@@ -68,7 +68,11 @@ typedef struct s_info
 	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
-	int						redir_flag;
+	int						redir_out_flag; // 1이면 > 한개, 2면 >>
+	int						redir_in_flag;
+	int						s_flag;
+	int						*pipe;
+	int						pipe_cnt;
 	char					**envp;
 	struct s_dlist			*dlist;
 	t_tree					*root;
