@@ -12,6 +12,7 @@ void	init_info(t_info *info)
 	info->redir_out_fd = 0;
 	info->redir_in_flag = 0;
 	info->redir_cnt = 0;
+	info->heredoc_flag = 0;
 	info->tmp_fd = 0;
 	info->dlist = 0;
 	info->env = 0;

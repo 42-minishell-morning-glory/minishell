@@ -62,75 +62,6 @@ int	execute_pipe(t_info *info, t_tree *myself)
 	execute(info, myself->right_child);
 }
 
-int	arg_num(t_dlist *list)
-{
-	t_dlist *curr;
-	int		i;
-
-	curr = list;
-	while (list)
-	{
-		i++;
-		list = list->next;
-	}
-	return (i);
-}
-
-char	**make_command_redir(t_tree *left_c, t_tree *right_c)
-{
-	t_dlist	*left;
-	t_dlist *right;
-
-	left = left_c->dlist;
-	right = right_c->dlist;
-	left->next = right;
-	return (make_command(left));
-}
-
-int	kyhan_redir_input(t_info *info, t_tree *myself)
-{
-	int		r_fd;
-	char	**arg;
-
-	if (myself->left_child)
-	{
-		if (arg_num(myself->right_child->dlist) == 1)
-		{
-			r_fd = open(myself->right_child->dlist->token, O_RDONLY);
-			if (r_fd == -1)
-				return (0);
-		}
-		else if (arg_num(myself->right_child->dlist) >= 2)
-		{
-			myself->right_child->dlist = myself->right_child->dlist->next;
-			// if (!is_builtin(myself->left_child))
-				arg = make_command_redir(myself->left_child, myself->right_child);
-			info->redir_in_flag = 1;
-		}
-		if (!info->redir_in_flag) // first redir
-		{
-			dup2(r_fd, STDIN_FILENO);
-			close(r_fd);
-			info->redir_in_flag = 1;
-		}
-		return (execute(info, myself->left_child));
-	}
-	else
-	{
-		if (myself->right_child)
-			r_fd = open(myself->right_child->dlist->token, O_RDONLY);
-		if (!info->redir_in_flag) // first redir
-		{
-			dup2(r_fd, STDIN_FILENO);
-			close(r_fd);
-			info->redir_in_flag = 1;
-			return (execute(info, myself->left_child)); // execute에서 REDIR가 아니면 flag off 해줘야 함
-		}
-		else
-			return (execute(info, myself->left_child));
-	}
-}
-
 int	redir_input(t_info *info, t_tree *myself)
 {
 	t_ftool	tool;
@@ -143,10 +74,13 @@ int	redir_input(t_info *info, t_tree *myself)
 	r_fd = open(file_name, O_RDONLY, 0644);
 	if (r_fd == -1 && myself->left_child->dlist->type == WORD)
 		puterr_exit(file_name);
-	if (r_fd != -1 && !info->redir_in_flag) //cat <a <b <c일떄 c만 나오도록
+	if (!info->redir_in_flag) // 여기서 첫번째 redir in 파일 안 열렸을 때, 마지막 명령어에서 표준 입력 기다림 오류!!
 	{
-		dup2(r_fd, STDIN_FILENO);
-		close(r_fd);
+		if (r_fd != -1)
+		{
+			dup2(r_fd, STDIN_FILENO);
+			close(r_fd);
+		}
 		info->redir_in_flag = 1;
 	}
 	tool.pid = fork();
@@ -164,56 +98,54 @@ int	redir_input(t_info *info, t_tree *myself)
 	return (0);
 }
 
+void	do_here_doc(t_info *info, t_tree *myself)
+{
+	int		fd;
+	char	*str;
+	char	*limiter;
+
+	if (myself->left_child && myself->left_child->dlist->type != WORD)
+		do_here_doc(info, myself->left_child);
+	limiter = &myself->dlist->token[2];
+	fd = open(".heredoc", O_CREAT | O_TRUNC | O_RDWR, 0644);
+	while (1)
+	{
+		str = get_next_line(0);
+		if (ft_strncmp(str, limiter, ft_strlen(str)) == '\n')
+		{
+			free(str);
+			break ;
+		}
+		write(fd, str, ft_strlen(str));
+		free(str);
+	}
+	close(fd);
+}
+
 int	redir_heredoc(t_info *info, t_tree *myself)
 {
 	t_ftool	tool;
-	char	*limiter;
-	char	*gnl;
-	int		h_fd;
+	int		r_fd;
 
-	limiter = &myself->dlist->token[2];
-	if (!info->redir_in_flag)
+	if (!info->heredoc_flag)
 	{
-		h_fd = open(".here_doc_tmp", O_RDWR | O_TRUNC | O_CREAT, 0644);
-		while (1)
-		{
-			write(2, "1hd> ", 5);
-			gnl = get_next_line(0);
-			if (ft_strncmp(gnl, limiter, ft_strlen(gnl)) == '\n')
-			{
-				free(gnl);
-				break ;
-			}
-			write(h_fd, gnl, ft_strlen(gnl));
-			free(gnl);
-		}
-		close(h_fd);
-		h_fd = open(".here_doc_tmp", O_RDONLY, 0644);
-		dup2(h_fd, STDIN_FILENO);
-		close(h_fd);
+		do_here_doc(info, myself);
+		info->heredoc_flag = 1;
+	}
+	if (!info->redir_in_flag) //cat <a <b <c일떄 c만 나오도록
+	{
+		r_fd = open(".heredoc", O_RDONLY);
+		dup2(r_fd, STDIN_FILENO);
+		close(r_fd);
 		info->redir_in_flag = 1;
-	}
-	else
-	{
-		while (1)
-		{
-			write(2, "2hd> ", 5);
-			gnl = get_next_line(0);
-			if (ft_strncmp(gnl, limiter, ft_strlen(gnl)) == '\n')
-			{
-				free(gnl);
-				break ;
-			}
-			free(gnl);
-		}
-	}
+	} 
 	tool.pid = fork();
 	if (!tool.pid)
 		execute(info, myself->left_child);
 	waitpid(tool.pid, &tool.status, 0);
 	if (WEXITSTATUS(tool.status))
 	{
-		if (info->redir_cnt == 1)
+		if (info->redir_cnt ==1)
 			unlink(".minishell_tmp");
 		exit(WEXITSTATUS(tool.status));
 	}
@@ -283,7 +215,7 @@ int	execute_redir(t_info *info, t_tree *myself)
 		}
 		close(info->redir_out_fd);
 		unlink(".minishell_tmp");
-		unlink(".here_doc_tmp");
+		unlink(".here_doc");
 		close(info->tmp_fd);
 	}
 	exit(0);

@@ -71,6 +71,7 @@ typedef struct s_info
 	int						double_quote_flag;
 	int						redir_out_fd; // 1이면 > 한개, 2면 >>
 	int						redir_in_flag;
+	int						heredoc_flag;
 	int						redir_cnt;
 	int						tmp_fd;
 	char					**envp;
