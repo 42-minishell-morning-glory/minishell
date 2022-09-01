@@ -54,8 +54,8 @@ int	execute_pipe(t_info *info, t_tree *myself)
 		return (execute(info, myself->left_child));
 	}
 	waitpid(tool.pid, &tool.status, 0);
-	if (WEXITSTATUS(tool.status))
-		return (tool.status); // 왼쪽에서 오류났으면 파이프 오른쪽은 실행 x
+	if (!WIFEXITED(tool.status))
+		exit(WEXITSTATUS(tool.status)); // 왼쪽에서 오류났으면 파이프 오른쪽은 실행 x
 	dup2(tool.p_fd[0], STDIN_FILENO);
 	close(tool.p_fd[0]);
 	close(tool.p_fd[1]);
@@ -140,13 +140,10 @@ int	redir_input(t_info *info, t_tree *myself)
 	file_name = myself->dlist->token;
 	while (*file_name == '<')
 		file_name++;
-	if (myself->dlist->token[1] == '<')
-		r_fd = open(file_name, O_RDONLY, 0664);
-	else
-		r_fd = open(file_name, O_RDONLY, 0664);
-	if (r_fd == -1)
-		info->redir_in_flag = 0;
-	else if (r_fd != -1 && !info->redir_in_flag)
+	r_fd = open(file_name, O_RDONLY, 0644);
+	if (r_fd == -1 && myself->left_child->dlist->type == WORD)
+		puterr_exit(file_name);
+	if (r_fd != -1 && !info->redir_in_flag) //cat <a <b <c일떄 c만 나오도록
 	{
 		dup2(r_fd, STDIN_FILENO);
 		close(r_fd);
@@ -157,8 +154,70 @@ int	redir_input(t_info *info, t_tree *myself)
 		execute(info, myself->left_child);
 	waitpid(tool.pid, &tool.status, 0);
 	if (WEXITSTATUS(tool.status))
-		exit(tool.status);
-	exit(0);
+	{
+		if (info->redir_cnt == 1)
+			unlink(".minishell_tmp");
+		exit(WEXITSTATUS(tool.status));
+	}
+	if (r_fd == -1)
+		puterr_exit(file_name);
+	return (0);
+}
+
+int	redir_heredoc(t_info *info, t_tree *myself)
+{
+	t_ftool	tool;
+	char	*limiter;
+	char	*gnl;
+	int		h_fd;
+
+	limiter = &myself->dlist->token[2];
+	if (!info->redir_in_flag)
+	{
+		h_fd = open(".here_doc_tmp", O_RDWR | O_TRUNC | O_CREAT, 0644);
+		while (1)
+		{
+			write(2, "1hd> ", 5);
+			gnl = get_next_line(0);
+			if (ft_strncmp(gnl, limiter, ft_strlen(gnl)) == '\n')
+			{
+				free(gnl);
+				break ;
+			}
+			write(h_fd, gnl, ft_strlen(gnl));
+			free(gnl);
+		}
+		close(h_fd);
+		h_fd = open(".here_doc_tmp", O_RDONLY, 0644);
+		dup2(h_fd, STDIN_FILENO);
+		close(h_fd);
+		info->redir_in_flag = 1;
+	}
+	else
+	{
+		while (1)
+		{
+			write(2, "2hd> ", 5);
+			gnl = get_next_line(0);
+			if (ft_strncmp(gnl, limiter, ft_strlen(gnl)) == '\n')
+			{
+				free(gnl);
+				break ;
+			}
+			free(gnl);
+		}
+	}
+	tool.pid = fork();
+	if (!tool.pid)
+		execute(info, myself->left_child);
+	waitpid(tool.pid, &tool.status, 0);
+	if (WEXITSTATUS(tool.status))
+	{
+		if (info->redir_cnt == 1)
+			unlink(".minishell_tmp");
+		exit(WEXITSTATUS(tool.status));
+	}
+	return (0);
 }
 
 int	redir_output(t_info *info, t_tree *myself)
@@ -171,57 +230,63 @@ int	redir_output(t_info *info, t_tree *myself)
 	while (*file_name == '>')
 		file_name++;
 	if (myself->dlist->token[1] == '>')
-		r_fd = open(file_name, O_CREAT | O_APPEND | O_RDWR, 0664);
+		r_fd = open(file_name, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
-		r_fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);
-	if (!info->redir_out_flag)
+		r_fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	if (!info->redir_out_fd)
 	{
-		dup2(r_fd, STDOUT_FILENO);
-		close(r_fd);
-		info->redir_out_flag = 1;
+		info->tmp_fd = open(".minishell_tmp", O_CREAT | O_TRUNC | O_RDWR, 0644);
+		dup2(info->tmp_fd, STDOUT_FILENO);
+		close(info->tmp_fd);
+		printf("%s\n", file_name);
+		info->redir_out_fd = dup(r_fd);
 	}
+	close(r_fd);
 	tool.pid = fork();
 	if (!tool.pid)
 		execute(info, myself->left_child);
 	waitpid(tool.pid, &tool.status, 0);
 	if (WEXITSTATUS(tool.status))
 	{
-		// printf("unlink 해야됨!\n");
+		if (info->redir_cnt == 1)
+			unlink(".minishell_tmp");
 		unlink(file_name);
-		exit(tool.status);
+		exit(WEXITSTATUS(tool.status));
 	}
-	exit(0);
-	// else if (myself->right_child && myself->left_child->dlist->type == REDIR)
-	// {
-		
-	// 	// myself->right_child를 myself->left_child->right_child로 보내기
-	// }
-	// else if (myself->left_child->dlist->type == WORD);
-	// excute left
+	return (0);
 }
 
 int	execute_redir(t_info *info, t_tree *myself)
 {
-	if (myself->dlist->token[0] == '<')
+	char	*gnl;
+
+	info->redir_cnt++;
+	if (myself->dlist->token[0] == '<' && myself->dlist->token[1] != '<')
 		redir_input(info, myself);
-	else if (myself->dlist->token[0] == '>') // >a
+	else if (myself->dlist->token[0] == '>')
 		redir_output(info, myself);
-	//if (!ft_strncmp(myself->dlist->token, "<", 2))
-	//{
-			//}
-	//else if (!ft_strncmp(myself->dlist->token, ">", 2))
-	//{
-	
-	//}
-	//else if (!ft_strncmp(myself->dlist->token, "<<", 3))
-	//{
-	
-	//}
-	//else if (!ft_strncmp(myself->dlist->token, ">>", 3))
-	//{
-	
-	//}
-	return (1);
+	else if (myself->dlist->token[0] == '<' && myself->dlist->token[1] == '<')
+		redir_heredoc(info, myself);
+	if (info->redir_cnt == 1)
+	{
+		info->tmp_fd = open(".minishell_tmp", O_RDONLY);
+		gnl = get_next_line(info->tmp_fd);
+		gnl[ft_strlen(gnl) - 1] = '\0';
+		info->redir_out_fd = open(gnl, O_WRONLY, 0644);
+		free(gnl);
+		gnl = get_next_line(info->tmp_fd);
+		while (gnl)
+		{
+			write(info->redir_out_fd, gnl, ft_strlen(gnl));
+			free(gnl);
+			gnl = get_next_line(info->tmp_fd);
+		}
+		close(info->redir_out_fd);
+		unlink(".minishell_tmp");
+		unlink(".here_doc_tmp");
+		close(info->tmp_fd);
+	}
+	exit(0);
 }
 
 

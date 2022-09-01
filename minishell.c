@@ -9,16 +9,15 @@ void	init_info(t_info *info)
 	i = 0;
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
-	info->redir_out_flag = 0;
+	info->redir_out_fd = 0;
 	info->redir_in_flag = 0;
-	info->s_flag = 0;
-	info->pipe_cnt = 0;
+	info->redir_cnt = 0;
+	info->tmp_fd = 0;
 	info->dlist = 0;
 	info->env = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
-	info->pipe = ft_calloc(2, sizeof(int));
 	while (environ[i])
 	{
 		add_list_env(info, environ[i]);
@@ -62,7 +61,7 @@ int	main(void)
 		if (!pid)
 		{
 			execute(&info, info.root);
-			exit(1);
+			exit(0);
 		}
 		waitpid(pid, 0, 0);
 		free(str);

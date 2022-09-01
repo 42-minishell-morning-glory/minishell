@@ -12,6 +12,7 @@
 # include <errno.h>
 # include <dirent.h>
 # include <sys/wait.h>
+# include "get_next_line/get_next_line.h"
 
 /* yehyun
 command
@@ -68,11 +69,10 @@ typedef struct s_info
 	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
-	int						redir_out_flag; // 1이면 > 한개, 2면 >>
+	int						redir_out_fd; // 1이면 > 한개, 2면 >>
 	int						redir_in_flag;
-	int						s_flag;
-	int						*pipe;
-	int						pipe_cnt;
+	int						redir_cnt;
+	int						tmp_fd;
 	char					**envp;
 	struct s_dlist			*dlist;
 	t_tree					*root;
