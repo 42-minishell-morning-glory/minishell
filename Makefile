@@ -11,7 +11,7 @@ RM = rm -f
 PARSER_DIR = parser
 UTILS_DIR = utils
 EXPAND_DIR = expand
-TREE_DIR = travel_tree
+EXCUTE_DIR = excute
 GNL_DIR = get_next_line
 
 SRCS =	minishell.c \
@@ -24,11 +24,15 @@ SRCS =	minishell.c \
 		$(UTILS_DIR)/doubly_list.c \
 		$(UTILS_DIR)/tree.c \
 		$(UTILS_DIR)/ft_strrep.c \
+		$(UTILS_DIR)/utils.c \
 		$(EXPAND_DIR)/expand.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
 		$(EXPAND_DIR)/wild_card_utils.c \
-		$(TREE_DIR)/yehyun_test.c \
+		$(EXCUTE_DIR)/built_in.c \
+		$(EXCUTE_DIR)/excute_redir.c \
+		$(EXCUTE_DIR)/excute_word.c \
+		$(EXCUTE_DIR)/excute.c \
 		$(GNL_DIR)/get_next_line.c \
 		$(GNL_DIR)/get_next_line_utils.c
 
@@ -42,10 +46,10 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	@make -C ./libft
 	@./make.sh
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LINKING_FLAGS) $(COMFILE_FLAGS) ./libft/libft.a
+	@$(CC) $(DFLAGS) $(CFLAGS) $(OBJS) -o $(NAME) $(LINKING_FLAGS) $(COMFILE_FLAGS) ./libft/libft.a
 
 %.o : %.c
-	@$(CC) $(COMFILE_FLAGS) -c $< -o $@
+	@$(CC) $(DFLAGS) $(COMFILE_FLAGS) -c $< -o $@
 
 clean :
 	@make -C ./libft fclean

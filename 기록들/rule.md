@@ -35,3 +35,13 @@
 	엑세큐트구현시 잘 할 수 있게
 
 	최말단 구현 
+
+<처리해야 할 에러 목록>
+1. 파이프 개만흥ㅁ | 실제 bash message =>  bash: fork: Resource temporarily unavailable | 렉싱단계에서 전체 fork개수 파악
+2. 리다이렉션이랑 와일드카드 붙어있음
+
+파이프 => input & here-doc
+	output은 모르겠음
+
+<built-in 함수>
+1. env을 건드는 함수인데 파이프이면 들어가서 실행하고 (영향이 없음)

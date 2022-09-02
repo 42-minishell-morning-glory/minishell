@@ -14,19 +14,6 @@
 # include <sys/wait.h>
 # include "get_next_line/get_next_line.h"
 
-/* yehyun
-command
-option
-operator(논리 연산자)
-redirection
-pipe
-single quote
-double quote
-string -> 달러도 여기서 받아서 예외처리
-
-현재 알려진 이슈 : '$'와 "$"를 어떻게 구분할 것인가??
-*/ 
-
 # define LINE 1
 # define PIPE 2
 # define REDIR 3
@@ -35,6 +22,11 @@ string -> 달러도 여기서 받아서 예외처리
 
 # define FALSE 0
 # define TRUE 1
+
+# define VERTICAL 1
+# define HORIZONTAL 0
+
+# define REPLACE_ONE 140
 
 typedef struct s_operation
 {
@@ -69,24 +61,26 @@ typedef struct s_info
 	char					quote;
 	int						quote_flag;
 	int						double_quote_flag;
-	int						redir_out_fd; // 1이면 > 한개, 2면 >>
+	int						redir_out_fd;
 	int						redir_in_flag;
-	int						heredoc_flag;
 	int						redir_cnt;
 	int						tmp_fd;
+	int						in_fd;
+	int						out_fd;
 	char					**envp;
 	struct s_dlist			*dlist;
 	t_tree					*root;
 	struct s_dlist			*env;
 	struct s_operation		fo;
+	int						err_flag;
 }							t_info;
+
 /* signal.c */
 void	set_signal_handler(void);
 void	signal_handler(int signal);
 void	set_terminal(void);
 
 /*---minishell/parser---*/
-
 	/* lexer.c */
 int		lexer(char *str, t_info *info);
 
@@ -106,13 +100,9 @@ int		check_pipe(t_dlist *curr);
 int		check_word(t_dlist *curr);
 int		check_line(t_dlist *curr);
 int		check_bracket(t_dlist *curr);
+/*---minishell/parser---*/
 
 /*---minishell/utils---*/
-
-
-/* execute.c */
-int	execute(t_info *info, t_tree *myself);
-
 	/* doubly_list.c */
 t_dlist	*create_list(void);
 void	add_list(t_info *info, char *str);
@@ -126,11 +116,17 @@ t_tree *make_tree(t_tree *myself, t_dlist *dlist);
 void	printTree(t_tree *parent, int cnt);
 t_dlist	*get_first(t_dlist *curr);
 
+	/* utils.c */
+int		puterr_exit_code(char *str, int code);
+int		put_str_err(t_dlist *list, char *str);
+int		ft_free(char **split);
+
 	/* other */
 char	*ft_strjoin_free(char *s1, char *s2);
 char	*ft_strrep(char *token, char *value, int i);
 /*---minishell/utils---*/
 
+/*---minishell/expand---*/
 	/* expand.c */
 int		expand(t_tree *myself, t_info *info);
 int		shell_var_expand(t_dlist *curr, t_info *info);
@@ -141,5 +137,26 @@ int		set_list(t_dlist *curr, t_dlist *new_list);
 char	*ft_str_rep_wildcard(char *d_name, char *next_path);
 char	*ft_strjoin_free(char *s1, char *s2);
 int		filter_wildcard(char *wc, char *str, int i, int j);
+/*---minishell/expand---*/
+
+/* minishell/execute */
+	/* excute.c */
+int		execute(t_info *info, t_tree *myself);
+int		execute_word(t_info *info, t_tree *myself);
+int		execute_redir(t_info *info, t_tree *myself);
+char	**make_command(t_dlist *curr);
+
+	/* built_in.c */
+int		is_echo_option(char *arg);
+char	*list2p(t_dlist *list);
+int		echo(t_dlist *list);
+int		export(t_info *info, t_dlist *list);
+int		unset(t_info *info, t_dlist *list);
+int		env(t_info *info, int flag);
+int		cd(t_info *info, t_dlist *list);
+int		pwd(void);
+int		mini_exit(t_dlist *list);
+int		built_in(t_info *info, t_tree *myself);
+
 
 #endif

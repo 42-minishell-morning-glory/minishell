@@ -40,13 +40,13 @@ void	add_list_env(t_info *info, char *str)
 	if (info->env == NULL)
 	{
 		info->env = create_list();
-		info->env->token = str;
+		info->env->token = ft_strdup(str);
 		return ;
 	}
 	while (curr->next)
 		curr = curr->next;
 	new = create_list();
-	new->token = str;
+	new->token = ft_strdup(str);
 	curr->next = new;
 	new->next = NULL;
 	new->prev = curr;
@@ -90,6 +90,7 @@ int	delete_node(t_dlist **list, t_dlist *node)
 		tmp = tmp->next;
 	if (tmp == 0)
 		return (0);
+	printf("%s\n", tmp->token);
 	if (tmp->next)
 		tmp->next->prev = tmp->prev;
 	if (tmp->prev)
