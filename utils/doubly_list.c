@@ -90,7 +90,6 @@ int	delete_node(t_dlist **list, t_dlist *node)
 		tmp = tmp->next;
 	if (tmp == 0)
 		return (0);
-	printf("%s\n", tmp->token);
 	if (tmp->next)
 		tmp->next->prev = tmp->prev;
 	if (tmp->prev)

@@ -16,25 +16,26 @@ void	init_info(t_info *info)
 	info->in_fd = 0;
 	info->out_fd = 0;
 	info->dlist = 0;
-	info->env = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
 	info->err_flag = 0;
-	while (environ[i])
-	{
-		add_list_env(info, environ[i]);
-		i++;
-	}
 }
 
 int	main(void)
 {
+	int		i = 0;
 	char	*str;
 	t_info	info;
 
 	set_terminal();
 	set_signal_handler();
+	info.env = 0;
+	while (environ[i])
+	{
+		add_list_env(&info, environ[i]);
+		i++;
+	}
 	while (1)
 	{
 		init_info(&info);

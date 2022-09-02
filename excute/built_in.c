@@ -45,46 +45,32 @@ int	echo(t_dlist *list)
 	return (0);
 }
 
-char	*list2p(t_dlist *list)
-{
-	t_dlist	*tmp;
-	char	*key;
-
-	tmp = list;
-	key = ft_strdup(tmp->token);
-	tmp = tmp->next;
-	while (tmp)
-	{
-		key = ft_strjoin(key, tmp->token);
-		tmp = tmp->next;
-	}
-	return (key);
-}
-
 int	unset(t_info *info, t_dlist *list)
 {
 	t_dlist	*tmp;
-	char	*key;
+	char	**key;
+	int		i;
 
-	tmp = info->env;
-	key = list2p(list->next);
-	if (ft_isdigit(key[0])
-		&& printf("minishell: unset: '%s': not a valid identifier\n", key))
-		return (0);
-	if (key[0] == '-' && printf("usage: unset [name ...]\n"))
-		return (0);
-	while (tmp)
+	key = make_command(list->next);
+	i = 0;
+	while (key[i])
 	{
-		if (ft_strncmp(tmp->token, key, ft_strlen(key) + 1) == '=')
-			break ;
-		tmp = tmp->next;
+		tmp = info->env;
+		if ((ft_isdigit(key[i][0]) || key[i][0] == '-')
+			&& printf("morningshell: unset: `%c': not a valid identifier\n", key[i][0]) && ++i)
+			continue ;
+		while (tmp)
+		{
+			if (ft_strncmp(tmp->token, key[i], ft_strlen(key[i]) + 1) == '=')
+				break ;
+			tmp = tmp->next;
+		}
+		if (!tmp && ++i)
+			continue ;
+		delete_node(&info->env, tmp);
+		i++;
 	}
-	if (!tmp)
-		return (1);
-	delete_node(&info->env, tmp);
 	free(key);
-	printf("외안되\n");
-	env(info, 0);
 	return (0);
 }
 
@@ -92,7 +78,6 @@ int	env(t_info *info, int flag)
 {
 	t_dlist	*temp;
 
-	printf("나는 환경변수\n");
 	temp = info->env;
 	while (temp != NULL)
 	{
@@ -104,42 +89,40 @@ int	env(t_info *info, int flag)
 	return (0);
 }
 
-// int	export(t_info *info, char *key_value)
-
-int	env_check(t_info *info, t_dlist *env_list, char *key_value)
+int	env_check(t_info *info, t_dlist *env_list, char *key_value, int *i)
 {
 	char	*temp;
-	int		i;
+	t_dlist *unset_list;
 
-	i = ft_strlen(key_value);
-	// while (env_list)
-	// {
-	// 	if (!ft_strncmp(key_value, env_list->token, i))
-	// 	{
-	// 		// temp = ft_strndup(env->token, i - 1);
-	// 		unset(info, env_list);
-	// 		// free(temp);
-	// 	}
-	// 	env_list = env_list->next;
-	// }
+	while (env_list)
+	{
+		if (!ft_strncmp(key_value, env_list->token, (*i)))
+		{
+			temp = ft_strndup(env_list->token, (*i));
+			unset_list = create_list();
+			unset_list->next = create_list();
+			unset_list->next->token = temp;
+			unset(info, unset_list);
+			free(temp);
+			break ;
+		}
+		env_list = env_list->next;
+	}
 	return (0);
 }
 
-int key_check(char *token)
+int key_check(char *token, int *i)
 {
-	int i;
-	
-	i = 0;
-	while (token[i] && token[i] != '=')
+	while (token[(*i)] && token[(*i)] != '=')
 	{
-		if (ft_isdigit(token[i])) //export 1=e
+		if (ft_isdigit(token[0])) //export 1=e
 		{
 			printf("minishell: export: `%s': not a valid identifier\n", token);
 			return (1);
 		}
-		if (!token[i]) // export a 
+		if (!token[(*i)]) // export a 
 			return (1);
-		i++;
+		(*i)++;
 	}
 	return (0);
 }
@@ -151,25 +134,19 @@ int	export(t_info *info, t_dlist *list)
 	t_dlist	*env_list;
 
 	curr = list->next;
-	printf("curr token :%s \n", curr->token);
 	env_list = info->env;
 	if (!curr)
 	{
 		env(info, 1);
 		return (0);
-	} //문제없음!
-
+	}
 	while (curr)
 	{
-		if (1)
-		{
-			printf("hey : %s\n", curr->token);
+		i = 0;
+		if (!key_check(curr->token, &i) && !env_check(info, env_list, curr->token, &i))
 			add_list_env(info, curr->token);
-		}
 		curr = curr->next;
 	}
-	env(info, 0);
-	// && !env_check(info, env_list, curr->token)
 	return (0);
 }
 
@@ -200,7 +177,7 @@ int	cd(t_info *info, t_dlist *list)
 	{
 		old_path = getcwd(NULL, 0);
 		if (chdir(list->next->token))
-			perror(strerror(errno));
+			puterr_exit_code("cd", 0);
 	}
 	env = ft_strjoin("OLDPWD=", old_path);
 	prev_lst = create_list();
