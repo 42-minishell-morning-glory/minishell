@@ -58,11 +58,19 @@ int	normal_expand(t_dlist *curr, t_info *info, int i)
 {
 	char	*expand;
 	char	*tmp;
+	char	*exit_code;
 
 	tmp = curr->token;
 	while (tmp[i] && (tmp[i] != '\'' || tmp[i] != '\"' || tmp[i] != ' '))
 	{
-		if (tmp[i] == '$')
+		if (tmp[i] == '$' && tmp[i + 1] == '?')
+		{
+			exit_code = ft_itoa(info->exit_code);
+			curr->token = exit_code;
+			free(tmp);
+			return (1);
+		}
+		else if (tmp[i] == '$')
 		{
 			expand = switch2env(tmp, info, i);
 			if (expand)

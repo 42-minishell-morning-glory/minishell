@@ -95,7 +95,7 @@ int	execute_word(t_info *info, t_tree *myself)
 	tool.pid = fork();
 	if (!tool.pid)
 		if (execve(path, argv, env) == -1)
-			exit(puterr_exit_code(argv[0], 0));
+			exit(puterr_exit_code(argv[0], 127));
 	waitpid(tool.pid, &tool.status, 0);
 	// 여기서 올바르지 않은 명령어일때 그 명령어 free 해줘야댐
 	if (info->path_flag)

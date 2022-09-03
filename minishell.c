@@ -22,14 +22,15 @@ void	init_info(t_info *info)
 
 int	main(void)
 {
-	int		i;
-	char	*str;
-	t_info	info;
+	int			i;
+	char		*str;
+	t_info		info;
 
 	set_terminal();
 	set_signal_handler();
-	info.env = 0;
 	i = 0;
+	info.env = 0;
+	info.exit_code = 0;
 	while (environ[i])
 	{
 		add_list(&info.env, environ[i]);
@@ -64,7 +65,7 @@ int	main(void)
 		}
 		info.root = make_tree(NULL, info.dlist);
 		expand(&info, info.root);
-		execute(&info, info.root);
+		info.exit_code = execute(&info, info.root);
 		free(str);
 		free_tree(info.root);
 	}

@@ -73,19 +73,48 @@ char	*fix_bracket(char *token)
 
 int	execute_bracket(t_info *info, t_tree *myself)
 {
-	char	*fixed;
-	pid_t	pid;
+	char	*str;
+	t_info	infoo;
+	t_ftool	tool;
 
-	fixed = fix_bracket(myself->dlist->token);
-	printf("%s\n", fixed);
-	pid = fork();
-	if (!pid)
-		
-	exit(0);
+	str = fix_bracket(myself->dlist->token);
+	init_info(&infoo);
+	infoo.env = info->env;
+	tool.pid = fork();
+	if (!tool.pid)
+	{
+		if (space_check(str) == TRUE)
+		{
+			free(str);
+			exit(0);
+		}
+		if (!input_check(str))
+		{
+			free(str);
+			exit(0);
+		}
+		if (!lexer(str, &infoo))
+		{
+			free(str);
+			delete_dlist(infoo.dlist);
+			exit(0);
+		}
+		infoo.root = make_tree(NULL, infoo.dlist);
+		expand(&infoo, infoo.root);
+		tool.status = execute(&infoo, infoo.root);
+		free(str);
+		free_tree(infoo.root);
+		exit(tool.status);
+	}
+	waitpid(tool.pid, &tool.status, 0);
+	free(str);
+	return (0);
 }
 
 int	execute(t_info *info, t_tree *myself)
 {
+	if (!myself)
+		return (0);
 	if (myself->dlist->type == LINE)
 		return (execute_line(info, myself));
 	if (myself->dlist->type == PIPE)

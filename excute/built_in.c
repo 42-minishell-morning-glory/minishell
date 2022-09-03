@@ -196,7 +196,7 @@ int	cd(t_info *info, t_dlist *list)
 	return (0);
 }
 
-int	pwd(void) // 뒤에 오는 argv들 모두 금이빨 빼 씹어먹음
+int	pwd(void) // 뒤에 오는 argv들 모두 금이빨 bogo빼 씹어먹음
 {
 	char	*tmp;
 
