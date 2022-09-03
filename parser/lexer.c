@@ -5,7 +5,8 @@ int	make_token(t_info *info, int end, int start, char *str)
 	char	*temp;
 
 	temp = ft_strndup(&str[start], end + 1 - start);
-	add_list(info, temp);
+	add_list(&info->dlist, temp);
+	free(temp);
 	return (1);
 }
 
@@ -96,8 +97,10 @@ int	lexer(char *str, t_info *info)
 	}
 	free(lex_str);
 	tokenize(info);
+	if (!info->dlist)
+		return (0);
 	if (!check_syntax(info))
-		return(0);
+		return (0);
 	stick_redir(info);
 	return (1);
 }

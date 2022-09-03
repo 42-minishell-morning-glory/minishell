@@ -104,6 +104,8 @@ int	env_check(t_info *info, t_dlist *env_list, char *key_value, int *i)
 			unset_list->next->token = temp;
 			unset(info, unset_list);
 			free(temp);
+			free(unset_list->next);
+			free(unset_list);
 			break ;
 		}
 		env_list = env_list->next;
@@ -144,7 +146,7 @@ int	export(t_info *info, t_dlist *list)
 	{
 		i = 0;
 		if (!key_check(curr->token, &i) && !env_check(info, env_list, curr->token, &i))
-			add_list_env(info, curr->token);
+			add_list(&info->env, curr->token);
 		curr = curr->next;
 	}
 	return (0);
@@ -170,7 +172,9 @@ int	cd(t_info *info, t_dlist *list)
 			tmp = getcwd(NULL, 0);
 			chdir(old_path);
 			old_path = tmp;
-			printf("%s\n", getcwd(NULL, 0));
+			tmp = getcwd(NULL, 0);
+			printf("%s\n", tmp);
+			free(tmp);
 		}
 	}
 	else
@@ -186,12 +190,19 @@ int	cd(t_info *info, t_dlist *list)
 	prev_lst->next = env_list;
 	export(info, prev_lst);
 	free(env);
+	free(prev_lst);
+	free(env_list);
+	free(old_path);
 	return (0);
 }
 
 int	pwd(void) // 뒤에 오는 argv들 모두 금이빨 빼 씹어먹음
 {
-	printf("%s\n", getcwd(NULL, 0)); // 수정 필요 pwd > a 가능함
+	char	*tmp;
+
+	tmp = getcwd(NULL, 0);
+	printf("%s\n", tmp);
+	free(tmp);
 	return (0);
 }
 

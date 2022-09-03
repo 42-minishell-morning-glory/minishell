@@ -4,9 +4,6 @@ extern char **environ;
 
 void	init_info(t_info *info)
 {
-	int	i;
-
-	i = 0;
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
 	info->redir_out_fd = 0;
@@ -20,20 +17,22 @@ void	init_info(t_info *info)
 	info->fo.last_idx = 0;
 	info->root = 0;
 	info->err_flag = 0;
+	info->path_flag = 0;
 }
 
 int	main(void)
 {
-	int		i = 0;
+	int		i;
 	char	*str;
 	t_info	info;
 
 	set_terminal();
 	set_signal_handler();
 	info.env = 0;
+	i = 0;
 	while (environ[i])
 	{
-		add_list_env(&info, environ[i]);
+		add_list(&info.env, environ[i]);
 		i++;
 	}
 	while (1)
@@ -43,23 +42,30 @@ int	main(void)
 		if (!str)
 		{
 			printf("exit\n");
+			delete_dlist(info.env);
 			exit(0);
 		}
 		if (space_check(str) == TRUE)
+		{
+			free(str);
 			continue ;
+		}
 		add_history(str);
 		if (!input_check(str))
+		{
+			free(str);
 			continue ;
+		}
 		if (!lexer(str, &info))
 		{
 			free(str);
-			delete_dlist(&info);
+			delete_dlist(info.dlist);
 			continue ;
 		}
 		info.root = make_tree(NULL, info.dlist);
-		expand(info.root, &info);
+		expand(&info, info.root);
 		execute(&info, info.root);
 		free(str);
-		delete_dlist(&info);
+		free_tree(info.root);
 	}
 }

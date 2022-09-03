@@ -13,14 +13,7 @@ char	*token2env(char *env)
 	while (env[j] != '=')
 		j++;
 	j++;
-	new = ft_calloc(env_size - j + 1, sizeof(char));
-	while (env[j])
-	{
-		new[i] = env[j];
-		i++;
-		j++;
-	}
-	new[i] = '\0';
+	new = ft_strdup(&env[j]);
 	return (new);
 }
 
@@ -73,7 +66,10 @@ int	normal_expand(t_dlist *curr, t_info *info, int i)
 		{
 			expand = switch2env(tmp, info, i);
 			if (expand)
+			{
 				curr->token = ft_strrep(tmp, expand, i);
+				free(expand);
+			}
 			return (1);
 		}
 		i++;

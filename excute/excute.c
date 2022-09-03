@@ -15,27 +15,43 @@ int	execute_line(t_info *info, t_tree *myself)
 	return (right);
 }
 
+void	pipe_child(t_info *info, t_tree *myself, t_ftool *tool, int flag)
+{
+	if (flag)
+	{
+		dup2(tool->p_fd[1], STDOUT_FILENO);
+		close(tool->p_fd[1]);
+		close(tool->p_fd[0]);
+		tool->status = execute(info, myself->left_child);
+	}
+	else
+		tool->status = execute(info, myself->right_child);
+	exit(tool->status);
+}
+
 int	execute_pipe(t_info *info, t_tree *myself)
 {
 	t_ftool	tool;
+	int		tmp_fd;
 
-	if (pipe(tool.p_fd) == -1)
-		return (1);
+	tmp_fd = dup(STDIN_FILENO);
+	pipe(tool.p_fd);
 	tool.pid = fork();
 	if (!tool.pid)
-	{
-		dup2(tool.p_fd[1], STDOUT_FILENO);
-		close(tool.p_fd[1]);
-		close(tool.p_fd[0]);
-		return (execute(info, myself->left_child));
-	}
+		pipe_child(info, myself, &tool, 1);
 	waitpid(tool.pid, &tool.status, 0);
-	if (!WIFEXITED(tool.status))
-		exit(WEXITSTATUS(tool.status));
+	if (WEXITSTATUS(tool.status))
+		return (WEXITSTATUS(tool.status));
 	dup2(tool.p_fd[0], STDIN_FILENO);
 	close(tool.p_fd[0]);
 	close(tool.p_fd[1]);
-	execute(info, myself->right_child);
+	tool.pid = fork();
+	if (!tool.pid)
+		pipe_child(info, myself, &tool, 0);
+	waitpid(tool.pid, &tool.status, 0);
+	dup2(tmp_fd, STDIN_FILENO);
+	close(tmp_fd);
+	return (WEXITSTATUS(tool.status));
 }
 
 char	*fix_bracket(char *token)

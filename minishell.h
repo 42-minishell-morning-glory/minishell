@@ -59,20 +59,20 @@ typedef struct s_tree
 typedef struct s_info
 {
 	char					quote;
-	int						quote_flag;
-	int						double_quote_flag;
-	int						redir_out_fd;
-	int						redir_in_flag;
 	int						redir_cnt;
+	int						redir_out_fd;
 	int						tmp_fd;
 	int						in_fd;
 	int						out_fd;
-	char					**envp;
+	int						quote_flag;
+	int						double_quote_flag;
+	int						redir_in_flag;
+	int						err_flag;
+	int						path_flag;
+	struct s_operation		fo;
+	struct s_dlist			*env;
 	struct s_dlist			*dlist;
 	t_tree					*root;
-	struct s_dlist			*env;
-	struct s_operation		fo;
-	int						err_flag;
 }							t_info;
 
 /* signal.c */
@@ -105,16 +105,16 @@ int		check_bracket(t_dlist *curr);
 /*---minishell/utils---*/
 	/* doubly_list.c */
 t_dlist	*create_list(void);
-void	add_list(t_info *info, char *str);
-void	add_list_env(t_info *info, char *str);
+void	add_list(t_dlist **list, char *str);
 int		delete_node(t_dlist **list, t_dlist *node);
-void	delete_dlist(t_info *info);
-void	printList(t_info *info);
+void	delete_dlist(t_dlist *list);
+void	printList(t_dlist *list);
+t_dlist	*get_first(t_dlist *curr);
 
 	/* tree.c */
 t_tree *make_tree(t_tree *myself, t_dlist *dlist);
 void	printTree(t_tree *parent, int cnt);
-t_dlist	*get_first(t_dlist *curr);
+void	free_tree(t_tree *myself);
 
 	/* utils.c */
 int		puterr_exit_code(char *str, int code);
@@ -128,7 +128,7 @@ char	*ft_strrep(char *token, char *value, int i);
 
 /*---minishell/expand---*/
 	/* expand.c */
-int		expand(t_tree *myself, t_info *info);
+int		expand(t_info *info, t_tree *myself);
 int		shell_var_expand(t_dlist *curr, t_info *info);
 
 	/* wildcard.c */
@@ -157,6 +157,5 @@ int		cd(t_info *info, t_dlist *list);
 int		pwd(void);
 int		mini_exit(t_dlist *list);
 int		built_in(t_info *info, t_tree *myself);
-
 
 #endif
