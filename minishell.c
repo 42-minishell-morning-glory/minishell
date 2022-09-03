@@ -20,53 +20,74 @@ void	init_info(t_info *info)
 	info->path_flag = 0;
 }
 
-int	main(void)
+int	before_cmd(char *str, t_info *info)
 {
-	int			i;
-	char		*str;
-	t_info		info;
+	if (!str)
+	{
+		printf("exit\n");
+		delete_dlist(info->env);
+		exit(0);
+	}
+	if (space_check(str) == TRUE)
+	{
+		free(str);
+		return (1);
+	}
+	return (0);
+}
 
-	set_terminal();
-	set_signal_handler();
+int	after_cmd(char *str, t_info *info)
+{
+	if (!input_check(str))
+	{
+		free(str);
+		return (1);
+	}
+	if (!lexer(str, info))
+	{
+		free(str);
+		delete_dlist(info->dlist);
+		return (1);
+	}
+	return (0);
+}
+
+int	init_main(t_info *info)
+{
+	int	i;
+
 	i = 0;
-	info.env = 0;
-	info.exit_code = 0;
+	info->env = 0;
+	info->exit_code = 0;
 	while (environ[i])
 	{
-		add_list(&info.env, environ[i]);
+		add_list(&info->env, environ[i]);
 		i++;
-	}
+	}	
+}
+
+int	main(void)
+{
+	char	*str;
+	t_info	info;
+
+	init_main(&info);
+	set_terminal();
+	set_signal_handler();
 	while (1)
 	{
 		init_info(&info);
 		str = readline("morningshell$ ");
-		if (!str)
-		{
-			printf("exit\n");
-			delete_dlist(info.env);
-			exit(0);
-		}
-		if (space_check(str) == TRUE)
-		{
-			free(str);
+		if (before_cmd(str, &info))
 			continue ;
-		}
 		add_history(str);
-		if (!input_check(str))
-		{
-			free(str);
+		if (after_cmd(str, &info))
 			continue ;
-		}
-		if (!lexer(str, &info))
-		{
-			free(str);
-			delete_dlist(info.dlist);
-			continue ;
-		}
 		info.root = make_tree(NULL, info.dlist);
 		expand(&info, info.root);
 		info.exit_code = execute(&info, info.root);
 		free(str);
 		free_tree(info.root);
 	}
+	return (0);
 }
