@@ -121,7 +121,10 @@ void	do_here_doc(t_info *info, t_tree *myself)
 	fd = open(".heredoc", O_CREAT | O_TRUNC | O_RDWR, 0644);
 	while (1)
 	{
+		write(2, "> ", 2);
 		str = get_next_line(info->in_fd);
+		if (!str)
+			break ;
 		if (ft_strncmp(str, limiter, ft_strlen(str)) == '\n')
 		{
 			free(str);
