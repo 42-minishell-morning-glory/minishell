@@ -1,9 +1,9 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LINKING_FLAGS = -L/Users/yehyun/.brew/opt/readline/lib -lreadline
-COMFILE_FLAGS = -I/Users/yehyun/.brew/opt/readline/include/
-#LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
-#COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+#LINKING_FLAGS = -L/Users/yehyun/.brew/opt/readline/lib -lreadline
+#COMFILE_FLAGS = -I/Users/yehyun/.brew/opt/readline/include/
+LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline
+COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
 DFLAGS = -g2 -fsanitize=address
 
 RM = rm -f
@@ -66,6 +66,7 @@ re :
 run :
 	@cat ascii_art/sun
 	@make re
+	@make clean
 	@./minishell
 
 #debug :

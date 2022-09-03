@@ -2,7 +2,8 @@
 
 int	is_sep_token(char *str, int i)
 {
-	if (str[i] == '<' || str[i] == '>' || (str[i] == '&' && str[i + 1] == '&') || str[i] == '|')
+	if (str[i] == '<' || str[i] == '>'
+		|| (str[i] == '&' && str[i + 1] == '&') || str[i] == '|')
 		return (1);
 	return (0);
 }
@@ -54,13 +55,8 @@ int	pass_quote(char *token, int i)
 	return (i);
 }
 
-int	split_token(char *token, t_dlist *curr)
+int	split_token(char *token, t_dlist *curr, int i, int quote)
 {
-	int	i;
-	int	quote;
-
-	i = 0;
-	quote = 0;
 	while (token[i])
 	{
 		if (token[i] == '\'' || token[i] == '\"')
@@ -108,7 +104,7 @@ void	tokenize(t_info *info)
 			curr = curr->next;
 			continue ;
 		}
-		split_token(curr->token, curr);
+		split_token(curr->token, curr, 0, 0);
 		curr = curr->next;
 	}
 }

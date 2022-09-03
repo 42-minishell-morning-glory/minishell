@@ -1,0 +1,16 @@
+Makefile
+ascii_art
+c
+excute
+expand
+get_next_line
+libft
+make.sh
+minishell
+minishell.c
+minishell.h
+parser
+signal.c
+signatures
+utils
+venv

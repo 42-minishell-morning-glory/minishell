@@ -58,11 +58,12 @@ t_dlist *change_to_word(char *curr, char *next, int com_flag)
 	while (d_entry)
 	{
 		if (((com_flag && d_entry->d_name[0] == '.')
-			|| (!com_flag && d_entry->d_name[0] != '.'))
-			&& filter_wildcard(curr, d_entry->d_name, -1, 0)
-			&& ((d_entry->d_type == 8 && !next) || (d_entry->d_type == 4))
+			|| ((!com_flag && d_entry->d_name[0] != '.')
 			&& (ft_strncmp(d_entry->d_name, ".", 2) 
-			&& ft_strncmp(d_entry->d_name, "..", 3)))
+			&& ft_strncmp(d_entry->d_name, "..", 3))))
+			&& filter_wildcard(curr, d_entry->d_name, -1, 0)
+			&& ((d_entry->d_type == 8 && !next) || (d_entry->d_type == 4)))
+			// 이슈 : ls .* 했을떄 .이랑 ..도 인자로 받기
 		{
 			ret = ft_strjoin(d_entry->d_name, next);
 			add_list(&tmp_info.dlist, ret); // ret 복사되서 들어감

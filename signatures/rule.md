@@ -45,3 +45,16 @@
 
 <built-in 함수>
 1. env을 건드는 함수인데 파이프이면 들어가서 실행하고 (영향이 없음)
+
+<알려진 오류>
+1. 표준입력 상태에서 ctrl c 누르면 모닝쉘 두번 나옴
+
+2. exit hihi => numeric arument required
+			==> exit code 255
+3. exit 122 21321 => too many arguments
+			==> 1인데 exit 안됨
+4. exit hihi bye => numeric arument required
+			==> exit code 255
+5. "< ("=> systax error near unexpected token '('
+			==> exit code 258
+6. 표준입력 받는 중에 ctrl + \ 했을 때 bash랑 다름 (서브젝트 다시 확인 필요함)

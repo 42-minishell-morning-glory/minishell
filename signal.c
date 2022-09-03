@@ -13,9 +13,17 @@ void	signal_handler(int signal)
 		return ;
 }
 
-void	set_signal_handler(void)
+void	signal_handler2(int signal)
 {
-	signal(SIGINT, signal_handler);
+	printf("\n");
+}
+
+void	set_signal_handler(int flag)
+{
+	if (!flag)
+		signal(SIGINT, signal_handler);
+	else
+		signal(SIGINT, signal_handler2);
 	signal(SIGQUIT, SIG_IGN);
 }
 

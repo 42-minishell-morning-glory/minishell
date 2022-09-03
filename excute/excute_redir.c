@@ -56,7 +56,7 @@ int	redir_input(t_info *info, t_tree *myself)
 		file_name++;
 	r_fd = open(file_name, O_RDONLY, 0644);
 	if (r_fd == -1 && (myself->left_child->dlist->type == WORD || !myself->left_child))
-		return (puterr_exit_code(file_name, 0));
+		return (puterr_exit_code(file_name, 0, 0));
 	if (!info->redir_in_flag)
 		flag_on_redirin(info, myself, &r_fd);
 	left = execute(info, myself->left_child);
@@ -67,7 +67,7 @@ int	redir_input(t_info *info, t_tree *myself)
 		return (left);
 	}
 	if (r_fd == -1)
-		return (puterr_exit_code(file_name, REPLACE_ONE));
+		return (puterr_exit_code(file_name, 0, REPLACE_ONE));
 	return (0);
 }
 
@@ -133,7 +133,7 @@ void	do_here_doc(t_info *info, t_tree *myself)
 	close(fd);
 }
 
-void	append_list(t_tree *myself, int flag)
+void	append_list(t_tree *myself, int flag) // 오류 발생
 {
 	t_dlist	*tmp1;
 	t_dlist	*tmp2;
@@ -143,17 +143,26 @@ void	append_list(t_tree *myself, int flag)
 		return ;
 	tmp1 = myself->right_child->dlist;
 	if (flag == VERTICAL)
-		target = myself->left_child->right_child;
-	else
-		target = myself->left_child;
-	if (target == NULL)
 	{
-		target = myself->right_child;
-		myself->right_child = 0;
-		return ;
-	}	
+		target = myself->left_child->right_child;
+		if (target == NULL)
+		{
+			myself->left_child->right_child = myself->right_child;
+			myself->right_child = 0;
+			return ;
+		}
+	}
 	else
-		tmp2 = target->dlist;
+	{
+		target = myself->left_child;
+		if (target == NULL)
+		{
+			myself->left_child = myself->right_child;
+			myself->right_child = 0;
+			return ;
+		}
+	}
+	tmp2 = target->dlist;
 	while (tmp2->next)
 		tmp2 = tmp2->next;
 	tmp2->next = tmp1;

@@ -79,11 +79,11 @@ typedef struct s_info
 void	init_info(t_info *info);
 
 /* signal.c */
-void	set_signal_handler(void);
+void	set_signal_handler(int flag);
 void	signal_handler(int signal);
 void	set_terminal(void);
-
-/*---minishell/parser---*/
+void	signal_handler2(int signal);
+/*---parser---*/
 	/* lexer.c */
 int		lexer(char *str, t_info *info);
 
@@ -103,7 +103,7 @@ int		check_pipe(t_dlist *curr);
 int		check_word(t_dlist *curr);
 int		check_line(t_dlist *curr);
 int		check_bracket(t_dlist *curr);
-/*---minishell/parser---*/
+/*---parser---*/
 
 /*---minishell/utils---*/
 	/* doubly_list.c */
@@ -115,14 +115,15 @@ void	printList(t_dlist *list);
 t_dlist	*get_first(t_dlist *curr);
 
 	/* tree.c */
-t_tree *make_tree(t_tree *myself, t_dlist *dlist);
+t_tree	*make_tree(t_tree *myself, t_dlist *dlist);
 void	printTree(t_tree *parent, int cnt);
 void	free_tree(t_tree *myself);
 
 	/* utils.c */
-int		puterr_exit_code(char *str, int code);
+int		puterr_exit_code(char *str, char *arg, int code);
 int		put_str_err(t_dlist *list, char *str);
 int		ft_free(char **split);
+int		ft_isdigit_str(char *str);
 
 	/* other */
 char	*ft_strjoin_free(char *s1, char *s2);

@@ -125,4 +125,5 @@ int	execute(t_info *info, t_tree *myself)
 		return (execute_word(info, myself));
 	if (myself->dlist->type == BRACKET)
 		return (execute_bracket(info, myself));
+	return (0);
 }

@@ -54,9 +54,9 @@ int	first_opertaion(char *str, t_info *info)
 				info->fo.i++;
 		}
 		else if (str[info->fo.i] == ')')
-			return (put_syntaxerr_msg(")")); // return (0);
+			return (put_syntaxerr_msg(")"));
 		else if (str[info->fo.i] == '(' && !cut_bracket(str, info, 0, 0))
-			return (put_syntaxerr_msg(")")); //return 0
+			return (put_syntaxerr_msg(")"));
 		info->fo.i++;
 	}
 	if (info->fo.last_idx != info->fo.i)

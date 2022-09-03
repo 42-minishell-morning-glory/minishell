@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-extern char **environ;
+extern char	**environ;
 
 void	init_info(t_info *info)
 {
@@ -63,7 +63,8 @@ int	init_main(t_info *info)
 	{
 		add_list(&info->env, environ[i]);
 		i++;
-	}	
+	}
+	return (0);
 }
 
 int	main(void)
@@ -73,11 +74,12 @@ int	main(void)
 
 	init_main(&info);
 	set_terminal();
-	set_signal_handler();
 	while (1)
 	{
 		init_info(&info);
+		set_signal_handler(0);
 		str = readline("morningshell$ ");
+		set_signal_handler(1);
 		if (before_cmd(str, &info))
 			continue ;
 		add_history(str);

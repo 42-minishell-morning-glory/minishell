@@ -152,8 +152,22 @@ int	export(t_info *info, t_dlist *list)
 	return (0);
 }
 
+char	*get_home(t_info *info) // HOME을 찾기. HOME을 떄 cd하면  이거 뜸 
+{
+	t_dlist	*curr;
+	char	*ret;
+	
+	curr = info->env;
+	while (curr && ft_strncmp(curr->token, "HOME=", 5))
+		curr = curr->next;
+	if (!curr)
+		return (NULL);
+	ret = curr->token;
+	ret += 5;
+	return (ret);
+}
 
-int	cd(t_info *info, t_dlist *list)
+int	cd(t_info *info, t_dlist *list) // 그냥 cd 했을때 처리
 {
 	static char	*old_path;
 	char		*tmp;
@@ -161,6 +175,14 @@ int	cd(t_info *info, t_dlist *list)
 	t_dlist		*env_list;
 	t_dlist		*prev_lst;
 
+	if (!list->next) // env에서 $HOME 찾아서 넣어주면 됨
+	{
+		if (!get_home(info))
+			return (put_str_err(list, "HOME not set")); //[bash: cd: HOME not set]
+		else
+			chdir(get_home(info));
+		return (0);
+	}
 	if (list->next->next)
 		return (put_str_err(list, "too many arguments"));
 	if (list->next->token[0] == '-' && list->next->token[1] == '\0')
@@ -181,7 +203,7 @@ int	cd(t_info *info, t_dlist *list)
 	{
 		old_path = getcwd(NULL, 0);
 		if (chdir(list->next->token))
-			puterr_exit_code("cd", 0);
+			puterr_exit_code("cd", 0, 0);
 	}
 	env = ft_strjoin("OLDPWD=", old_path);
 	prev_lst = create_list();
@@ -208,8 +230,19 @@ int	pwd(void) // 뒤에 오는 argv들 모두 금이빨 bogo빼 씹어먹음
 
 int	mini_exit(t_dlist *list)
 {
-	int	exit_code;
+	unsigned char	exit_code;
 
+	if (list->next && !ft_isdigit_str(list->next->token))
+	{
+		// exit
+		// bash: exit: www: numeric argument required
+		ft_putstr_fd("exit\nmorningshell: exit: ", 2);
+		ft_putstr_fd(list->next->token, 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		exit(255);
+	}
+	if (list->next && list->next->next) //안끝남
+		return (put_str_err(list, "too many arguments"));
 	if (list->next)
 		exit_code = ft_atoi(list->next->token);
 	else

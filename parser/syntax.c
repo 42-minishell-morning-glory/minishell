@@ -13,11 +13,13 @@ int	init_syntax(t_info *info)
 	curr = info->dlist;
 	while (curr)
 	{
-		if (!ft_strncmp(curr->token, "&&", 3) || !ft_strncmp(curr->token, "||", 3))
+		if (!ft_strncmp(curr->token, "&&", 3)
+			|| !ft_strncmp(curr->token, "||", 3))
 			curr->type = LINE;
 		else if (!ft_strncmp(curr->token, "|", 2))
 			curr->type = PIPE;
-		else if (!ft_strncmp(curr->token, "<", 1) || !ft_strncmp(curr->token, ">", 1))
+		else if (!ft_strncmp(curr->token, "<", 1)
+			|| !ft_strncmp(curr->token, ">", 1))
 			curr->type = REDIR;
 		else if (curr->token[0] == '(')
 			curr->type = BRACKET;
@@ -40,6 +42,24 @@ int	check_last(t_dlist *curr)
 	return (1);
 }
 
+int	check_syntax_opt(t_dlist *curr)
+{
+	int	ret;
+
+	ret = 1;
+	if (curr->type == LINE)
+		ret = check_line(curr);
+	else if (curr->type == PIPE)
+		ret = check_pipe(curr);
+	else if (curr->type == REDIR)
+		ret = check_redir(curr);
+	else if (curr->type == WORD)
+		ret = check_word(curr);
+	else if (curr->type == BRACKET)
+		ret = check_bracket(curr);
+	return (ret);
+}
+
 int	check_syntax(t_info *info)
 {
 	t_dlist	*curr;
@@ -52,16 +72,7 @@ int	check_syntax(t_info *info)
 		return (put_syntaxerr_msg(curr->token));
 	while (curr->next)
 	{
-		if (curr->type == LINE)
-			ret = check_line(curr);
-		else if (curr->type == PIPE)
-			ret = check_pipe(curr);
-		else if (curr->type == REDIR)
-			ret = check_redir(curr);
-		else if (curr->type == WORD)
-			ret = check_word(curr);
-		else if (curr->type == BRACKET)
-			ret = check_bracket(curr);
+		ret = check_syntax_opt(curr);
 		if (!ret)
 			break ;
 		curr = curr->next;

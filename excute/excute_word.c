@@ -67,12 +67,16 @@ char	*get_path(t_info *info, char *cmd, char **env)
 {
 	char	*path;
 	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		i++;
-	env[i] += 5;
-	path = split_path(info, env[i], cmd);
+	if (!env[i])
+		return (0);
+	tmp = env[i];
+	tmp += 5;
+	path = split_path(info, tmp, cmd);
 	return (path);
 }
 
@@ -92,12 +96,17 @@ int	execute_word(t_info *info, t_tree *myself)
 	argv = make_command(myself->dlist);
 	env = make_command(info->env);
 	path = get_path(info, argv[0], env);
+	if (!path)
+	{
+		free(env);
+		free(argv);
+		return (put_str_err(myself->dlist, "No such file or directory") + 126);
+	}
 	tool.pid = fork();
 	if (!tool.pid)
 		if (execve(path, argv, env) == -1)
-			exit(puterr_exit_code(argv[0], 127));
+			exit(puterr_exit_code(argv[0], 0, 127));
 	waitpid(tool.pid, &tool.status, 0);
-	// 여기서 올바르지 않은 명령어일때 그 명령어 free 해줘야댐
 	if (info->path_flag)
 		free(path);
 	free(argv);
