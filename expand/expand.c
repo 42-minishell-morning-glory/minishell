@@ -56,7 +56,7 @@ void	word_split(t_dlist *now, char quote, int i)
 	}
 }
 
-int	expand(t_tree *myself, t_info *info)
+int	expand(t_info *info, t_tree *myself)
 {
 	t_dlist	*curr;
 	int		ret;
@@ -65,7 +65,7 @@ int	expand(t_tree *myself, t_info *info)
 	ret = 0;
 	while (curr)
 	{
-		if (curr->type != WORD)
+		if (curr->type != WORD && curr->type != REDIR)
 			break ;
 		shell_var_expand(curr, info);
 		word_split(curr, 0, 0);
@@ -76,8 +76,8 @@ int	expand(t_tree *myself, t_info *info)
 		curr = curr->next;
 	}
 	if (myself->left_child)
-		ret = expand(myself->left_child, info);
+		ret = expand(info, myself->left_child);
 	if (myself->right_child)
-		ret = expand(myself->right_child, info);
+		ret = expand(info, myself->right_child);
 	return (ret);
 }

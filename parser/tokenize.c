@@ -1,8 +1,9 @@
 #include "../minishell.h"
 
-int	is_sep_token(int sep)
+int	is_sep_token(char *str, int i)
 {
-	if (sep == '<' || sep == '>' || sep == '&' || sep == '|')
+	if (str[i] == '<' || str[i] == '>'
+		|| (str[i] == '&' && str[i + 1] == '&') || str[i] == '|')
 		return (1);
 	return (0);
 }
@@ -22,7 +23,8 @@ void	cut_node(t_dlist *curr, int i)
 	curr->token = tmp1;
 	new->token = tmp2;
 	new->next = curr->next;
-	curr->next->prev = new;
+	if (curr->next)
+		curr->next->prev = new;
 	curr->next = new;
 	new->prev = curr;
 }
@@ -53,26 +55,21 @@ int	pass_quote(char *token, int i)
 	return (i);
 }
 
-int	split_token(char *token, t_dlist *curr)
+int	split_token(char *token, t_dlist *curr, int i, int quote)
 {
-	int	i;
-	int	quote;
-
-	i = 0;
-	quote = 0;
 	while (token[i])
 	{
 		if (token[i] == '\'' || token[i] == '\"')
 			i = pass_quote(token, i);
-		else if (!is_sep_token(token[i]))
+		else if (!is_sep_token(token, i))
 		{
-			while (token[i] && !is_sep_token(token[i]))
+			while (token[i] && !is_sep_token(token, i))
 				i++;
-			if (is_sep_token(token[i]))
+			if (is_sep_token(token, i))
 				cut_node(curr, i - 1);
 			return (1);
 		}
-		else if (is_sep_token(token[i]))
+		else if (is_sep_token(token, i))
 		{
 			if (token[i + 1] == token[i])
 				cut_node(curr, i + 1);
@@ -107,7 +104,7 @@ void	tokenize(t_info *info)
 			curr = curr->next;
 			continue ;
 		}
-		split_token(curr->token, curr);
+		split_token(curr->token, curr, 0, 0);
 		curr = curr->next;
 	}
 }

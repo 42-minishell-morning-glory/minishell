@@ -1,5 +1,39 @@
 #include "../minishell.h"
 
+void	printTree(t_tree *parent, int cnt)
+{
+	t_dlist	*temp;
+	t_tree	*tmp;
+
+	if (!parent)
+		return ;
+	tmp = parent;
+	temp = get_first(tmp->dlist);
+	printf("depth : %d, tree: ", cnt);
+	while (temp)
+	{
+		printf("|str : %s,  type: %d|", temp->token, temp->type);
+		temp = temp->next;
+		if (temp)
+			printf(", ");
+	}
+	printf("\n");
+	printTree(tmp->left_child, cnt + 1);
+	printTree(tmp->right_child, cnt + 1);
+}
+
+void	free_tree(t_tree *myself)
+{
+	if (!myself)
+		return ;
+	myself->dlist = get_first(myself->dlist);
+	if (myself->dlist)
+		delete_dlist(myself->dlist);
+	free_tree(myself->left_child);
+	free_tree(myself->right_child);
+	free(myself);
+}
+
 t_dlist	*check_priority(t_dlist *curr)
 {
 	t_dlist	*priority;
@@ -16,40 +50,12 @@ t_dlist	*check_priority(t_dlist *curr)
 	return (priority);
 }
 
-t_dlist	*get_first(t_dlist *curr)
+t_tree	*make_tree(t_tree *myself, t_dlist *dlist)
 {
-	while (curr && curr->prev)
-		curr = curr->prev;
-	return (curr);
-}
-
-void	printTree(t_tree *parent, int cnt)
-{
-	t_dlist	*temp;
-
-	if (parent)
-	{
-		temp = get_first(parent->dlist);
-		printf("depth : %d, tree: ", cnt);
-		while (temp)
-		{
-			printf("%s", temp->token);
-			temp = temp->next;
-			if (temp)
-				printf(", ");
-		}
-		printf("\n");
-		printTree(parent->left_child, cnt + 1);
-		printTree(parent->right_child, cnt + 1);
-	}
-}
-
-t_tree *make_tree(t_tree *myself, t_dlist *dlist)
-{
-	t_dlist		*left;
-	t_dlist		*right;
+	t_dlist 	*left;
+	t_dlist 	*right;
 	t_dlist		*node;
-	
+
 	node = check_priority(dlist);
 	if (!myself)
 		myself = ft_calloc(1, sizeof(t_tree));

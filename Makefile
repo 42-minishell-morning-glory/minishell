@@ -1,7 +1,13 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LINKING_FLAGS = -L/usr/lib/x86_64-linux-gnu -lreadline
+#LINKING_FLAGS = -L/Users/yehyun/.brew/opt/readline/lib -lreadline #클러스터 맥
+#COMFILE_FLAGS = -I/Users/yehyun/.brew/opt/readline/include/
+LINKING_FLAGS = -L/usr/lib/x86_64-linux-gnu -lreadline #에현 컴퓨터
 COMFILE_FLAGS = -I/usr/include/
+# LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline #키한
+# COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+#LINKING_FLAGS = -L/usr/local/Cellar/readline/8.1.2/lib -lreadline #키한
+#COMFILE_FLAGS = -I/usr/local/Cellar/readline/8.1.2/include/
 DFLAGS = -g2 -fsanitize=address
 
 RM = rm -f
@@ -9,7 +15,8 @@ RM = rm -f
 PARSER_DIR = parser
 UTILS_DIR = utils
 EXPAND_DIR = expand
-TREE_DIR = travel_tree
+EXCUTE_DIR = excute
+GNL_DIR = get_next_line
 
 SRCS =	minishell.c \
 		signal.c \
@@ -21,11 +28,17 @@ SRCS =	minishell.c \
 		$(UTILS_DIR)/doubly_list.c \
 		$(UTILS_DIR)/tree.c \
 		$(UTILS_DIR)/ft_strrep.c \
+		$(UTILS_DIR)/utils.c \
 		$(EXPAND_DIR)/expand.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
 		$(EXPAND_DIR)/wild_card_utils.c \
-		$(TREE_DIR)/test.c \
+		$(EXCUTE_DIR)/built_in.c \
+		$(EXCUTE_DIR)/excute_redir.c \
+		$(EXCUTE_DIR)/excute_word.c \
+		$(EXCUTE_DIR)/excute.c \
+		$(GNL_DIR)/get_next_line.c \
+		$(GNL_DIR)/get_next_line_utils.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -57,6 +70,7 @@ re :
 run :
 	@cat ascii_art/sun
 	@make re
+	@make clean
 	@./minishell
 
 #debug :

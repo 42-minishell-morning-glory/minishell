@@ -36,7 +36,7 @@ int	is_quotes(char *str, t_info *info)
 	i = 0;
 	while (str[i])
 	{
-	printf("%s", str);
+		printf("%s", str);
 		if (str[i] == '\'' && info->double_quote_flag == 0)
 		{
 			if (!is_single_quote(info, str, &i))
@@ -52,26 +52,6 @@ int	is_quotes(char *str, t_info *info)
 	else
 		return (FALSE);
 }
-
-// char	*input_check(char *str, t_info *info)
-// {
-// 	char	*quote_line;
-// 	char	*tmp;
-// 	char	*free_tmp;
-
-// 	while (is_quotes(str, info) == FALSE)
-// 	{
-// 		quote_line = readline("> ");
-// 		tmp = ft_strjoin(str, "\n");
-// 		free_tmp = tmp;
-// 		tmp = ft_strjoin(tmp, quote_line);
-// 		free(free_tmp);
-// 		free(str);
-// 		free(quote_line);
-// 		str = tmp;
-// 	}
-// 	return (str);
-// }
 
 int	space_check(char *str)
 {

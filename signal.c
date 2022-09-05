@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+extern int	g_exit_code;
+
 void	signal_handler(int signal)
 {
 	if (signal == SIGINT)
@@ -8,14 +10,23 @@ void	signal_handler(int signal)
 		rl_on_new_line();
 		rl_replace_line("", 1);
 		rl_redisplay();
+		g_exit_code = 1;
 	}
 	else if (signal == SIGQUIT)
 		return ;
 }
 
-void	set_signal_handler(void)
+void	signal_handler2(int signal)
 {
-	signal(SIGINT, signal_handler);
+	printf("\n");
+}
+
+void	set_signal_handler(int flag)
+{
+	if (!flag)
+		signal(SIGINT, signal_handler);
+	else
+		signal(SIGINT, signal_handler2);
 	signal(SIGQUIT, SIG_IGN);
 }
 
