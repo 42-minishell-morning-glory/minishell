@@ -1,5 +1,30 @@
 #include "../minishell.h"
 
+char	**make_command(t_dlist *curr)
+{
+	t_dlist	*tmp;
+	char	**ret;
+	int		i;
+ 
+	tmp = curr;
+	i = 0;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	ret = ft_calloc(i + 1, sizeof(char *));
+	tmp = curr;
+	i = 0;
+	while (tmp)
+	{
+		ret[i] = tmp->token;
+		tmp = tmp->next;
+		i++;
+	}
+	return (ret);
+}
+
 int	put_str_err(t_dlist *list, char *str)
 {
 	ft_putstr_fd("morningshell: ", 2);
