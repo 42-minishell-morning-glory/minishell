@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+extern int	g_exit_code;
+
 void	first_redir(t_info *info)
 {
 	unlink(".minishell_tmp");
@@ -107,11 +109,22 @@ int	redir_output(t_info *info, t_tree *myself)
 	return (0);
 }
 
+void	hd_sig(int signum)
+{
+	int	fd;
+
+	g_exit_code = 130;
+	fd = open(".heredoc", O_CREAT | O_TRUNC | O_RDWR, 0644);
+	close(fd);
+	unlink(".heredoc");
+	exit(130);
+}
+
 void	do_here_doc(t_info *info, t_tree *myself)
 {
-	int		fd;
 	char	*str;
 	char	*limiter;
+	int		fd;
 
 	if (myself->left_child && myself->left_child->dlist->type != WORD)
 		do_here_doc(info, myself->left_child);
@@ -119,10 +132,11 @@ void	do_here_doc(t_info *info, t_tree *myself)
 		return ;
 	limiter = &myself->dlist->token[2];
 	fd = open(".heredoc", O_CREAT | O_TRUNC | O_RDWR, 0644);
+	signal(SIGINT, hd_sig);
 	while (1)
 	{
 		write(2, "> ", 2);
-		str = get_next_line(info->in_fd);
+		str = get_next_line(0);
 		if (!str)
 			break ;
 		if (ft_strncmp(str, limiter, ft_strlen(str)) == '\n')
@@ -134,6 +148,7 @@ void	do_here_doc(t_info *info, t_tree *myself)
 		free(str);
 	}
 	close(fd);
+	set_signal_handler(1);
 }
 
 void	append_list(t_tree *myself, int flag) // 오류 발생
@@ -200,17 +215,25 @@ void	manage_redirfile(t_info *info, t_tree *myself, int ret)
 	close(info->redir_out_fd);
 	first_redir(info);
 }
-
 int	execute_redir(t_info *info, t_tree *myself)
 {
-	int	ret;
+	int		ret;
+	t_ftool	tool;
 
 	info->redir_cnt++;
 	if (info->redir_cnt == 1)
 	{
 		info->in_fd = dup(STDIN_FILENO);
 		info->out_fd = dup(STDOUT_FILENO);
-		do_here_doc(info, myself);
+		tool.pid = fork();
+		if (!tool.pid)
+		{
+			do_here_doc(info, myself);
+			exit(0);
+		}
+		waitpid(tool.pid, &tool.status, 0);
+		if (WEXITSTATUS(tool.status))
+			return (WEXITSTATUS(tool.status));
 		make_friends(info, myself);
 	}
 	if (myself->dlist->token[0] == '<' && myself->dlist->token[1] != '<')

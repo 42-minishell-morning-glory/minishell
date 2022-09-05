@@ -69,7 +69,6 @@ typedef struct s_info
 	int						redir_in_flag;
 	int						err_flag;
 	int						path_flag;
-	unsigned char			exit_code;
 	struct s_operation		fo;
 	struct s_dlist			*env;
 	struct s_dlist			*dlist;

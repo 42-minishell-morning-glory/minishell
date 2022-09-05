@@ -29,29 +29,37 @@ void	pipe_child(t_info *info, t_tree *myself, t_ftool *tool, int flag)
 	exit(tool->status);
 }
 
+void zombie_handler()
+{
+    int status;
+    int spid;
+    spid = wait(&status);
+}
+
 int	execute_pipe(t_info *info, t_tree *myself)
 {
-	t_ftool	tool;
+	t_ftool	left_tool;
+	t_ftool	right_tool;
 	int		tmp_fd;
 
+	signal(SIGCHLD, (void *)zombie_handler);
 	tmp_fd = dup(STDIN_FILENO);
-	pipe(tool.p_fd);
-	tool.pid = fork();
-	if (!tool.pid)
-		pipe_child(info, myself, &tool, 1);
-	waitpid(tool.pid, &tool.status, 0);
-	if (WEXITSTATUS(tool.status))
-		return (WEXITSTATUS(tool.status));
-	dup2(tool.p_fd[0], STDIN_FILENO);
-	close(tool.p_fd[0]);
-	close(tool.p_fd[1]);
-	tool.pid = fork();
-	if (!tool.pid)
-		pipe_child(info, myself, &tool, 0);
-	waitpid(tool.pid, &tool.status, 0);
+	pipe(left_tool.p_fd);
+	left_tool.pid = fork();
+	if (!left_tool.pid)
+		pipe_child(info, myself, &left_tool, 1l);
+	waitpid(left_tool.pid, &left_tool.status, WNOHANG);
+	dup2(left_tool.p_fd[0], STDIN_FILENO);
+	close(left_tool.p_fd[0]);
+	close(left_tool.p_fd[1]);
+	right_tool.pid = fork();
+	if (!right_tool.pid)
+		pipe_child(info, myself, &right_tool, 0);
+	waitpid(right_tool.pid, &right_tool.status, 0);
+	kill(left_tool.pid, SIGKILL);
 	dup2(tmp_fd, STDIN_FILENO);
 	close(tmp_fd);
-	return (WEXITSTATUS(tool.status));
+	return (WEXITSTATUS(right_tool.status));
 }
 
 char	*fix_bracket(char *token)

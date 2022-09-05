@@ -2,6 +2,8 @@
 
 extern char	**environ;
 
+int		g_exit_code;
+
 void	init_info(t_info *info)
 {
 	info->double_quote_flag = 0;
@@ -58,7 +60,6 @@ int	init_main(t_info *info)
 
 	i = 0;
 	info->env = 0;
-	info->exit_code = 0;
 	while (environ[i])
 	{
 		add_list(&info->env, environ[i]);
@@ -87,7 +88,7 @@ int	main(void)
 			continue ;
 		info.root = make_tree(NULL, info.dlist);
 		expand(&info, info.root);
-		info.exit_code = execute(&info, info.root);
+		g_exit_code = execute(&info, info.root);
 		free(str);
 		free_tree(info.root);
 	}

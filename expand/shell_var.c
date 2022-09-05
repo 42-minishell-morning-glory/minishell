@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+extern int	g_exit_code;
+
 char	*token2env(char *env)
 {
 	int		i;
@@ -65,7 +67,7 @@ int	normal_expand(t_dlist *curr, t_info *info, int i)
 	{
 		if (tmp[i] == '$' && tmp[i + 1] == '?')
 		{
-			exit_code = ft_itoa(info->exit_code);
+			exit_code = ft_itoa(g_exit_code);
 			curr->token = exit_code;
 			free(tmp);
 			return (1);

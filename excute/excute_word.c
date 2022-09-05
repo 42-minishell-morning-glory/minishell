@@ -96,16 +96,16 @@ int	execute_word(t_info *info, t_tree *myself)
 	argv = make_command(myself->dlist);
 	env = make_command(info->env);
 	path = get_path(info, argv[0], env);
-	if (!path)
-	{
-		free(env);
-		free(argv);
-		return (put_str_err(myself->dlist, "No such file or directory") + 126);
-	}
 	tool.pid = fork();
 	if (!tool.pid)
-		if (execve(path, argv, env) == -1)
+	{
+		if (opendir(argv[0]))
+			exit(puterr_exit_code(argv[0], 0, 126));
+		if (!path && execve(argv[0], argv, env) == -1)
+			exit(puterr_exit_code(argv[0], 0, 0));
+		else if (execve(path, argv, env) == -1)
 			exit(puterr_exit_code(argv[0], 0, 127));
+	}
 	waitpid(tool.pid, &tool.status, 0);
 	if (info->path_flag)
 		free(path);
@@ -113,3 +113,5 @@ int	execute_word(t_info *info, t_tree *myself)
 	free(env);
 	return (WEXITSTATUS(tool.status));
 }
+
+//<< a cat -e | cat -e > b

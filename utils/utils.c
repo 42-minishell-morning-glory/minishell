@@ -20,10 +20,16 @@ int	puterr_exit_code(char *str, char *arg, int code)
 		ft_putstr_fd(": ", 2);
 	}
 	if (!code)
-		ft_putstr_fd(strerror(errno), 2);
+		ft_putendl_fd(strerror(errno), 2);
+	else if (code == 126)
+		ft_putendl_fd("is a directory", 2);
 	else
-		ft_putstr_fd("command not found", 2);
-	ft_putstr_fd("\n", 2);
+	{
+		if (str[0] == '/')
+			ft_putendl_fd("No such file or directory", 2);
+		else
+			ft_putendl_fd("command not found", 2);
+	}
 	if (code)
 		return(code);
 	else
