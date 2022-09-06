@@ -119,6 +119,7 @@ void	printTree(t_tree *parent, int cnt);
 void	free_tree(t_tree *myself);
 
 	/* utils.c */
+char	**make_command(t_dlist *curr);
 int		puterr_exit_code(char *str, char *arg, int code);
 int		put_str_err(t_dlist *list, char *str);
 int		ft_free(char **split);
@@ -147,18 +148,20 @@ int		filter_wildcard(char *wc, char *str, int i, int j);
 int		execute(t_info *info, t_tree *myself);
 int		execute_word(t_info *info, t_tree *myself);
 int		execute_redir(t_info *info, t_tree *myself);
-char	**make_command(t_dlist *curr);
 
 	/* built_in.c */
-int		is_echo_option(char *arg);
-char	*list2p(t_dlist *list);
 int		echo(t_dlist *list);
-int		export(t_info *info, t_dlist *list);
-int		unset(t_info *info, t_dlist *list);
-int		env(t_info *info, int flag);
-int		cd(t_info *info, t_dlist *list);
 int		pwd(void);
 int		mini_exit(t_dlist *list);
 int		built_in(t_info *info, t_tree *myself);
+
+	/* environ.c */
+int		export(t_info *info, t_dlist *list);
+int		unset(t_info *info, t_dlist *list);
+int		env(t_info *info, int flag);
+
+	/* cd.c */
+int		cd(t_info *info, t_dlist *list);
+/* minishell/execute */
 
 #endif

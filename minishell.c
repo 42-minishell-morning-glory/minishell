@@ -65,6 +65,7 @@ int	init_main(t_info *info)
 		add_list(&info->env, environ[i]);
 		i++;
 	}
+	rl_catch_signals = 0;
 	return (0);
 }
 

@@ -34,6 +34,8 @@ SRCS =	minishell.c \
 		$(EXPAND_DIR)/wild_card.c \
 		$(EXPAND_DIR)/wild_card_utils.c \
 		$(EXCUTE_DIR)/built_in.c \
+		$(EXCUTE_DIR)/environ.c \
+		$(EXCUTE_DIR)/cd.c \
 		$(EXCUTE_DIR)/excute_redir.c \
 		$(EXCUTE_DIR)/excute_word.c \
 		$(EXCUTE_DIR)/excute.c \
