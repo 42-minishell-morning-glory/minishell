@@ -12,6 +12,7 @@ void	init_info(t_info *info)
 	info->redir_in_flag = 0;
 	info->redir_cnt = 0;
 	info->tmp_fd = 0;
+	info->hd_cnt = 0;
 	info->in_fd = 0;
 	info->out_fd = 0;
 	info->dlist = 0;
@@ -20,7 +21,6 @@ void	init_info(t_info *info)
 	info->root = 0;
 	info->err_flag = 0;
 	info->path_flag = 0;
-	info->hd_cnt = 0;
 	info->in_fd = dup(STDIN_FILENO);
 	info->out_fd = dup(STDOUT_FILENO);
 }
@@ -69,6 +69,7 @@ int	init_main(t_info *info)
 		i++;
 	}
 	rl_catch_signals = 0;
+	info->hd_cnt = 0;
 	return (0);
 }
 
@@ -77,6 +78,7 @@ int	close_main(t_info *info, char *str)
 	char	*file_name;
 	char	*file_num;
 
+	// usleep(10000);
 	free(str);
 	free_tree(info->root);
 	while (info->hd_cnt)

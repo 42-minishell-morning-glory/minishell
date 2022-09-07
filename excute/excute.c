@@ -40,7 +40,6 @@ int	execute_pipe(t_info *info, t_tree *myself)
 			close(tool.p_fd[0]);
 			close(tool.p_fd[1]);
 			tool.status = execute(info, myself->right_child);
-			// kill(tool.pid, SIGKILL);
 			exit(tool.status);
 		}
 	}

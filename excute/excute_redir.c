@@ -5,8 +5,7 @@ extern int	g_exit_code;
 void	first_redir(t_info *info)
 {
 	close(info->tmp_fd);
-	unlink(".minishell_tmp");
-	dup2(info->in_fd, STDIN_FILENO); // 추가 ls > e
+	dup2(info->in_fd, STDIN_FILENO);
 	dup2(info->out_fd, STDOUT_FILENO);
 	close(info->in_fd);
 	close(info->out_fd);
@@ -36,8 +35,8 @@ int	redir_input(t_info *info, t_tree *myself)
 	file_name = myself->dlist->token;
 	while (*file_name == '<')
 		file_name++;
-	r_fd = open(file_name, O_RDONLY, 0644);
-	if (r_fd == -1 && (myself->left_child->dlist->type == WORD || !myself->left_child))
+	r_fd = open(file_name, O_RDONLY);
+	if (r_fd == -1 && (!myself->left_child || myself->left_child->dlist->type == WORD))
 		return (puterr_exit_code(file_name, 0, 0));
 	if (!info->redir_in_flag)
 		flag_on_redirin(info, myself, &r_fd);
@@ -53,14 +52,6 @@ int	redir_input(t_info *info, t_tree *myself)
 	return (0);
 }
 
-void	flag_on_redirout(t_info *info, t_tree *myself, int *r_fd)
-{
-	info->tmp_fd = open(".minishell_tmp", O_CREAT | O_TRUNC | O_RDWR, 0644);
-	dup2(info->tmp_fd, STDOUT_FILENO);
-	close(info->tmp_fd);
-	info->redir_out_fd = dup(*r_fd);
-}
-
 int	redir_output(t_info *info, t_tree *myself)
 {
 	char	*file_name;
@@ -74,8 +65,8 @@ int	redir_output(t_info *info, t_tree *myself)
 		r_fd = open(file_name, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
 		r_fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0644);
-	if (!info->redir_out_fd)
-		flag_on_redirout(info, myself, &r_fd);
+	if (!info->redir_out_fd && ++info->redir_out_fd)
+		dup2(r_fd, STDOUT_FILENO);
 	close(r_fd);
 	left = execute(info, myself->left_child);
 	if (left)
@@ -83,7 +74,7 @@ int	redir_output(t_info *info, t_tree *myself)
 		if (info->redir_cnt == 1)
 			first_redir(info);
 		if (left != 1)
-			unlink(file_name); // exit code가 명령어에서 실패해서 1인거랑 인풋에서 읽었을떄 실패해서 1인거 구분
+			unlink(file_name);
 		return (left);
 	}
 	return (0);
@@ -138,22 +129,6 @@ void	make_friends(t_info *info, t_tree *myself)
 		append_list(myself, HORIZONTAL);
 }
 
-void	manage_redirfile(t_info *info, t_tree *myself, int ret)
-{
-	char	*gnl;
-
-	info->tmp_fd = open(".minishell_tmp", O_RDONLY | O_CREAT, 0644);
-	gnl = get_next_line(info->tmp_fd);
-	while (gnl)
-	{
-		write(info->redir_out_fd, gnl, ft_strlen(gnl));
-		free(gnl);
-		gnl = get_next_line(info->tmp_fd);
-	}
-	close(info->redir_out_fd);
-	first_redir(info);
-}
-
 int	execute_redir(t_info *info, t_tree *myself)
 {
 	int	ret;
@@ -166,7 +141,7 @@ int	execute_redir(t_info *info, t_tree *myself)
 	else if (myself->dlist->token[0] == '>')
 		ret = redir_output(info, myself);
 	if (!ret && info->redir_cnt == 1)
-		manage_redirfile(info, myself, ret);
+		first_redir(info);
 	info->redir_cnt--;
 	return (ret);
 }

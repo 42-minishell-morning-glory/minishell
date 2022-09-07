@@ -99,6 +99,7 @@ int	execute_word(t_info *info, t_tree *myself)
 		free(path);
 	free(argv);
 	free(env);
+	// kill(0, SIGUSR1);
 	if (g_exit_code == 130)
 		return (g_exit_code);
 	return (WEXITSTATUS(tool.status));
