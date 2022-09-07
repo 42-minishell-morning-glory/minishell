@@ -18,8 +18,8 @@ int	execute_line(t_info *info, t_tree *myself)
 int	execute_pipe(t_info *info, t_tree *myself)
 {
 	pid_t	pid;
-	t_ftool	tool;
 	int		status;
+	t_ftool	tool;
 
 	pid = fork();
 	if (!pid)
@@ -29,23 +29,18 @@ int	execute_pipe(t_info *info, t_tree *myself)
 		if (!tool.pid)
 		{
 			dup2(tool.p_fd[1], STDOUT_FILENO);
-			close(tool.p_fd[1]);
 			close(tool.p_fd[0]);
 			tool.status = execute(info, myself->left_child);
+			close(tool.p_fd[1]);
 			exit(tool.status);
 		}
 		else
 		{
-			if (myself->left_child->dlist->token[1] == '<')
-			{
-				waitpid(tool.pid, &tool.status, 0);
-				if (WEXITSTATUS(tool.status) == 130)
-					exit(tool.status);
-			}
 			dup2(tool.p_fd[0], STDIN_FILENO);
 			close(tool.p_fd[0]);
 			close(tool.p_fd[1]);
 			tool.status = execute(info, myself->right_child);
+			// kill(tool.pid, SIGKILL);
 			exit(tool.status);
 		}
 	}

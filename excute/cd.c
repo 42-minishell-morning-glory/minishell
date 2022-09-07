@@ -31,6 +31,7 @@ int	add_export(t_info *info, char *tmp)
 	free(prev_lst);
 	free(env_list);
 	free(tmp);
+	return (0);
 }
 
 int	set_cd_minus(t_info *info, t_dlist *list)

@@ -18,7 +18,11 @@ void	signal_handler(int signal)
 
 void	signal_handler2(int signal)
 {
-	printf("\n");
+	if (signal == SIGINT)
+	{
+		g_exit_code = 130;
+		printf("\n");
+	}
 }
 
 void	set_signal_handler(int flag)
@@ -28,6 +32,15 @@ void	set_signal_handler(int flag)
 	else
 		signal(SIGINT, signal_handler2);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	signal_word(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		g_exit_code = 130;
+	}
 }
 
 void	set_terminal(void)

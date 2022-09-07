@@ -64,6 +64,7 @@ typedef struct s_info
 	int						tmp_fd;
 	int						in_fd;
 	int						out_fd;
+	int						hd_cnt;
 	int						quote_flag;
 	int						double_quote_flag;
 	int						redir_in_flag;
@@ -82,6 +83,7 @@ void	set_signal_handler(int flag);
 void	signal_handler(int signal);
 void	set_terminal(void);
 void	signal_handler2(int signal);
+void	signal_word(int signum);
 /*---parser---*/
 	/* lexer.c */
 int		lexer(char *str, t_info *info);
@@ -147,6 +149,7 @@ int		filter_wildcard(char *wc, char *str, int i, int j);
 	/* excute.c */
 int		execute(t_info *info, t_tree *myself);
 int		execute_word(t_info *info, t_tree *myself);
+int		here_doc(t_info *info, t_tree *myself);
 int		execute_redir(t_info *info, t_tree *myself);
 
 	/* built_in.c */

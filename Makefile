@@ -2,10 +2,10 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 #LINKING_FLAGS = -L/Users/yehyun/.brew/opt/readline/lib -lreadline #클러스터 맥
 #COMFILE_FLAGS = -I/Users/yehyun/.brew/opt/readline/include/
-LINKING_FLAGS = -L/usr/lib/x86_64-linux-gnu -lreadline #에현 컴퓨터
-COMFILE_FLAGS = -I/usr/include/
-# LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline #키한
-# COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
+# LINKING_FLAGS = -L/usr/lib/x86_64-linux-gnu -lreadline #에현 컴퓨터
+# COMFILE_FLAGS = -I/usr/include/
+LINKING_FLAGS = -L/opt/homebrew/Cellar/readline/8.1.2/lib -lreadline #키한
+COMFILE_FLAGS = -I/opt/homebrew/Cellar/readline/8.1.2/include/
 #LINKING_FLAGS = -L/usr/local/Cellar/readline/8.1.2/lib -lreadline #키한
 #COMFILE_FLAGS = -I/usr/local/Cellar/readline/8.1.2/include/
 DFLAGS = -g2 -fsanitize=address
@@ -38,6 +38,7 @@ SRCS =	minishell.c \
 		$(EXCUTE_DIR)/cd.c \
 		$(EXCUTE_DIR)/excute_redir.c \
 		$(EXCUTE_DIR)/excute_word.c \
+		$(EXCUTE_DIR)/excute_heredoc.c \
 		$(EXCUTE_DIR)/excute.c \
 		$(GNL_DIR)/get_next_line.c \
 		$(GNL_DIR)/get_next_line_utils.c
@@ -73,7 +74,7 @@ run :
 	@cat ascii_art/sun
 	@make re
 	@make clean
-	@./minishell
+	@exec ./minishell
 
 #debug :
 #	@make -C ./libft

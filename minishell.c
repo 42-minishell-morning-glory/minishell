@@ -20,6 +20,9 @@ void	init_info(t_info *info)
 	info->root = 0;
 	info->err_flag = 0;
 	info->path_flag = 0;
+	info->hd_cnt = 0;
+	info->in_fd = dup(STDIN_FILENO);
+	info->out_fd = dup(STDOUT_FILENO);
 }
 
 int	before_cmd(char *str, t_info *info)
@@ -69,6 +72,25 @@ int	init_main(t_info *info)
 	return (0);
 }
 
+int	close_main(t_info *info, char *str)
+{
+	char	*file_name;
+	char	*file_num;
+
+	free(str);
+	free_tree(info->root);
+	while (info->hd_cnt)
+	{
+		file_num = ft_itoa(info->hd_cnt);
+		file_name = ft_strjoin(".2Pj-9C6-v9X-g47", file_num);
+		unlink(file_name);
+		free(file_num);
+		free(file_name);
+		info->hd_cnt--;
+	}
+	return (0);
+}
+
 int	main(void)
 {
 	char	*str;
@@ -81,7 +103,6 @@ int	main(void)
 		init_info(&info);
 		set_signal_handler(0);
 		str = readline("morningshell$ ");
-		set_signal_handler(1);
 		if (before_cmd(str, &info))
 			continue ;
 		add_history(str);
@@ -89,11 +110,11 @@ int	main(void)
 			continue ;
 		info.root = make_tree(NULL, info.dlist);
 		expand(&info, info.root);
+		if (here_doc(&info, info.root) && !close_main(&info, str))
+			continue ;
+		set_signal_handler(1);
 		g_exit_code = execute(&info, info.root);
-		free(str);
-		free_tree(info.root);
-		unlink(".heredoc");
-		unlink(".minishell_tmp");
+		close_main(&info, str);
 	}
 	return (0);
 }
