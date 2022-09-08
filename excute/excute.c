@@ -17,34 +17,46 @@ int	execute_line(t_info *info, t_tree *myself)
 
 int	execute_pipe(t_info *info, t_tree *myself)
 {
-	pid_t	pid;
-	int		status;
-	t_ftool	tool;
+	t_ftool	parent_tool;
+	t_ftool	child_tool;
+	char	*tmp;
 
-	pid = fork();
-	if (!pid)
+	pipe(parent_tool.p_fd);
+	parent_tool.pid = fork();
+	if (!parent_tool.pid)
 	{
-		pipe(tool.p_fd);
-		tool.pid = fork();
-		if (!tool.pid)
+		close(parent_tool.p_fd[0]);
+		pipe(child_tool.p_fd);
+		child_tool.pid = fork();
+		if (!child_tool.pid)
 		{
-			dup2(tool.p_fd[1], STDOUT_FILENO);
-			close(tool.p_fd[0]);
-			tool.status = execute(info, myself->left_child);
-			close(tool.p_fd[1]);
-			exit(tool.status);
+			close(parent_tool.p_fd[1]);
+			dup2(child_tool.p_fd[1], STDOUT_FILENO);
+			close(child_tool.p_fd[0]);
+			child_tool.status = execute(info, myself->left_child);
+			close(child_tool.p_fd[1]);
+			exit(child_tool.status);
 		}
 		else
 		{
-			dup2(tool.p_fd[0], STDIN_FILENO);
-			close(tool.p_fd[0]);
-			close(tool.p_fd[1]);
-			tool.status = execute(info, myself->right_child);
-			exit(tool.status);
+			tmp = ft_itoa(child_tool.pid);
+			write(parent_tool.p_fd[1], tmp, ft_strlen(tmp));
+			free(tmp);
+			close(parent_tool.p_fd[1]);
+			dup2(child_tool.p_fd[0], STDIN_FILENO);
+			close(child_tool.p_fd[0]);
+			close(child_tool.p_fd[1]);
+			child_tool.status = execute(info, myself->right_child);
+			exit(child_tool.status);
 		}
 	}
-	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	tmp = ft_calloc(6, sizeof(char));
+	read(parent_tool.p_fd[0], tmp, 5);
+	close(parent_tool.p_fd[0]);
+	waitpid(ft_atoi(tmp), 0, 0);
+	free(tmp);
+	waitpid(parent_tool.pid, &parent_tool.status, 0);
+	return (WEXITSTATUS(parent_tool.status));
 }
 
 char	*fix_bracket(char *token)
