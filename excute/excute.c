@@ -17,46 +17,46 @@ int	execute_line(t_info *info, t_tree *myself)
 
 int	execute_pipe(t_info *info, t_tree *myself)
 {
-	t_ftool	parent_tool;
-	t_ftool	child_tool;
-	char	*tmp;
+	int		i;
+	int		in_fd;
+	pid_t	left;
+	pid_t	right;
+	t_ftool	tool;
 
-	pipe(parent_tool.p_fd);
-	parent_tool.pid = fork();
-	if (!parent_tool.pid)
+	i = 0;
+	in_fd = dup(STDIN_FILENO); // in 이나 out이 닫혀있으면 process가 종료됨 
+	pipe(tool.p_fd);
+	while (i < 2) 
 	{
-		close(parent_tool.p_fd[0]);
-		pipe(child_tool.p_fd);
-		child_tool.pid = fork();
-		if (!child_tool.pid)
+		tool.pid = fork();
+		if (!tool.pid && !i)
 		{
-			close(parent_tool.p_fd[1]);
-			dup2(child_tool.p_fd[1], STDOUT_FILENO);
-			close(child_tool.p_fd[0]);
-			child_tool.status = execute(info, myself->left_child);
-			close(child_tool.p_fd[1]);
-			exit(child_tool.status);
+			dup2(tool.p_fd[1], STDOUT_FILENO);
+			close(tool.p_fd[1]);
+			close(tool.p_fd[0]);
+			tool.status = execute(info, myself->left_child);
+			exit(tool.status);
 		}
-		else
+		else if (!tool.pid && i == 1)
 		{
-			tmp = ft_itoa(child_tool.pid);
-			write(parent_tool.p_fd[1], tmp, ft_strlen(tmp));
-			free(tmp);
-			close(parent_tool.p_fd[1]);
-			dup2(child_tool.p_fd[0], STDIN_FILENO);
-			close(child_tool.p_fd[0]);
-			close(child_tool.p_fd[1]);
-			child_tool.status = execute(info, myself->right_child);
-			exit(child_tool.status);
+			tool.status = execute(info, myself->right_child);
+			exit(tool.status);
 		}
+		else if (!i)
+		{
+			left = tool.pid;
+			dup2(tool.p_fd[0], STDIN_FILENO);
+			close(tool.p_fd[0]);
+			close(tool.p_fd[1]);
+		}
+		else if (i == 1)
+			right = tool.pid;
+		i++;
 	}
-	tmp = ft_calloc(6, sizeof(char));
-	read(parent_tool.p_fd[0], tmp, 5);
-	close(parent_tool.p_fd[0]);
-	waitpid(ft_atoi(tmp), 0, 0);
-	free(tmp);
-	waitpid(parent_tool.pid, &parent_tool.status, 0);
-	return (WEXITSTATUS(parent_tool.status));
+	dup2(in_fd, STDIN_FILENO);
+	waitpid(left, &tool.status, 0);
+	waitpid(right, &tool.status, 0);
+	return (WEXITSTATUS(tool.status));
 }
 
 char	*fix_bracket(char *token)

@@ -34,9 +34,9 @@ int	echo(t_dlist *list)
 	while (argv[i])
 	{
 		if (i == print_i)
-			printf("%s", argv[i]);
-		else
-			printf(" %s", argv[i]);
+			write(1, argv[i], ft_strlen(argv[i]));
+		else if (write(1, " ", 1))
+			write(1, argv[i], ft_strlen(argv[i]));
 		i++;
 	}
 	if (!opt)

@@ -112,9 +112,9 @@ int	main(void)
 			continue ;
 		info.root = make_tree(NULL, info.dlist);
 		expand(&info, info.root);
+		set_signal_handler(1);
 		if (here_doc(&info, info.root) && !close_main(&info, str))
 			continue ;
-		set_signal_handler(1);
 		g_exit_code = execute(&info, info.root);
 		close_main(&info, str);
 	}
