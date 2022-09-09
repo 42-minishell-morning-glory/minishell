@@ -5,8 +5,8 @@
 4. excute_bracket 현재 메인문에 맞춰서 수정
 
 - 자잘한 처리
-make command -> make_char_arr로 변경
-hd_sig signal 함수에 넣음
-간단한 norm 수정 (마지막줄 스페이스, 함수 정렬, 다 처리된 주석)
+1. make command -> make_char_arr로 변경
+2. hd_sig signal 함수에 넣음
+3. 간단한 norm 수정 (마지막줄 스페이스, 함수 정렬, 다 처리된 주석)
 
 by yehyun
