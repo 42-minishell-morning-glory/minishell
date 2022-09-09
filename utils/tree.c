@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	printTree(t_tree *parent, int cnt)
+void	print_tree(t_tree *parent, int cnt)
 {
 	t_dlist	*temp;
 	t_tree	*tmp;
@@ -18,8 +18,8 @@ void	printTree(t_tree *parent, int cnt)
 			printf(", ");
 	}
 	printf("\n");
-	printTree(tmp->left_child, cnt + 1);
-	printTree(tmp->right_child, cnt + 1);
+	print_tree(tmp->left_child, cnt + 1);
+	print_tree(tmp->right_child, cnt + 1);
 }
 
 void	free_tree(t_tree *myself)
@@ -52,8 +52,8 @@ t_dlist	*check_priority(t_dlist *curr)
 
 t_tree	*make_tree(t_tree *myself, t_dlist *dlist)
 {
-	t_dlist 	*left;
-	t_dlist 	*right;
+	t_dlist		*left;
+	t_dlist		*right;
 	t_dlist		*node;
 
 	node = check_priority(dlist);

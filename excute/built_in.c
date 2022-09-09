@@ -25,7 +25,7 @@ int	echo(t_dlist *list)
 
 	i = 0;
 	opt = 0;
-	argv = make_command(list->next);
+	argv = make_str_arr(list->next);
 	while (argv[i] && is_echo_option(argv[i]))
 		i++;
 	if (i > 0)
@@ -66,7 +66,7 @@ int	mini_exit(t_dlist *list)
 		ft_putendl_fd(": numeric argument required", 2);
 		exit(255);
 	}
-	if (list->next && list->next->next) //안끝남
+	if (list->next && list->next->next)
 		return (put_str_err(list, "too many arguments"));
 	if (list->next)
 		exit_code = ft_atoi(list->next->token);

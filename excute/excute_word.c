@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-extern int g_exit_code;
+extern int	g_exit_code;
 
 int	ft_access(char *path)
 {
@@ -57,7 +57,7 @@ char	*get_path(t_info *info, char *cmd, char **env)
 	return (path);
 }
 
-int	word_child(char **argv, char **env, char *path) // 자식에서 execve 실행하면 시그널 defualt로 변경되서 sigint가 exit code로 130을 못받아옴.
+int	word_child(char **argv, char **env, char *path)
 {
 	DIR	*tmp;
 
@@ -81,15 +81,14 @@ int	execute_word(t_info *info, t_tree *myself)
 	char	*path;
 	t_ftool	tool;
 
-	signal(SIGINT, signal_word);
 	if (info->err_flag)
 		return (0);
 	myself->dlist = get_first(myself->dlist);
 	tool.status = built_in(info, myself);
 	if (tool.status != -1)
 		return (tool.status);
-	argv = make_command(myself->dlist);
-	env = make_command(info->env);
+	argv = make_str_arr(myself->dlist);
+	env = make_str_arr(info->env);
 	path = get_path(info, argv[0], env);
 	tool.pid = fork();
 	if (!tool.pid)
@@ -99,7 +98,6 @@ int	execute_word(t_info *info, t_tree *myself)
 		free(path);
 	free(argv);
 	free(env);
-	// kill(0, SIGUSR1);
 	if (g_exit_code == 130)
 		return (g_exit_code);
 	return (WEXITSTATUS(tool.status));

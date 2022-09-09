@@ -4,7 +4,7 @@ char	*get_path_cd(t_info *info, char *find)
 {
 	t_dlist	*curr;
 	char	*ret;
-	
+
 	curr = info->env;
 	while (curr && ft_strncmp(curr->token, find, 5))
 		curr = curr->next;

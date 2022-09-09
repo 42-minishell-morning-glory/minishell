@@ -34,13 +34,9 @@ void	set_signal_handler(int flag)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	signal_word(int signum)
+void	hd_sig(int signum)
 {
-	if (signum == SIGINT)
-	{
-		printf("\n");
-		g_exit_code = 130;
-	}
+	exit(1);
 }
 
 void	set_terminal(void)

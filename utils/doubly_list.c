@@ -53,7 +53,7 @@ void	delete_dlist(t_dlist *list)
 	}
 }
 
-void	printList(t_dlist *list)
+void	print_list(t_dlist *list)
 {
 	t_dlist	*tmp;
 

@@ -2,27 +2,23 @@
 
 extern char	**environ;
 
-int		g_exit_code;
+int			g_exit_code;
 
 void	init_info(t_info *info)
 {
 	info->double_quote_flag = 0;
 	info->quote_flag = 0;
-	info->redir_out_fd = 0;
+	info->redir_out_flag = 0;
 	info->redir_in_flag = 0;
 	info->redir_cnt = 0;
 	info->tmp_fd = 0;
 	info->hd_cnt = 0;
-	info->in_fd = 0;
-	info->out_fd = 0;
 	info->dlist = 0;
 	info->fo.i = 0;
 	info->fo.last_idx = 0;
 	info->root = 0;
 	info->err_flag = 0;
 	info->path_flag = 0;
-	info->in_fd = dup(STDIN_FILENO);
-	info->out_fd = dup(STDOUT_FILENO);
 }
 
 int	before_cmd(char *str, t_info *info)
@@ -30,7 +26,6 @@ int	before_cmd(char *str, t_info *info)
 	if (!str)
 	{
 		printf("exit\n");
-		delete_dlist(info->env);
 		exit(0);
 	}
 	if (space_check(str) == TRUE)
@@ -69,7 +64,6 @@ int	init_main(t_info *info)
 		i++;
 	}
 	rl_catch_signals = 0;
-	info->hd_cnt = 0;
 	return (0);
 }
 
@@ -78,7 +72,6 @@ int	close_main(t_info *info, char *str)
 	char	*file_name;
 	char	*file_num;
 
-	// usleep(10000);
 	free(str);
 	free_tree(info->root);
 	while (info->hd_cnt)

@@ -1,11 +1,11 @@
 #include "../minishell.h"
 
-char	**make_command(t_dlist *curr)
+char	**make_str_arr(t_dlist *curr)
 {
 	t_dlist	*tmp;
 	char	**ret;
 	int		i;
- 
+
 	tmp = curr;
 	i = 0;
 	while (tmp)
@@ -37,7 +37,7 @@ int	put_str_err(t_dlist *list, char *str)
 int	puterr_exit_code(char *str, char *arg, int code)
 {
 	ft_putstr_fd("morningshell: ", 2);
-	ft_putstr_fd(str, 2); // exit : dsad: numeric argument required
+	ft_putstr_fd(str, 2);
 	ft_putstr_fd(": ", 2);
 	if (arg)
 	{
@@ -56,9 +56,9 @@ int	puterr_exit_code(char *str, char *arg, int code)
 			ft_putendl_fd("command not found", 2);
 	}
 	if (code)
-		return(code);
+		return (code);
 	else
-		return(errno);
+		return (errno);
 }
 
 int	ft_free(char **split)

@@ -1,8 +1,11 @@
 #include "../minishell.h"
 
+extern int	g_exit_code;
+
 int	put_syntaxerr_msg(char *token)
 {
 	printf("minishell: syntax error near unexpected token `%s'\n", token);
+	g_exit_code = 258;
 	return (0);
 }
 

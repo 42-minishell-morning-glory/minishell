@@ -9,7 +9,7 @@ void	first_redir(t_info *info)
 	dup2(info->out_fd, STDOUT_FILENO);
 	close(info->in_fd);
 	close(info->out_fd);
-	info->redir_out_fd = 0;
+	info->redir_out_flag = 0;
 	info->redir_in_flag = 0;
 	info->tmp_fd = 0;
 }
@@ -65,7 +65,7 @@ int	redir_output(t_info *info, t_tree *myself)
 		r_fd = open(file_name, O_CREAT | O_APPEND | O_RDWR, 0644);
 	else
 		r_fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0644);
-	if (!info->redir_out_fd && ++info->redir_out_fd)
+	if (!info->redir_out_flag && ++info->redir_out_flag)
 		dup2(r_fd, STDOUT_FILENO);
 	close(r_fd);
 	left = execute(info, myself->left_child);
@@ -135,7 +135,11 @@ int	execute_redir(t_info *info, t_tree *myself)
 
 	info->redir_cnt++;
 	if (info->redir_cnt == 1)
+	{
+		info->in_fd = dup(STDIN_FILENO);
+		info->out_fd = dup(STDOUT_FILENO);
 		make_friends(info, myself);
+	}
 	if (myself->dlist->token[0] == '<' && myself->dlist->token[1] != '<')
 		ret = redir_input(info, myself);
 	else if (myself->dlist->token[0] == '>')

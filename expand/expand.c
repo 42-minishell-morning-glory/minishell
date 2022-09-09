@@ -29,7 +29,7 @@ int	quote_removal(t_dlist *curr)
 
 void	word_split(t_dlist *now, char quote, int i)
 {
-	t_dlist	*curr; 
+	t_dlist	*curr;
 	char	*token;
 
 	curr = now;

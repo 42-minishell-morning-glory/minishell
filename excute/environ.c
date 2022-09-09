@@ -6,7 +6,7 @@ int	unset(t_info *info, t_dlist *list)
 	char	**key;
 	int		i;
 
-	key = make_command(list->next);
+	key = make_str_arr(list->next);
 	i = 0;
 	while (key[i])
 	{
@@ -72,12 +72,12 @@ int key_check(char *token, int *i)
 {
 	while (token[(*i)] && token[(*i)] != '=')
 	{
-		if (ft_isdigit(token[0])) //export 1=e
+		if (ft_isdigit(token[0]))
 		{
 			printf("minishell: export: `%s': not a valid identifier\n", token);
 			return (1);
 		}
-		if (!token[(*i)]) // export a 
+		if (!token[(*i)])
 			return (1);
 		(*i)++;
 	}
@@ -100,7 +100,8 @@ int	export(t_info *info, t_dlist *list)
 	while (curr)
 	{
 		i = 0;
-		if (!key_check(curr->token, &i) && !env_check(info, env_list, curr->token, &i))
+		if (!key_check(curr->token, &i)
+			&& !env_check(info, env_list, curr->token, &i))
 			add_list(&info->env, curr->token);
 		curr = curr->next;
 	}

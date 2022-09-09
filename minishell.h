@@ -60,14 +60,14 @@ typedef struct s_info
 {
 	char					quote;
 	int						redir_cnt;
-	int						redir_out_fd;
+	int						redir_out_flag;
+	int						redir_in_flag;
 	int						tmp_fd;
 	int						in_fd;
 	int						out_fd;
 	int						hd_cnt;
 	int						quote_flag;
 	int						double_quote_flag;
-	int						redir_in_flag;
 	int						err_flag;
 	int						path_flag;
 	struct s_operation		fo;
@@ -76,14 +76,19 @@ typedef struct s_info
 	t_tree					*root;
 }							t_info;
 
-void	init_info(t_info *info);
+/* minishell.c */
+int		before_cmd(char *str, t_info *info);
+int		after_cmd(char *str, t_info *info);
+int		init_main(t_info *info);
+int		close_main(t_info *info, char *str);
 
 /* signal.c */
 void	set_signal_handler(int flag);
 void	signal_handler(int signal);
 void	set_terminal(void);
 void	signal_handler2(int signal);
-void	signal_word(int signum);
+void	hd_sig(int signum);
+
 /*---parser---*/
 	/* lexer.c */
 int		lexer(char *str, t_info *info);
@@ -112,16 +117,16 @@ t_dlist	*create_list(void);
 void	add_list(t_dlist **list, char *str);
 int		delete_node(t_dlist **list, t_dlist *node);
 void	delete_dlist(t_dlist *list);
-void	printList(t_dlist *list);
+void	print_list(t_dlist *list);
 t_dlist	*get_first(t_dlist *curr);
 
 	/* tree.c */
 t_tree	*make_tree(t_tree *myself, t_dlist *dlist);
-void	printTree(t_tree *parent, int cnt);
+void	print_tree(t_tree *parent, int cnt);
 void	free_tree(t_tree *myself);
 
 	/* utils.c */
-char	**make_command(t_dlist *curr);
+char	**make_str_arr(t_dlist *curr);
 int		puterr_exit_code(char *str, char *arg, int code);
 int		put_str_err(t_dlist *list, char *str);
 int		ft_free(char **split);
@@ -151,6 +156,9 @@ int		execute(t_info *info, t_tree *myself);
 int		execute_word(t_info *info, t_tree *myself);
 int		here_doc(t_info *info, t_tree *myself);
 int		execute_redir(t_info *info, t_tree *myself);
+
+	/* excute_pipe.c */
+int		execute_pipe(t_info *info, t_tree *myself);
 
 	/* built_in.c */
 int		echo(t_dlist *list);
