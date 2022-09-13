@@ -26,7 +26,7 @@ void	split_dir(char *path, char **curr, char **next)
 {
 	int	i;
 	int	last_dir_idx;
-	
+
 	i = 0;
 	last_dir_idx = 0;
 	while (!ft_strncmp("./", path, 2))
@@ -45,7 +45,7 @@ void	split_dir(char *path, char **curr, char **next)
 	}
 }
 
-t_dlist *change_to_word(char *curr, char *next, int com_flag)
+t_dlist	*change_to_word(char *curr, char *next, int com_flag)
 {
 	DIR				*d_info;
 	struct dirent	*d_entry;
@@ -58,34 +58,20 @@ t_dlist *change_to_word(char *curr, char *next, int com_flag)
 	while (d_entry)
 	{
 		if (((com_flag && d_entry->d_name[0] == '.')
-			|| ((!com_flag && d_entry->d_name[0] != '.')
-			&& (ft_strncmp(d_entry->d_name, ".", 2) 
-			&& ft_strncmp(d_entry->d_name, "..", 3))))
+				|| ((!com_flag && d_entry->d_name[0] != '.')
+					&& (ft_strncmp(d_entry->d_name, ".", 2)
+						&& ft_strncmp(d_entry->d_name, "..", 3))))
 			&& filter_wildcard(curr, d_entry->d_name, -1, 0)
 			&& ((d_entry->d_type == 8 && !next) || (d_entry->d_type == 4)))
-			// 이슈 : ls .* 했을떄 .이랑 ..도 인자로 받기
 		{
 			ret = ft_strjoin(d_entry->d_name, next);
-			add_list(&tmp_info.dlist, ret); // ret 복사되서 들어감
+			add_list(&tmp_info.dlist, ret);
 		}
 		d_entry = readdir(d_info);
 	}
 	closedir(d_info);
 	return (tmp_info.dlist);
 }		
-
-// t_dlist *change_to_word(char *curr, char *next, int com_flag)
-// {e[0] == '.')
-// 			|| (!com_flag && d_entry->d_name[0] != '.'))
-// 			&& filter_wildcard(curr, d_entry->d_name, -1, 0)
-// 			&& ((d_entry->d_type == 8 && !next) || (d_entry->d_type == 4))
-// 			&& (ft_strncmp(d_entry->d_name, ".", 2) 
-// 			&& ft_strncmp(d_entry->d_name, "..", 3)))
-// 			tmp->token = ft_strjoin(d_entry->d_name, next);
-// 		d_entry = readdir(d_info);
-// 	}
-// 	return (tmp);
-// }		
 
 int	wildcard(t_dlist **now)
 {
@@ -104,7 +90,7 @@ int	wildcard(t_dlist **now)
 	free(curr_path);
 	if (next_path)
 		free(next_path);
-	if (new_list && set_list(*now, new_list)) // 리스트 프리
+	if (new_list && set_list(*now, new_list))
 		*now = new_list;
 	return (0);
 }

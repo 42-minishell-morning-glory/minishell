@@ -89,6 +89,10 @@ void	set_terminal(void);
 void	signal_handler2(int signal);
 void	hd_sig(int signum);
 
+/* init.c */
+void	init_info(t_info *info);
+int		init_env(t_info *info);
+
 /*---parser---*/
 	/* lexer.c */
 int		lexer(char *str, t_info *info);
@@ -99,7 +103,6 @@ int		space_check(char *str);
 
 	/* tokenize.c */	
 void	tokenize(t_info *info);
-void	cut_node(t_dlist *curr, int i);
 
 	/* syntax.c, syntax_table.c */
 int		put_syntaxerr_msg(char *token);
@@ -131,16 +134,17 @@ int		puterr_exit_code(char *str, char *arg, int code);
 int		put_str_err(t_dlist *list, char *str);
 int		ft_free(char **split);
 int		ft_isdigit_str(char *str);
+void	cut_node(t_dlist *curr, int i);
+char	*ft_strrep(char *token, char *value, int i);
 
 	/* other */
 char	*ft_strjoin_free(char *s1, char *s2);
-char	*ft_strrep(char *token, char *value, int i);
 /*---minishell/utils---*/
 
 /*---minishell/expand---*/
 	/* expand.c */
 int		expand(t_info *info, t_tree *myself);
-int		shell_var_expand(t_dlist *curr, t_info *info);
+int		shell_var_expand(t_dlist *curr, t_info *info, int i);
 
 	/* wildcard.c */
 int		wildcard(t_dlist **now);
@@ -155,7 +159,13 @@ int		filter_wildcard(char *wc, char *str, int i, int j);
 int		execute(t_info *info, t_tree *myself);
 int		execute_word(t_info *info, t_tree *myself);
 int		here_doc(t_info *info, t_tree *myself);
+
+	/* excute_redir.c */
 int		execute_redir(t_info *info, t_tree *myself);
+int		redir_output(t_info *info, t_tree *myself);
+int		redir_input(t_info *info, t_tree *myself);
+void	flag_on_redirin(t_info *info, t_tree *myself, int *r_fd);
+void	first_redir(t_info *info);
 
 	/* excute_pipe.c */
 int		execute_pipe(t_info *info, t_tree *myself);
@@ -168,7 +178,7 @@ int		built_in(t_info *info, t_tree *myself);
 
 	/* environ.c */
 int		export(t_info *info, t_dlist *list);
-int		unset(t_info *info, t_dlist *list);
+int		unset(t_info *info, t_dlist *list, int i);
 int		env(t_info *info, int flag);
 
 	/* cd.c */

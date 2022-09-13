@@ -20,6 +20,7 @@ GNL_DIR = get_next_line
 
 SRCS =	minishell.c \
 		signal.c \
+		init.c \
 		$(PARSER_DIR)/lexer.c \
 		$(PARSER_DIR)/tokenize.c \
 		$(PARSER_DIR)/input_check.c \
@@ -27,8 +28,8 @@ SRCS =	minishell.c \
 		$(PARSER_DIR)/syntax_table.c \
 		$(UTILS_DIR)/doubly_list.c \
 		$(UTILS_DIR)/tree.c \
-		$(UTILS_DIR)/ft_strrep.c \
 		$(UTILS_DIR)/utils.c \
+		$(UTILS_DIR)/utils2.c \
 		$(EXPAND_DIR)/expand.c \
 		$(EXPAND_DIR)/shell_var.c \
 		$(EXPAND_DIR)/wild_card.c \
@@ -37,6 +38,7 @@ SRCS =	minishell.c \
 		$(EXCUTE_DIR)/environ.c \
 		$(EXCUTE_DIR)/cd.c \
 		$(EXCUTE_DIR)/excute_redir.c \
+		$(EXCUTE_DIR)/excute_redir_inout.c \
 		$(EXCUTE_DIR)/excute_word.c \
 		$(EXCUTE_DIR)/excute_pipe.c \
 		$(EXCUTE_DIR)/excute_heredoc.c \

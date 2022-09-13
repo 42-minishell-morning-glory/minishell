@@ -12,6 +12,7 @@ int	open_hdfile(t_tree *myself, t_info *info)
 	file_name = ft_strjoin(".2Pj-9C6-v9X-g47", file_num);
 	free(file_num);
 	fd = open(file_name, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	free(file_name);
 	return (fd);
 }
 

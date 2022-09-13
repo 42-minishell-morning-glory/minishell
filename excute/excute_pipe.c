@@ -41,7 +41,7 @@ int	execute_pipe(t_info *info, t_tree *myself)
 	in_fd = dup(STDIN_FILENO);
 	pipe(tool.p_fd);
 	i = 0;
-	while (i < 2) 
+	while (i < 2)
 	{
 		tool.pid = fork();
 		if (!tool.pid)

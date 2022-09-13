@@ -53,20 +53,6 @@ void	delete_dlist(t_dlist *list)
 	}
 }
 
-void	print_list(t_dlist *list)
-{
-	t_dlist	*tmp;
-
-	tmp = list;
-	printf("====print start====\n");
-	while (tmp)
-	{	
-		printf("token : %s, type : %d\n", tmp->token, tmp->type);
-		tmp = tmp->next;
-	}
-	printf("=====print end=====\n\n");
-}
-
 int	delete_node(t_dlist **list, t_dlist *node)
 {
 	t_dlist	*tmp;

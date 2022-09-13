@@ -67,7 +67,7 @@ int	expand(t_info *info, t_tree *myself)
 	{
 		if (curr->type != WORD && curr->type != REDIR)
 			break ;
-		shell_var_expand(curr, info);
+		shell_var_expand(curr, info, 0);
 		word_split(curr, 0, 0);
 		wildcard(&curr);
 		if (!myself->dlist->prev && !myself->dlist->next)

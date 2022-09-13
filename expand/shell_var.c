@@ -22,12 +22,13 @@ char	*token2env(char *env)
 int	empty_env_in_quote(char *token, int i)
 {
 	int	a;
-	
+
 	a = 0;
-	while (token[i + a] == ' ' || token[i + a] == '\'' || token[i + a] == '\"' || token[i + a] == '$' || token[i + a])
+	while (token[i + a] == ' ' || token[i + a] == '\''
+		|| token[i + a] == '\"' || token[i + a] == '$' || token[i + a])
 		a++;
 	ft_strlcpy(&token[i], &token[i + a], ft_strlen(&token[i]));
-	return(1);
+	return (1);
 }
 
 char	*switch2env(char *token, t_info *info, int i)
@@ -47,7 +48,7 @@ char	*switch2env(char *token, t_info *info, int i)
 		}
 		if (env->token[j] == '='
 			&& ((token[i + j + 1] == ' ' || token[i + j + 1] == '\''
-				|| token[i + j + 1] == '\"' || token[i + j + 1] == '$'
+					|| token[i + j + 1] == '\"' || token[i + j + 1] == '$'
 					|| token[i + j + 1] == '\0')))
 			return (token2env(env->token));
 		env = env->next;
@@ -56,46 +57,42 @@ char	*switch2env(char *token, t_info *info, int i)
 	return (NULL);
 }
 
-int	normal_expand(t_dlist *curr, t_info *info, int i)
+void	normal_expand(t_dlist *curr, t_info *info, int i)
 {
 	char	*expand;
-	char	*tmp;
 	char	*exit_code;
 
-	tmp = curr->token;
-	while (tmp[i] && (tmp[i] != '\'' || tmp[i] != '\"' || tmp[i] != ' '))
+	while (curr->token[i] && (curr->token[i] != '\''
+			|| curr->token[i] != '\"' || curr->token[i] != ' '))
 	{
-		if (tmp[i] == '$' && tmp[i + 1] == '?')
+		if (curr->token[i] == '$')
 		{
-			exit_code = ft_itoa(g_exit_code);
-			curr->token = exit_code;
-			free(tmp);
-			return (1);
-		}
-		else if (tmp[i] == '$')
-		{
-			expand = switch2env(tmp, info, i);
+			if (curr->token[i + 1] == '?')
+			{
+				exit_code = ft_itoa(g_exit_code);
+				curr->token = ft_strrep(curr->token, exit_code, i);
+				free(exit_code);
+				return ;
+			}
+			expand = switch2env(curr->token, info, i);
 			if (expand)
 			{
-				curr->token = ft_strrep(tmp, expand, i);
+				curr->token = ft_strrep(curr->token, expand, i);
 				free(expand);
 			}
-			return (1);
+			return ;
 		}
 		i++;
 	}
-	return (1);
 }
 
-int	shell_var_expand(t_dlist *curr, t_info *info)
+int	shell_var_expand(t_dlist *curr, t_info *info, int i)
 {
 	char	*token;
 	char	quote;
-	int		i;
 
 	token = curr->token;
 	quote = 0;
-	i = 0;
 	while (token[i])
 	{
 		if (token[i] == '\'' && !quote)

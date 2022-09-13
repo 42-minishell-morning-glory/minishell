@@ -86,7 +86,7 @@ int	built_in(t_info *info, t_tree *myself)
 	else if (!ft_strncmp(token, "cd", 3))
 		return (cd(info, myself->dlist));
 	else if (!ft_strncmp(token, "unset", 6))
-		return (unset(info, myself->dlist));
+		return (unset(info, myself->dlist, 0));
 	else if (!ft_strncmp(token, "env", 4))
 		return (env(info, 0));
 	else if (!ft_strncmp(token, "pwd", 4))

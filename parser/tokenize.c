@@ -8,27 +8,6 @@ int	is_sep_token(char *str, int i)
 	return (0);
 }
 
-void	cut_node(t_dlist *curr, int i)
-{
-	t_dlist	*new;
-	char	*tmp1;
-	char	*tmp2;
-	char	*remove;
-
-	remove = curr->token;
-	new = create_list();
-	tmp1 = ft_strndup(remove, i + 1);
-	tmp2 = ft_strdup(&remove[i + 1]);
-	free(remove);
-	curr->token = tmp1;
-	new->token = tmp2;
-	new->next = curr->next;
-	if (curr->next)
-		curr->next->prev = new;
-	curr->next = new;
-	new->prev = curr;
-}
-
 int	pass_quote(char *token, int i)
 {
 	char	quote;

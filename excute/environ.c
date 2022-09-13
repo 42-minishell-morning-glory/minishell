@@ -1,18 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environ.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: littley <littley@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/09/13 09:07:43 by littley           #+#    #+#             */
+/*   Updated: 2022/09/13 09:10:10 by littley          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int	unset(t_info *info, t_dlist *list)
+int	unset(t_info *info, t_dlist *list, int i)
 {
 	t_dlist	*tmp;
 	char	**key;
-	int		i;
 
 	key = make_str_arr(list->next);
-	i = 0;
 	while (key[i])
 	{
 		tmp = info->env;
 		if ((ft_isdigit(key[i][0]) || key[i][0] == '-')
-			&& printf("morningshell: unset: `%c': not a valid identifier\n", key[i][0]) && ++i)
+		&& printf("morningshell: unset: `%c': not a valid identifier\n", \
+		key[i][0]) && ++i)
 			continue ;
 		while (tmp)
 		{
@@ -47,7 +58,7 @@ int	env(t_info *info, int flag)
 int	env_check(t_info *info, t_dlist *env_list, char *key_value, int *i)
 {
 	char	*temp;
-	t_dlist *unset_list;
+	t_dlist	*unset_list;
 
 	while (env_list)
 	{
@@ -57,7 +68,7 @@ int	env_check(t_info *info, t_dlist *env_list, char *key_value, int *i)
 			unset_list = create_list();
 			unset_list->next = create_list();
 			unset_list->next->token = temp;
-			unset(info, unset_list);
+			unset(info, unset_list, 0);
 			free(temp);
 			free(unset_list->next);
 			free(unset_list);
@@ -68,7 +79,7 @@ int	env_check(t_info *info, t_dlist *env_list, char *key_value, int *i)
 	return (0);
 }
 
-int key_check(char *token, int *i)
+int	key_check(char *token, int *i)
 {
 	while (token[(*i)] && token[(*i)] != '=')
 	{
