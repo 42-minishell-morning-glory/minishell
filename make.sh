@@ -9,4 +9,5 @@ do
     printf "\b${sp:i++%${#sp}:1}"
     j=$(($j+1))
 done
+
 printf "\b✅\n"
